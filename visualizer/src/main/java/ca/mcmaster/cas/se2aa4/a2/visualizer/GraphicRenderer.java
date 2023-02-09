@@ -1,8 +1,10 @@
 package ca.mcmaster.cas.se2aa4.a2.visualizer;
 
+import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Mesh;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Vertex;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Property;
+import ca.mcmaster.cas.se2aa4.a2.io.Structs.Segment;
 
 import java.awt.Graphics2D;
 import java.awt.Stroke;
@@ -10,6 +12,9 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.geom.Ellipse2D;
 import java.util.List;
+import java.awt.*;
+import javax.swing.*;
+import java.awt.geom.Line2D;
 
 public class GraphicRenderer {
 
@@ -26,6 +31,27 @@ public class GraphicRenderer {
             Ellipse2D point = new Ellipse2D.Double(centre_x, centre_y, THICKNESS, THICKNESS);
             canvas.fill(point);
             canvas.setColor(old);
+
+            double x1 = v.getX();
+            double x2 = v.getX() + 1;
+            double y1 = v.getY();
+            double y2 = v.getY() + 1;
+
+
+        }
+
+        for (Segment s: aMesh.getSegmentsList()){
+            Vertex vertex = aMesh.getVerticesList().get(s.getV1Idx());
+            Vertex vertex2 = aMesh.getVerticesList().get(s.getV2Idx());
+            double x1 = vertex.getX();
+            double y1 = vertex.getY();
+            double x2 = vertex2.getX();
+            double y2 = vertex2.getY();
+            canvas.draw(new Line2D.Double(x1, y1, x2, y2));
+            canvas.setColor(extractColor(s.getPropertiesList()));
+
+
+
         }
     }
 

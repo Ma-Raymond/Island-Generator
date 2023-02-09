@@ -1,8 +1,10 @@
 package ca.mcmaster.cas.se2aa4.a2.generator;
 
+import java.awt.*;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
+import java.util.List;
 
 
 import ca.mcmaster.cas.se2aa4.a2.io.Structs;
@@ -87,7 +89,45 @@ public class DotGen {
             verticesWithColors.add(colored);
         }
 
-        return Mesh.newBuilder().addAllVertices(verticesWithColors).addAllSegments(segmentList).build();
+        //Coloring the Segments
+        Set<Segment> segmentsWithColors = new HashSet<>();
+        ArrayList<Vertex> vertexToVertexMap = new ArrayList<Vertex>();
+        vertexToVertexMap.addAll(verticesWithColors);
+        for (Segment s : segmentList){
+//            System.out.println("V1: " + extractColor(vertexToVertexMap.get(s.getV1Idx()).getPropertiesList()) );
+//            System.out.println("V2: " + extractColor(vertexToVertexMap.get(s.getV2Idx()).getPropertiesList()) );
+            Color v1Color = extractColor(vertexToVertexMap.get(s.getV1Idx()).getPropertiesList());
+            Color v2Color = extractColor(vertexToVertexMap.get(s.getV2Idx()).getPropertiesList());
+            int red = (v1Color.getRed()+v2Color.getRed())/2;
+            int green = (v1Color.getGreen()+v2Color.getGreen())/2;
+            int blue = (v1Color.getBlue()+v2Color.getBlue())/2;
+//            Color segmentColour = new Color((v1Color.getRed()+v2Color.getRed())/2,(v1Color.getGreen()+v2Color.getGreen())/2, (v1Color.getBlue()+v2Color.getBlue())/2);
+            Property color = Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue).build();
+            Segment colored = Segment.newBuilder(s).addProperties(color).build();
+            segmentsWithColors.add(colored);
+        }
+        for (Segment s: segmentsWithColors){
+            System.out.println(s);
+        }
+
+        return Mesh.newBuilder().addAllVertices(verticesWithColors).addAllSegments(segmentsWithColors).build();
+    }
+
+    private Color extractColor(List<Property> properties) {
+        String val = null;
+        for(Property p: properties) {
+            if (p.getKey().equals("rgb_color")) {
+                System.out.println(p.getValue());
+                val = p.getValue();
+            }
+        }
+        if (val == null)
+            return Color.BLACK;
+        String[] raw = val.split(",");
+        int red = Integer.parseInt(raw[0]);
+        int green = Integer.parseInt(raw[1]);
+        int blue = Integer.parseInt(raw[2]);
+        return new Color(red, green, blue);
     }
 
 

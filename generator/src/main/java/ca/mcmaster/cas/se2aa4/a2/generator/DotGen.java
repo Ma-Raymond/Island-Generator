@@ -75,9 +75,9 @@ public class DotGen {
         }
 
         // Distribute colors randomly. Vertices are immutable, need to enrich them
-        Set<Vertex> verticesWithColors = new HashSet<>();
+        List<Vertex> verticesWithColors = new ArrayList<>();
         Random bag = new Random();
-        for(Vertex v: vertices){
+        for(Vertex v: vertexList){
             int red = bag.nextInt(255);
             int green = bag.nextInt(255);
             int blue = bag.nextInt(255);
@@ -87,7 +87,7 @@ public class DotGen {
             verticesWithColors.add(colored);
         }
 
-        return Mesh.newBuilder().addAllVertices(vertexList).addAllSegments(segments).build();
+        return Mesh.newBuilder().addAllVertices(verticesWithColors).addAllSegments(segmentList).build();
     }
 
 

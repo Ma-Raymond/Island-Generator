@@ -1,8 +1,8 @@
 # Assignment A2: Mesh Generator
 
-  - Author #1 [email@mcmaster.ca]
-  - Author #2 [email@mcmaster.ca]
-  - Author #3 [email@mcmaster.ca]
+  - Raymond Ma [mar47@mcmaster.ca]
+  - Gayan Athukorala [athukorg@mcmaster.ca]
+  - Rhea Gokhale [gokhaler@mcmaster.ca]
 
 ## How to run the product
 
@@ -59,12 +59,15 @@ When you develop features and enrich the product, remember that you have first t
 
 ### Definition of Done
 
--- Insert here your definition of done for your features --
+-- Feature Compiles without error and has meaningful contribution to MVP and does not interfere with the working status of previous features --
 
 ### Product Backlog
 
-| Id | Feature title | Who? | Start | End | Status |
-|:--:|---------------|------|-------|-----|--------|
-|    |               |      |       |     |        |
+| Id  | Feature title        | Who?             | Start | End   | Status |
+|:---:|----------------------|------------------|-------|-------|--------|
+|  0  | Segment Generated    | Raymond Ma       | Feb 5 | Feb 9 | Done   |
+|  1  | Segment Colour Added | Gayan Athukorala |       |       |        |
+|  2  | Segment Visualizer   | Rhea Gokhale     |       |       |        |
+
 
 

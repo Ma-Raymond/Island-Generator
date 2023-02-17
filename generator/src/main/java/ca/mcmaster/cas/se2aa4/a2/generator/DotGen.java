@@ -67,6 +67,7 @@ public class DotGen {
             i += 1;
         }
 
+
         Set<Integer> visited = new HashSet<Integer>();
         List<Segment> segmentList = new ArrayList<Segment>();
         for (int x=0; x< vertexMap.length; x++){
@@ -75,6 +76,8 @@ public class DotGen {
                 visited.add(vertexMap[x][y]);
             }
         }
+        Segment hi = Segment.newBuilder().setV1Idx(461).setV2Idx(462).build();
+        System.out.println(segmentList.indexOf(hi));
 
         // Distribute colors randomly. Vertices are immutable, need to enrich them
         List<Vertex> verticesWithColors = new ArrayList<>();
@@ -106,9 +109,6 @@ public class DotGen {
             Segment colored = Segment.newBuilder(s).addProperties(color).build();
             segmentsWithColors.add(colored);
         }
-        for (Segment s: segmentsWithColors){
-            System.out.println(s);
-        }
 
         return Mesh.newBuilder().addAllVertices(verticesWithColors).addAllSegments(segmentsWithColors).build();
     }
@@ -117,7 +117,6 @@ public class DotGen {
         String val = null;
         for(Property p: properties) {
             if (p.getKey().equals("rgb_color")) {
-                System.out.println(p.getValue());
                 val = p.getValue();
             }
         }

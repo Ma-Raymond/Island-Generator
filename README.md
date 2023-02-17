@@ -63,11 +63,13 @@ When you develop features and enrich the product, remember that you have first t
 
 ### Product Backlog
 
-| Id  | Feature title        | Who?             | Start | End   | Status |
-|:---:|----------------------|------------------|-------|-------|--------|
-| F0  | Segment Generated    | Raymond Ma       | Feb 5 | Feb 9 | Done   |
-| F1  | Segment Colour Added | Gayan Athukorala | Feb 9 | Feb 9 | Done   |
-| F2  | Segment Visualizer   | Rhea Gokhale     | Feb 9 | Feb 9 | Done   |
+| Id  | Feature title                 | Who?             | Start  | End    | Status |
+|:---:|-------------------------------|------------------|--------|--------|--------|
+| F0  | Segment Generated             | Raymond Ma       | Feb 5  | Feb 9  | Done   |
+| F1  | Segment Colour Added          | Gayan Athukorala | Feb 9  | Feb 9  | Done   |
+| F2  | Segment Visualizer            | Rhea Gokhale     | Feb 9  | Feb 9  | Done   |
+| F3  | Generator System for Polygons | Raymond Ma       | Feb 16 | Feb 16 | Done   |
+
 
 
 

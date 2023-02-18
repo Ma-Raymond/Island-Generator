@@ -32,15 +32,12 @@ public class GraphicRenderer {
             canvas.fill(point);
             canvas.setColor(old);
 
-            double x1 = v.getX();
-            double x2 = v.getX() + 1;
-            double y1 = v.getY();
-            double y2 = v.getY() + 1;
 
 
         }
-
+        //get each segment in list
         for (Segment s: aMesh.getSegmentsList()){
+
             Vertex vertex = aMesh.getVerticesList().get(s.getV1Idx());
             Vertex vertex2 = aMesh.getVerticesList().get(s.getV2Idx());
             double x1 = vertex.getX();

@@ -45,13 +45,18 @@ public class MeshGen extends GeneralMesh{
                 makePolygon(vertexList.indexOf(v1),vertexList.indexOf(v2),vertexList.indexOf(v3),vertexList.indexOf(v4));
             }
         }
+
+//        for(Polygon poly: polygonList){
+//            poly.getPropertiesList();
+//
+//        }
     }
-    public void makePolygon(int v1,int v2,int v3,int v4){
+    public void makePolygon(int v1Id,int v2Id,int v3Id,int v4Id){
         // Created Segments here based on the identifier of the vertexes to make a square shape
-        Segment s1 = Segment.newBuilder().setV1Idx(v1).setV2Idx(v2).build();
-        Segment s2 = Segment.newBuilder().setV1Idx(v2).setV2Idx(v4).build();
-        Segment s3 = Segment.newBuilder().setV1Idx(v3).setV2Idx(v4).build();
-        Segment s4 = Segment.newBuilder().setV1Idx(v1).setV2Idx(v3).build();
+        Segment s1 = Segment.newBuilder().setV1Idx(v1Id).setV2Idx(v2Id).build();
+        Segment s2 = Segment.newBuilder().setV1Idx(v2Id).setV2Idx(v4Id).build();
+        Segment s3 = Segment.newBuilder().setV1Idx(v3Id).setV2Idx(v4Id).build();
+        Segment s4 = Segment.newBuilder().setV1Idx(v1Id).setV2Idx(v3Id).build();
 
         // This list is made so I can conviently run through each segment in the square
         List<Segment> square = new ArrayList<Segment>(Arrays.asList(s1,s2,s3,s4));
@@ -64,12 +69,22 @@ public class MeshGen extends GeneralMesh{
         // Here I created an integer list of all the segment identifiers, to make up the square. It is added in a consecutive order aswell
         List<Integer> squarelist = new ArrayList<Integer>(Arrays.asList(segmentList.indexOf(s1),segmentList.indexOf(s2),segmentList.indexOf(s3),segmentList.indexOf(s4)));
 
-        // Creates a polygon object, adds the list of integers of segments to the object
-        Polygon poly = Polygon.newBuilder().addAllSegmentIdxs(squarelist).build();
-        polygonList.add(poly);      // Add the polygon object into the polygonList
+
 
         // Gayan will make centroids
-        Vertex centroid;
+        Vertex vertex1 = vertexList.get(v1Id);
+        Vertex vertex2 = vertexList.get(v2Id);
+        Vertex vertex3 = vertexList.get(v3Id);
+
+
+        double centroidIdx = (double)(vertex1.getX()+vertex2.getX())/2;
+        double centroidIdy = (double)(vertex1.getY()+vertex3.getY())/2;
+        Vertex centroid = Vertex.newBuilder().setX(centroidIdx).setY(centroidIdy).build();
+        vertexList.add(centroid);
+        Property vertices = Property.newBuilder().setKey("vertices").setValue(v1Id + "," + v2Id + "," + v3Id + "," + v4Id).build();
+        // Creates a polygon object, adds the list of integers of segments to the object
+        Polygon poly = Polygon.newBuilder().addAllSegmentIdxs(squarelist).setCentroidIdx(vertexList.indexOf(centroid)).addProperties(vertices).build();
+        polygonList.add(poly);      // Add the polygon object into the polygonList
         System.out.println(poly);
     }
 

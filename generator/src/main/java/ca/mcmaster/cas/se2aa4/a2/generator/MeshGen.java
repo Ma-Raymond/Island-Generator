@@ -98,8 +98,39 @@ public class MeshGen extends GeneralMesh{
         //not finished
         if (Mode.equals("-X")) {
             for (Vertex v : vertexList){
-
+                int red = 0;
+                int green = 0;
+                int blue = 0;
+                String colorCode = red + "," + green + "," + blue;
+                Property color = Property.newBuilder().setKey("rgb_color").setValue(colorCode).build();
+                Vertex colored = Vertex.newBuilder(v).addProperties(color).build();
+                verticesWithColors.add(colored);
             }
+            ArrayList<Vertex> vertexToVertexMap = new ArrayList<Vertex>();
+            vertexToVertexMap.addAll(verticesWithColors);
+
+            //Make segments black
+            for (Segment s : segmentList){
+                int red = 0;
+                int green = 0;
+                int blue = 0;
+                String colorCode = red + "," + green + "," + blue;
+                Property color = Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue).build();
+                Segment colored = Segment.newBuilder(s).addProperties(color).build();
+                segmentsWithColors.add(colored);
+            }
+
+            for (Polygon p : polygonList){
+                Vertex centroid = vertexList.get(p.getCentroidIdx());
+                int red = 255;
+                int green = 0;
+                int blue = 0;
+                String colorCode = red + "," + green + "," + blue;
+                Property color = Property.newBuilder().setKey("rgb_color").setValue(colorCode).build();
+                Vertex colored = Vertex.newBuilder(centroid).addProperties(color).build();
+                verticesWithColors.add(colored);
+            }
+
 
 
         } else {

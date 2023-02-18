@@ -4,8 +4,11 @@ import ca.mcmaster.cas.se2aa4.a2.io.MeshFactory;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Mesh;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.*;
+import ca.mcmaster.cas.se2aa4.a2.io.Structs.Polygon;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 
 abstract class GeneralMesh {
@@ -30,7 +33,7 @@ public class MeshGen extends GeneralMesh{
                 Vertex v2 = Vertex.newBuilder().setX((double) x + square_size).setY((double) y).build();    // Top Right
                 Vertex v3 = Vertex.newBuilder().setX((double) x).setY((double) y + square_size).build();    // Bottom Left
                 Vertex v4 = Vertex.newBuilder().setX((double) x+square_size).setY((double) y + square_size).build();    // Bottom Right
-                // This list is made so I can conviently run through each vertex in the square
+                // This list is made so I can conveniently run through each vertex in the square
                 List<Vertex> square = new ArrayList<Vertex>(Arrays.asList(v1,v2,v3,v4));
                 for (Vertex v : square){
                     if (!vertices.contains(v)){     // If it's not in the SET, add it and also add it to the Iterable List vertexList
@@ -69,14 +72,75 @@ public class MeshGen extends GeneralMesh{
         Vertex centroid;
         System.out.println(poly);
     }
-    public Mesh generate(){
+
+
+    public Mesh generate(String Mode) {
         // This will make the vertexes
         makeVertex();
-        return Mesh.newBuilder().addAllVertices(vertexList).addAllPolygons(polygonList).addAllSegments(segmentList).build();
+        List<Vertex> verticesWithColors = new ArrayList<>();
+        Set<Segment> segmentsWithColors = new HashSet<>();
+
+        //not finished
+        if (Mode.equals("-X")) {
+            for (Vertex v : vertexList){
+
+            }
+
+
+        } else {
+
+            Random bag = new Random();
+            for (Vertex v : vertexList) {
+                int red = bag.nextInt(255);
+                int green = bag.nextInt(255);
+                int blue = bag.nextInt(255);
+                String colorCode = red + "," + green + "," + blue;
+                Property color = Property.newBuilder().setKey("rgb_color").setValue(colorCode).build();
+                Vertex colored = Vertex.newBuilder(v).addProperties(color).build();
+                verticesWithColors.add(colored);
+            }
+
+            //Coloring the Segments
+
+            ArrayList<Vertex> vertexToVertexMap = new ArrayList<Vertex>();
+            vertexToVertexMap.addAll(verticesWithColors);
+            for (Segment s : segmentList) {
+//            System.out.println("V1: " + extractColor(vertexToVertexMap.get(s.getV1Idx()).getPropertiesList()) );
+//            System.out.println("V2: " + extractColor(vertexToVertexMap.get(s.getV2Idx()).getPropertiesList()) );
+                Color v1Color = extractColor(vertexToVertexMap.get(s.getV1Idx()).getPropertiesList());
+                Color v2Color = extractColor(vertexToVertexMap.get(s.getV2Idx()).getPropertiesList());
+                int red = (v1Color.getRed() + v2Color.getRed()) / 2;
+                int green = (v1Color.getGreen() + v2Color.getGreen()) / 2;
+                int blue = (v1Color.getBlue() + v2Color.getBlue()) / 2;
+//            Color segmentColour = new Color((v1Color.getRed()+v2Color.getRed())/2,(v1Color.getGreen()+v2Color.getGreen())/2, (v1Color.getBlue()+v2Color.getBlue())/2);
+                Property color = Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue).build();
+                Segment colored = Segment.newBuilder(s).addProperties(color).build();
+                segmentsWithColors.add(colored);
+            }
+
+        }
+        return Mesh.newBuilder().addAllVertices(verticesWithColors).addAllSegments(segmentsWithColors).build();
+
     }
 
-    // Gayan will colour in the vertices and segments
-    public void colourVertices(){
+    private Color extractColor(List<Property> properties) {
+        String val = null;
+        for(Property p: properties) {
+            if (p.getKey().equals("rgb_color")) {
+                val = p.getValue();
+            }
+        }
+        if (val == null)
+            return Color.BLACK;
+        String[] raw = val.split(",");
+        int red = Integer.parseInt(raw[0]);
+        int green = Integer.parseInt(raw[1]);
+        int blue = Integer.parseInt(raw[2]);
+        return new Color(red, green, blue);
 
     }
+
+    // Rhea will colour in the vertices and segments
+
 }
+

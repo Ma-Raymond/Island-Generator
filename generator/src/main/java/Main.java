@@ -10,8 +10,10 @@ public class Main {
     public static void main(String[] args) throws IOException {
 //        DotGen generator = new DotGen();
 //        Mesh myMesh = generator.generate();
+        String mode = args[1];
+
         MeshGen gen = new MeshGen();
-        Mesh myMesh = gen.generate();
+        Mesh myMesh = gen.generate(mode);
         MeshFactory factory = new MeshFactory();
         factory.write(myMesh, args[0]);
     }

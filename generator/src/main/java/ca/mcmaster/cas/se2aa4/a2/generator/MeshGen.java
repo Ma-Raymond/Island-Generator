@@ -4,8 +4,12 @@ import ca.mcmaster.cas.se2aa4.a2.io.MeshFactory;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Mesh;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.*;
+import ca.mcmaster.cas.se2aa4.a2.io.Structs.Polygon;
 
+import java.awt.*;
+import java.lang.reflect.Array;
 import java.util.*;
+import java.util.List;
 
 
 abstract class GeneralMesh {
@@ -19,6 +23,8 @@ abstract class GeneralMesh {
     List<Vertex> vertexList = new ArrayList<Vertex>();
     List<Segment> segmentList = new ArrayList<Segment>();
     List<Polygon> polygonList = new ArrayList<Polygon>();
+    List<Vertex> verticesWithColours = new ArrayList<>();
+    List<Segment> segmentsWithColours = new ArrayList<>();
 }
 public class MeshGen extends GeneralMesh{
 
@@ -42,11 +48,47 @@ public class MeshGen extends GeneralMesh{
                 makePolygon(vertexList.indexOf(v1),vertexList.indexOf(v2),vertexList.indexOf(v3),vertexList.indexOf(v4));
             }
         }
+        // Colours the grid pattern
+        colourVertices();
+        colourSegments();
 
-//        for(Polygon poly: polygonList){
-//            poly.getPropertiesList();
-//
-//        }
+        Set<Integer> neighboursList = new HashSet<>();
+        for(Polygon poly: polygonList){
+            String val = poly.getPropertiesList().get(0).getValue();
+            String[] raw = val.split(",");
+            for(int i = 0; i<polygonList.size(); i++){
+                Polygon polyCompare = polygonList.get(i);
+                String valCompare = polyCompare.getPropertiesList().get(0).getValue();
+                String[] rawCompare = valCompare.split(",");
+                for (int j = 0; j<4; j++){
+                    int vertex = Integer.parseInt(raw[j]);
+                    for (int y = 0; y<4; y++){
+                        int vertexCompare = Integer.parseInt(rawCompare[y]);
+                        if (vertex == vertexCompare && (poly.getCentroidIdx() != polyCompare.getCentroidIdx())){
+                            neighboursList.add(i);
+
+                        }
+                    }
+
+                }
+            }
+            Property neighbours = Property.newBuilder().setKey("neighbours").setValue(String.valueOf(neighboursList)).build();
+            Polygon polyNew = Polygon.newBuilder(poly).addAllNeighborIdxs(neighboursList).build();
+            polygonList.set(polygonList.indexOf(poly), polyNew);
+            neighboursList.clear();
+        }
+
+        for (Polygon poly:polygonList){
+//            System.out.println(poly);
+            for (Integer i : poly.getNeighborIdxsList()){
+                Segment neighbourConnection = Segment.newBuilder().setV1Idx(poly.getCentroidIdx()).setV2Idx(polygonList.get(i).getCentroidIdx()).build();
+                System.out.println(neighbourConnection);
+                if (!segmentList.contains(neighbourConnection)){
+                    segmentList.add(neighbourConnection);
+                }
+            }
+        }
+
     }
     public void makePolygon(int v1Id,int v2Id,int v3Id,int v4Id){
         // Created Segments here based on the identifier of the vertexes to make a square shape
@@ -84,14 +126,61 @@ public class MeshGen extends GeneralMesh{
         polygonList.add(poly);      // Add the polygon object into the polygonList
         System.out.println(poly);
     }
+
+    // Gayan will colour in the vertices and segments
+    public void colourVertices(){
+        // Distribute colors randomly. Vertices are immutable, need to enrich them
+        Random bag = new Random();
+        for(Vertex v: vertexList){
+            int red = bag.nextInt(255);
+            int green = bag.nextInt(255);
+            int blue = bag.nextInt(255);
+            String colorCode = red + "," + green + "," + blue;
+            Property color = Property.newBuilder().setKey("rgb_color").setValue(colorCode).build();
+            Vertex colored = Vertex.newBuilder(v).addProperties(color).build();
+            verticesWithColours.add(colored);
+        }
+    }
+
+    public void colourSegments(){
+        //Coloring the Segments
+        ArrayList<Vertex> vertexToVertexMap = new ArrayList<Vertex>();
+        vertexToVertexMap.addAll(verticesWithColours);
+        for (Segment s : segmentList){
+//            System.out.println("V1: " + extractColor(vertexToVertexMap.get(s.getV1Idx()).getPropertiesList()) );
+//            System.out.println("V2: " + extractColor(vertexToVertexMap.get(s.getV2Idx()).getPropertiesList()) );
+            Color v1Color = extractColor(vertexToVertexMap.get(s.getV1Idx()).getPropertiesList());
+            Color v2Color = extractColor(vertexToVertexMap.get(s.getV2Idx()).getPropertiesList());
+            int red = (v1Color.getRed()+v2Color.getRed())/2;
+            int green = (v1Color.getGreen()+v2Color.getGreen())/2;
+            int blue = (v1Color.getBlue()+v2Color.getBlue())/2;
+//            Color segmentColour = new Color((v1Color.getRed()+v2Color.getRed())/2,(v1Color.getGreen()+v2Color.getGreen())/2, (v1Color.getBlue()+v2Color.getBlue())/2);
+            Property color = Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue).build();
+            Segment colored = Segment.newBuilder(s).addProperties(color).build();
+            segmentsWithColours.add(colored);
+        }
+    }
+
+    private Color extractColor(List<Property> properties) {
+        String val = null;
+        for(Property p: properties) {
+            if (p.getKey().equals("rgb_color")) {
+                val = p.getValue();
+            }
+        }
+        if (val == null)
+            return Color.BLACK;
+        String[] raw = val.split(",");
+        int red = Integer.parseInt(raw[0]);
+        int green = Integer.parseInt(raw[1]);
+        int blue = Integer.parseInt(raw[2]);
+        return new Color(red, green, blue);
+    }
     public Mesh generate(){
         // This will make the vertexes
         makeVertex();
         return Mesh.newBuilder().addAllVertices(vertexList).addAllPolygons(polygonList).addAllSegments(segmentList).build();
     }
 
-    // Gayan will colour in the vertices and segments
-    public void colourVertices(){
 
-    }
 }

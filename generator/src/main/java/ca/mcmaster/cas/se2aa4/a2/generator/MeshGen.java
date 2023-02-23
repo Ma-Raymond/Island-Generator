@@ -78,6 +78,7 @@ public class MeshGen extends GeneralMesh{
             neighboursList.clear();
         }
 
+        Set<Integer> neighbourConnectionsList = new HashSet<>();
         for (Polygon poly:polygonList){
 //            System.out.println(poly);
             for (Integer i : poly.getNeighborIdxsList()){
@@ -86,8 +87,14 @@ public class MeshGen extends GeneralMesh{
                 if (!segmentList.contains(neighbourConnection)){
                     segmentList.add(neighbourConnection);
                 }
+                neighbourConnectionsList.add(segmentList.indexOf(neighbourConnection));
             }
+            Property neighbourConnections = Property.newBuilder().setKey("neighbourConnections").setValue(String.valueOf(neighbourConnectionsList)).build();
+            Polygon polyNew = Polygon.newBuilder(poly).addProperties(neighbourConnections).build();
+            polygonList.set(polygonList.indexOf(poly), polyNew);
+            neighbourConnectionsList.clear();
         }
+        System.out.println(polygonList);
 
     }
     public void makePolygon(int v1Id,int v2Id,int v3Id,int v4Id){

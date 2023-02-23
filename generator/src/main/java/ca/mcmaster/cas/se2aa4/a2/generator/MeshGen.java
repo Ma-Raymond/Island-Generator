@@ -23,8 +23,8 @@ abstract class GeneralMesh {
     List<Vertex> vertexList = new ArrayList<Vertex>();
     List<Segment> segmentList = new ArrayList<Segment>();
     List<Polygon> polygonList = new ArrayList<Polygon>();
-    List<Vertex> verticesWithColours = new ArrayList<>();
-    List<Segment> segmentsWithColours = new ArrayList<>();
+    List<Vertex> verticesWithColors = new ArrayList<>();
+    Set<Segment> segmentsWithColors = new HashSet<>();
     Set<Integer> neighbourConnectionsList = new HashSet<>();
 }
 public class MeshGen extends GeneralMesh{
@@ -82,6 +82,16 @@ public class MeshGen extends GeneralMesh{
 //            System.out.println(poly);
             for (Integer i : poly.getNeighborIdxsList()){
                 Segment neighbourConnection = Segment.newBuilder().setV1Idx(poly.getCentroidIdx()).setV2Idx(polygonList.get(i).getCentroidIdx()).build();
+
+                //colour it
+                int red = 169;
+                int green = 169;
+                int blue = 169;
+                String colorCode = red + "," + green + "," + blue;
+                Property color = Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue).build();
+                Segment colored = Segment.newBuilder(neighbourConnection).addProperties(color).build();
+
+                segmentsWithColors.add(colored);
                 System.out.println(neighbourConnection);
                 if (!segmentList.contains(neighbourConnection)){
                     segmentList.add(neighbourConnection);
@@ -140,8 +150,7 @@ public class MeshGen extends GeneralMesh{
 
         // This will make the vertexes
         makeVertex();
-        List<Vertex> verticesWithColors = new ArrayList<>();
-        Set<Segment> segmentsWithColors = new HashSet<>();
+
 
         //not finished
         if (Mode.equals("-X")) {

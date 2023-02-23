@@ -23,6 +23,19 @@ public class GraphicRenderer {
         canvas.setColor(Color.BLACK);
         Stroke stroke = new BasicStroke(0.5f);
         canvas.setStroke(stroke);
+
+        for (Segment s: aMesh.getSegmentsList()){
+
+            Vertex vertex = aMesh.getVerticesList().get(s.getV1Idx());
+            Vertex vertex2 = aMesh.getVerticesList().get(s.getV2Idx());
+            double x1 = vertex.getX();
+            double y1 = vertex.getY();
+            double x2 = vertex2.getX();
+            double y2 = vertex2.getY();
+            canvas.draw(new Line2D.Double(x1, y1, x2, y2));
+            canvas.setColor(extractColor(s.getPropertiesList()));
+            
+        }
         for (Vertex v: aMesh.getVerticesList()) {
             double centre_x = v.getX() - (THICKNESS/2.0d);
             double centre_y = v.getY() - (THICKNESS/2.0d);
@@ -36,20 +49,7 @@ public class GraphicRenderer {
 
         }
         //get each segment in list
-        for (Segment s: aMesh.getSegmentsList()){
 
-            Vertex vertex = aMesh.getVerticesList().get(s.getV1Idx());
-            Vertex vertex2 = aMesh.getVerticesList().get(s.getV2Idx());
-            double x1 = vertex.getX();
-            double y1 = vertex.getY();
-            double x2 = vertex2.getX();
-            double y2 = vertex2.getY();
-            canvas.draw(new Line2D.Double(x1, y1, x2, y2));
-            canvas.setColor(extractColor(s.getPropertiesList()));
-
-
-
-        }
     }
 
     private Color extractColor(List<Property> properties) {

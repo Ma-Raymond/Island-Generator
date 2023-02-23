@@ -7,6 +7,7 @@ import ca.mcmaster.cas.se2aa4.a2.io.Structs.*;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Polygon;
 
 import java.awt.*;
+
 import java.util.*;
 import java.util.List;
 
@@ -22,6 +23,9 @@ abstract class GeneralMesh {
     List<Vertex> vertexList = new ArrayList<Vertex>();
     List<Segment> segmentList = new ArrayList<Segment>();
     List<Polygon> polygonList = new ArrayList<Polygon>();
+    List<Vertex> verticesWithColours = new ArrayList<>();
+    List<Segment> segmentsWithColours = new ArrayList<>();
+    Set<Integer> neighbourConnectionsList = new HashSet<>();
 }
 public class MeshGen extends GeneralMesh{
 
@@ -46,10 +50,52 @@ public class MeshGen extends GeneralMesh{
             }
         }
 
-//        for(Polygon poly: polygonList){
-//            poly.getPropertiesList();
-//
-//        }
+
+        Set<Integer> neighboursList = new HashSet<>();
+        for(Polygon poly: polygonList){
+            String val = poly.getPropertiesList().get(0).getValue();
+            String[] raw = val.split(",");
+            for(int i = 0; i<polygonList.size(); i++){
+                Polygon polyCompare = polygonList.get(i);
+                String valCompare = polyCompare.getPropertiesList().get(0).getValue();
+                String[] rawCompare = valCompare.split(",");
+                for (int j = 0; j<4; j++){
+                    int vertex = Integer.parseInt(raw[j]);
+                    for (int y = 0; y<4; y++){
+                        int vertexCompare = Integer.parseInt(rawCompare[y]);
+                        if (vertex == vertexCompare && (poly.getCentroidIdx() != polyCompare.getCentroidIdx())){
+                            neighboursList.add(i);
+
+                        }
+                    }
+
+                }
+            }
+            Property neighbours = Property.newBuilder().setKey("neighbours").setValue(String.valueOf(neighboursList)).build();
+            Polygon polyNew = Polygon.newBuilder(poly).addAllNeighborIdxs(neighboursList).build();
+            polygonList.set(polygonList.indexOf(poly), polyNew);
+            neighboursList.clear();
+        }
+
+
+        for (Polygon poly:polygonList){
+//            System.out.println(poly);
+            for (Integer i : poly.getNeighborIdxsList()){
+                Segment neighbourConnection = Segment.newBuilder().setV1Idx(poly.getCentroidIdx()).setV2Idx(polygonList.get(i).getCentroidIdx()).build();
+                System.out.println(neighbourConnection);
+                if (!segmentList.contains(neighbourConnection)){
+                    segmentList.add(neighbourConnection);
+                }
+                neighbourConnectionsList.add(segmentList.indexOf(neighbourConnection));
+            }
+
+            Property neighbourConnections = Property.newBuilder().setKey("neighbourConnections").setValue(String.valueOf(neighbourConnectionsList)).build();
+            Polygon polyNew = Polygon.newBuilder(poly).addProperties(neighbourConnections).build();
+            polygonList.set(polygonList.indexOf(poly), polyNew);
+            neighbourConnectionsList.clear();
+        }
+        System.out.println(polygonList);
+
     }
     public void makePolygon(int v1Id,int v2Id,int v3Id,int v4Id){
         // Created Segments here based on the identifier of the vertexes to make a square shape
@@ -89,7 +135,9 @@ public class MeshGen extends GeneralMesh{
     }
 
 
+
     public Mesh generate(String Mode) {
+
         // This will make the vertexes
         makeVertex();
         List<Vertex> verticesWithColors = new ArrayList<>();
@@ -132,6 +180,24 @@ public class MeshGen extends GeneralMesh{
             }
 
 
+            for (Segment s : segmentList){
+                for (int i : neighbourConnectionsList){
+                    if (segmentList.indexOf(s) == i){
+                        Segment neighbour = s;
+                        int red = 169;
+                        int green = 169;
+                        int blue = 169;
+                        String colorCode = red + "," + green + "," + blue;
+                        Property color = Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue).build();
+                        Segment colored = Segment.newBuilder(neighbour).addProperties(color).build();
+                        segmentsWithColors.add(colored);
+                    }
+
+                }
+
+            }
+
+
 
         } else {
 
@@ -169,6 +235,8 @@ public class MeshGen extends GeneralMesh{
 
     }
 
+
+
     private Color extractColor(List<Property> properties) {
         String val = null;
         for(Property p: properties) {
@@ -185,8 +253,5 @@ public class MeshGen extends GeneralMesh{
         return new Color(red, green, blue);
 
     }
-
-    // Rhea will colour in the vertices and segments
-
 }
 

@@ -24,6 +24,8 @@ abstract class GeneralMesh {
     List<Segment> segmentList = new ArrayList<Segment>();
     List<Polygon> polygonList = new ArrayList<Polygon>();
     List<Vertex> verticesWithColors = new ArrayList<>();
+    List<Vertex> centriodList = new ArrayList<>();
+    List<Segment> neighbourConnectionList = new ArrayList<>();
     Set<Segment> segmentsWithColors = new HashSet<>();
     Set<Integer> neighbourConnectionsList = new HashSet<>();
 }
@@ -45,6 +47,7 @@ public class MeshGen extends GeneralMesh{
                         vertexList.add(v);
                     }
                 }
+
                 // This function will create the segments and define the polygons of the square based on the vertexes made here
                 makePolygon(vertexList.indexOf(v1),vertexList.indexOf(v2),vertexList.indexOf(v3),vertexList.indexOf(v4));
             }
@@ -95,6 +98,7 @@ public class MeshGen extends GeneralMesh{
                 System.out.println(neighbourConnection);
                 if (!segmentList.contains(neighbourConnection)){
                     segmentList.add(neighbourConnection);
+                    neighbourConnectionList.add(neighbourConnection);
                 }
                 neighbourConnectionsList.add(segmentList.indexOf(neighbourConnection));
             }
@@ -137,6 +141,7 @@ public class MeshGen extends GeneralMesh{
         double centroidIdy = (double)(vertex1.getY()+vertex3.getY())/2;
         Vertex centroid = Vertex.newBuilder().setX(centroidIdx).setY(centroidIdy).build();
         vertexList.add(centroid);
+        centriodList.add(centroid);
         Property vertices = Property.newBuilder().setKey("vertices").setValue(v1Id + "," + v2Id + "," + v3Id + "," + v4Id).build();
         // Creates a polygon object, adds the list of integers of segments to the object
         Polygon poly = Polygon.newBuilder().addAllSegmentIdxs(squarelist).setCentroidIdx(vertexList.indexOf(centroid)).addProperties(vertices).build();
@@ -151,99 +156,96 @@ public class MeshGen extends GeneralMesh{
         // This will make the vertexes
         makeVertex();
 
-
         //not finished
         if (Mode.equals("-X")) {
             for (Vertex v : vertexList){
-                int red = 0;
-                int green = 0;
-                int blue = 0;
-                String colorCode = red + "," + green + "," + blue;
-                Property color = Property.newBuilder().setKey("rgb_color").setValue(colorCode).build();
-                Vertex colored = Vertex.newBuilder(v).addProperties(color).build();
-                verticesWithColors.add(colored);
-            }
-            ArrayList<Vertex> vertexToVertexMap = new ArrayList<Vertex>();
-            vertexToVertexMap.addAll(verticesWithColors);
-
-            //Make segments black
-            for (Segment s : segmentList){
-                int red = 0;
-                int green = 0;
-                int blue = 0;
-                String colorCode = red + "," + green + "," + blue;
-                Property color = Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue).build();
-                Segment colored = Segment.newBuilder(s).addProperties(color).build();
-                segmentsWithColors.add(colored);
-            }
-
-            for (Polygon p : polygonList){
-                Vertex centroid = vertexList.get(p.getCentroidIdx());
-                int red = 255;
-                int green = 0;
-                int blue = 0;
-                String colorCode = red + "," + green + "," + blue;
-                Property color = Property.newBuilder().setKey("rgb_color").setValue(colorCode).build();
-                Vertex colored = Vertex.newBuilder(centroid).addProperties(color).build();
-                verticesWithColors.add(colored);
-            }
-
-
-            for (Segment s : segmentList){
-                for (int i : neighbourConnectionsList){
-                    if (segmentList.indexOf(s) == i){
-                        Segment neighbour = s;
-                        int red = 169;
-                        int green = 169;
-                        int blue = 169;
-                        String colorCode = red + "," + green + "," + blue;
-                        Property color = Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue).build();
-                        Segment colored = Segment.newBuilder(neighbour).addProperties(color).build();
-                        segmentsWithColors.add(colored);
-                    }
-
+                if (centriodList.contains(v)){
+                    int red = 255;
+                    int green = 0;
+                    int blue = 0;
+                    int alpha = 255;
+                    colorVertex(v, red, green, blue,alpha);
+                }
+                else{
+                    int red = 0;
+                    int green = 0;
+                    int blue = 0;
+                    int alpha = 255;
+                    colorVertex(v, red, green, blue, alpha);
                 }
 
             }
 
 
-
-        } else {
+            //Make segments black
+            for (Segment s : segmentList){
+                if (neighbourConnectionList.contains(s)){
+                    int red = 169;
+                    int green = 169;
+                    int blue = 169;
+                    int alpha = 255;
+                    colorSegment(s,red, green, blue, alpha);
+                }
+                else{
+                    int red = 0;
+                    int green = 0;
+                    int blue = 0;
+                    int alpha = 255;
+                    colorSegment(s, red, green , blue, alpha);
+                }
+            }
+        }
+        else {
 
             Random bag = new Random();
             for (Vertex v : vertexList) {
-                int red = bag.nextInt(255);
-                int green = bag.nextInt(255);
-                int blue = bag.nextInt(255);
-                String colorCode = red + "," + green + "," + blue;
-                Property color = Property.newBuilder().setKey("rgb_color").setValue(colorCode).build();
-                Vertex colored = Vertex.newBuilder(v).addProperties(color).build();
-                verticesWithColors.add(colored);
+                if (!centriodList.contains(v)){
+                    int red = bag.nextInt(255);
+                    int green = bag.nextInt(255);
+                    int blue = bag.nextInt(255);
+                    int alpha = 255;
+                    colorVertex(v,red,green,blue, alpha);
+                }
+                else{
+                    colorVertex(v, 0,0,0,0);
+                }
             }
 
             //Coloring the Segments
-
-            ArrayList<Vertex> vertexToVertexMap = new ArrayList<Vertex>();
-            vertexToVertexMap.addAll(verticesWithColors);
             for (Segment s : segmentList) {
-//            System.out.println("V1: " + extractColor(vertexToVertexMap.get(s.getV1Idx()).getPropertiesList()) );
-//            System.out.println("V2: " + extractColor(vertexToVertexMap.get(s.getV2Idx()).getPropertiesList()) );
-                Color v1Color = extractColor(vertexToVertexMap.get(s.getV1Idx()).getPropertiesList());
-                Color v2Color = extractColor(vertexToVertexMap.get(s.getV2Idx()).getPropertiesList());
-                int red = (v1Color.getRed() + v2Color.getRed()) / 2;
-                int green = (v1Color.getGreen() + v2Color.getGreen()) / 2;
-                int blue = (v1Color.getBlue() + v2Color.getBlue()) / 2;
-//            Color segmentColour = new Color((v1Color.getRed()+v2Color.getRed())/2,(v1Color.getGreen()+v2Color.getGreen())/2, (v1Color.getBlue()+v2Color.getBlue())/2);
-                Property color = Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue).build();
-                Segment colored = Segment.newBuilder(s).addProperties(color).build();
-                segmentsWithColors.add(colored);
+                if (!neighbourConnectionList.contains(s)){
+                    Color v1Color = extractColor(vertexList.get(s.getV1Idx()).getPropertiesList());
+                    Color v2Color = extractColor(vertexList.get(s.getV2Idx()).getPropertiesList());
+                    int red = (v1Color.getRed() + v2Color.getRed()) / 2;
+                    int green = (v1Color.getGreen() + v2Color.getGreen()) / 2;
+                    int blue = (v1Color.getBlue() + v2Color.getBlue()) / 2;
+                    int alpha = 255;
+                    colorSegment(s,red,green,blue,alpha );
+                }
+                else{
+                    colorSegment(s, 0,0,0,0);
+                }
             }
 
         }
-        return Mesh.newBuilder().addAllVertices(verticesWithColors).addAllSegments(segmentsWithColors).build();
+        return Mesh.newBuilder().addAllVertices(vertexList).addAllSegments(segmentList).build();
 
     }
 
+    public void colorVertex(Vertex vertex, int red, int green, int blue, int alpha){
+        Random bag = new Random();
+        String colorCode = red + "," + green + "," + blue + "," + alpha;
+        Property color = Property.newBuilder().setKey("rgb_color").setValue(colorCode).build();
+        Vertex colored = Vertex.newBuilder(vertex).addProperties(color).build();
+        vertexList.set(vertexList.indexOf(vertex), colored);
+
+    }
+
+    public void colorSegment(Segment seg, int red, int green, int blue, int alpha){
+        Property color = Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue+ "," + alpha).build();
+        Segment colored = Segment.newBuilder(seg).addProperties(color).build();
+        segmentList.set(segmentList.indexOf(seg), colored);
+    }
 
 
     private Color extractColor(List<Property> properties) {
@@ -259,7 +261,8 @@ public class MeshGen extends GeneralMesh{
         int red = Integer.parseInt(raw[0]);
         int green = Integer.parseInt(raw[1]);
         int blue = Integer.parseInt(raw[2]);
-        return new Color(red, green, blue);
+        int alpha = Integer.parseInt(raw[3]);
+        return new Color(red, green, blue, alpha);
 
     }
 }

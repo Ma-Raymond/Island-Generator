@@ -66,7 +66,8 @@ public class GraphicRenderer {
         int red = Integer.parseInt(raw[0]);
         int green = Integer.parseInt(raw[1]);
         int blue = Integer.parseInt(raw[2]);
-        return new Color(red, green, blue);
+        int alpha = Integer.parseInt(raw[3]);
+        return new Color(red, green, blue, alpha);
     }
 
 }

@@ -157,7 +157,7 @@ public class MeshGen extends GeneralMesh{
         makeVertex();
 
         //not finished
-        if (Mode.equals("-X")) {
+        if (Mode.equals("true")) {
             for (Vertex v : vertexList){
                 if (centriodList.contains(v)){
                     int red = 255;

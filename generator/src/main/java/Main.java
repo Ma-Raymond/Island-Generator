@@ -2,20 +2,44 @@ import ca.mcmaster.cas.se2aa4.a2.generator.DotGen;
 import ca.mcmaster.cas.se2aa4.a2.generator.MeshGen;
 import ca.mcmaster.cas.se2aa4.a2.io.MeshFactory;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Mesh;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+
 
 import java.io.IOException;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
-//        DotGen generator = new DotGen();
-//        Mesh myMesh = generator.generate();
-        String mode = args[1];
+        CommandLineParser parser = new DefaultParser();
+        Options options = new Options();
+
+        options.addOption("X", false, "Toggles Debug Mode");
+
+        String Mode = "wowowowowowowow";
+        try {
+            CommandLine commandline = parser.parse(options, args);
+            if (commandline.hasOption("X")){
+                Mode = "true";
+            }
+
+        }
+        catch (ParseException e) {
+            System.out.println("IT DIDNT WORK!!!!!!!!!");
+        }
+
+
+        //        DotGen generator = new DotGen();
+        //        Mesh myMesh = generator.generate();
 
         MeshGen gen = new MeshGen();
-        Mesh myMesh = gen.generate(mode);
+        Mesh myMesh = gen.generate(Mode);
         MeshFactory factory = new MeshFactory();
         factory.write(myMesh, args[0]);
+        System.out.println(Mode);
     }
 
 }

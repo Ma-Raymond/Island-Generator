@@ -8,6 +8,7 @@ import ca.mcmaster.cas.se2aa4.a2.io.Structs.Polygon;
 
 import java.awt.*;
 
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.List;
 
@@ -23,22 +24,22 @@ abstract class GeneralMesh {
     List<Vertex> vertexList = new ArrayList<Vertex>();
     List<Segment> segmentList = new ArrayList<Segment>();
     List<Polygon> polygonList = new ArrayList<Polygon>();
-    List<Vertex> verticesWithColors = new ArrayList<>();
-    List<Vertex> centriodList = new ArrayList<>();
+    List<Vertex> centroidList = new ArrayList<>();
     List<Segment> neighbourConnectionList = new ArrayList<>();
-    Set<Segment> segmentsWithColors = new HashSet<>();
-    Set<Integer> neighbourConnectionsList = new HashSet<>();
+    DecimalFormat precision  = new DecimalFormat("0.00");
 }
+
 public class MeshGen extends GeneralMesh{
 
     public void makeVertex(){
+        Set<Integer> neighbourConnectionsPropertyList = new HashSet<>();
         for(int x = 0; x < width; x += square_size) {
             for(int y = 0; y < height; y += square_size) {
                 // Here I replicate a square with vertices
-                Vertex v1 = Vertex.newBuilder().setX((double) x).setY((double) y).build();      // Top left
-                Vertex v2 = Vertex.newBuilder().setX((double) x + square_size).setY((double) y).build();    // Top Right
-                Vertex v3 = Vertex.newBuilder().setX((double) x).setY((double) y + square_size).build();    // Bottom Left
-                Vertex v4 = Vertex.newBuilder().setX((double) x+square_size).setY((double) y + square_size).build();    // Bottom Right
+                Vertex v1 = Vertex.newBuilder().setX(Double.parseDouble(precision.format(x))).setY(Double.parseDouble(precision.format(y))).build();      // Top left
+                Vertex v2 = Vertex.newBuilder().setX(Double.parseDouble(precision.format(x + square_size))).setY(Double.parseDouble(precision.format(y))).build();    // Top Right
+                Vertex v3 = Vertex.newBuilder().setX(Double.parseDouble(precision.format(x))).setY(Double.parseDouble(precision.format(y + square_size))).build();    // Bottom Left
+                Vertex v4 = Vertex.newBuilder().setX( Double.parseDouble(precision.format(x+square_size))).setY(Double.parseDouble(precision.format(y + square_size))).build();    // Bottom Right
                 // This list is made so I can conveniently run through each vertex in the square
                 List<Vertex> square = new ArrayList<Vertex>(Arrays.asList(v1,v2,v3,v4));
                 for (Vertex v : square){
@@ -85,28 +86,18 @@ public class MeshGen extends GeneralMesh{
 //            System.out.println(poly);
             for (Integer i : poly.getNeighborIdxsList()){
                 Segment neighbourConnection = Segment.newBuilder().setV1Idx(poly.getCentroidIdx()).setV2Idx(polygonList.get(i).getCentroidIdx()).build();
-
-                //colour it
-                int red = 169;
-                int green = 169;
-                int blue = 169;
-                String colorCode = red + "," + green + "," + blue;
-                Property color = Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue).build();
-                Segment colored = Segment.newBuilder(neighbourConnection).addProperties(color).build();
-
-                segmentsWithColors.add(colored);
                 System.out.println(neighbourConnection);
                 if (!segmentList.contains(neighbourConnection)){
                     segmentList.add(neighbourConnection);
                     neighbourConnectionList.add(neighbourConnection);
                 }
-                neighbourConnectionsList.add(segmentList.indexOf(neighbourConnection));
+                neighbourConnectionsPropertyList.add(segmentList.indexOf(neighbourConnection));
             }
 
-            Property neighbourConnections = Property.newBuilder().setKey("neighbourConnections").setValue(String.valueOf(neighbourConnectionsList)).build();
+            Property neighbourConnections = Property.newBuilder().setKey("neighbourConnections").setValue(String.valueOf(neighbourConnectionsPropertyList)).build();
             Polygon polyNew = Polygon.newBuilder(poly).addProperties(neighbourConnections).build();
             polygonList.set(polygonList.indexOf(poly), polyNew);
-            neighbourConnectionsList.clear();
+            neighbourConnectionsPropertyList.clear();
         }
         System.out.println(polygonList);
 
@@ -137,11 +128,13 @@ public class MeshGen extends GeneralMesh{
         Vertex vertex3 = vertexList.get(v3Id);
 
 
-        double centroidIdx = (double)(vertex1.getX()+vertex2.getX())/2;
-        double centroidIdy = (double)(vertex1.getY()+vertex3.getY())/2;
+        double centroidIdx = Double.parseDouble(precision.format((vertex1.getX()+vertex2.getX())/2));
+        double centroidIdy = Double.parseDouble(precision.format((vertex1.getY()+vertex3.getY())/2));
+        System.out.println(centroidIdx);
+        System.out.println(centroidIdy);
         Vertex centroid = Vertex.newBuilder().setX(centroidIdx).setY(centroidIdy).build();
         vertexList.add(centroid);
-        centriodList.add(centroid);
+        centroidList.add(centroid);
         Property vertices = Property.newBuilder().setKey("vertices").setValue(v1Id + "," + v2Id + "," + v3Id + "," + v4Id).build();
         // Creates a polygon object, adds the list of integers of segments to the object
         Polygon poly = Polygon.newBuilder().addAllSegmentIdxs(squarelist).setCentroidIdx(vertexList.indexOf(centroid)).addProperties(vertices).build();
@@ -159,7 +152,7 @@ public class MeshGen extends GeneralMesh{
         //not finished
         if (Mode.equals("-X")) {
             for (Vertex v : vertexList){
-                if (centriodList.contains(v)){
+                if (centroidList.contains(v)){
                     int red = 255;
                     int green = 0;
                     int blue = 0;
@@ -199,7 +192,7 @@ public class MeshGen extends GeneralMesh{
 
             Random bag = new Random();
             for (Vertex v : vertexList) {
-                if (!centriodList.contains(v)){
+                if (!centroidList.contains(v)){
                     int red = bag.nextInt(255);
                     int green = bag.nextInt(255);
                     int blue = bag.nextInt(255);

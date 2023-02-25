@@ -86,15 +86,7 @@ public class MeshGen extends GeneralMesh{
             for (Integer i : poly.getNeighborIdxsList()){
                 Segment neighbourConnection = Segment.newBuilder().setV1Idx(poly.getCentroidIdx()).setV2Idx(polygonList.get(i).getCentroidIdx()).build();
 
-                //colour it
-                int red = 169;
-                int green = 169;
-                int blue = 169;
-                String colorCode = red + "," + green + "," + blue;
-                Property color = Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue).build();
-                Segment colored = Segment.newBuilder(neighbourConnection).addProperties(color).build();
 
-                segmentsWithColors.add(colored);
                 System.out.println(neighbourConnection);
                 if (!segmentList.contains(neighbourConnection)){
                     segmentList.add(neighbourConnection);
@@ -149,6 +141,25 @@ public class MeshGen extends GeneralMesh{
         System.out.println(poly);
     }
 
+    //user gets to decide the number of polygons. Will be taken from command line
+    public void irregularMesh(int numPoly){
+        //Create points
+        for (int i = 0; i < numPoly; i++){
+            Random xVal = new Random();
+            Random yVal = new Random();
+            int x = xVal.nextInt(width);
+            int y = yVal.nextInt(height);
+            Vertex site = Vertex.newBuilder().setX((double) x).setY((double) y).build();
+            if (!vertices.contains(site)){     // add to set if not already in it
+                vertices.add(site);            // The set will prevent duplicates
+                vertexList.add(site);          //add to iterable ArrayList
+            }
+        }
+
+
+
+    }
+
 
 
     public Mesh generate(String Mode) {
@@ -156,7 +167,7 @@ public class MeshGen extends GeneralMesh{
         // This will make the vertexes
         makeVertex();
 
-        //not finished
+
         if (Mode.equals("true")) {
             for (Vertex v : vertexList){
                 if (centriodList.contains(v)){

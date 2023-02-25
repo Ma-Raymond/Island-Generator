@@ -69,7 +69,7 @@ When you develop features and enrich the product, remember that you have first t
 | F1  | Segment Colour Added    | Gayan Athukorala | Feb 9  | Feb 9  | Done   |
 | F2  | Segment Visualizer      | Rhea Gokhale     | Feb 9  | Feb 9  | Done   |
 | F3  | Creating a mesh ADT     | Raymond Ma       | Feb 16 | Feb 16 | Done   |
-| F4  | Producing full meshes   | Raymond Ma       | Feb 17 | Feb 22 | Done   |
+| F4  | Producing full meshes   | Gayan Athukorala | Feb 17 | Feb 22 | Done   |
 | F5  | Implementing Debug Mode | Gayan + Rhea     | Feb 22 | Feb 24 | Done   |
 
 

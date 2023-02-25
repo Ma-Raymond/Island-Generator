@@ -86,6 +86,11 @@ public class MeshGen extends GeneralMesh{
 //            System.out.println(poly);
             for (Integer i : poly.getNeighborIdxsList()){
                 Segment neighbourConnection = Segment.newBuilder().setV1Idx(poly.getCentroidIdx()).setV2Idx(polygonList.get(i).getCentroidIdx()).build();
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 31783b5cb7c5323ddf797c1e0a0f19b978f0ddd8
                 System.out.println(neighbourConnection);
                 if (!segmentList.contains(neighbourConnection)){
                     segmentList.add(neighbourConnection);
@@ -142,6 +147,25 @@ public class MeshGen extends GeneralMesh{
         System.out.println(poly);
     }
 
+    //user gets to decide the number of polygons. Will be taken from command line
+    public void irregularMesh(int numPoly){
+        //Create points
+        for (int i = 0; i < numPoly; i++){
+            Random xVal = new Random();
+            Random yVal = new Random();
+            int x = xVal.nextInt(width);
+            int y = yVal.nextInt(height);
+            Vertex site = Vertex.newBuilder().setX((double) x).setY((double) y).build();
+            if (!vertices.contains(site)){     // add to set if not already in it
+                vertices.add(site);            // The set will prevent duplicates
+                vertexList.add(site);          //add to iterable ArrayList
+            }
+        }
+
+
+
+    }
+
 
 
     public Mesh generate(String Mode) {
@@ -149,8 +173,8 @@ public class MeshGen extends GeneralMesh{
         // This will make the vertexes
         makeVertex();
 
-        //not finished
-        if (Mode.equals("-X")) {
+
+        if (Mode.equals("true")) {
             for (Vertex v : vertexList){
                 if (centroidList.contains(v)){
                     int red = 255;

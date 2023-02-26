@@ -20,7 +20,7 @@ public class Main {
 
         options.addOption("X", false, "Toggles Debug Mode");
 
-        String Mode = "wowowowowowowow";
+        String Mode = "";
         try {
             CommandLine commandline = parser.parse(options, args);
             if (commandline.hasOption("X")){
@@ -29,18 +29,23 @@ public class Main {
 
         }
         catch (ParseException e) {
-            System.out.println("IT DIDNT WORK!!!!!!!!!");
+            System.out.println("Error Occured within Parser");
         }
 
-
+        // Step 1 -----------
         //        DotGen generator = new DotGen();
         //        Mesh myMesh = generator.generate();
 
+        // Step 2 ----------- OOP Approach w/ Neighbours and Centroids and Debug Mode
+        //         MeshGen generator = new MeshGen();
+        //        Mesh myMesh = generator.generate(Mode);
+
+        // Step 3 -----------
         IrregMeshGen gen = new IrregMeshGen();
         Mesh myMesh = gen.generate();
+
         MeshFactory factory = new MeshFactory();
         factory.write(myMesh, args[0]);
-        System.out.println(Mode);
     }
 
 }

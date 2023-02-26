@@ -14,6 +14,7 @@ import java.text.DecimalFormat;
 import java.util.*;
 import java.util.List;
 
+// This is Part 3, stilling using the object-oriented approach but with irregular mesh
 public class IrregMeshGen extends GeneralMesh {
     //THESE DATASETS ARE FOR IRREGULAR MESH
     List<Vertex> siteList = new ArrayList<Vertex>();
@@ -27,9 +28,8 @@ public class IrregMeshGen extends GeneralMesh {
         voronoi.setTolerance(0.01); //may be redundant
 
         Random Val = new Random();
-        Coordinate Coord = new Coordinate();
 
-        //ARBITRARY VALUE TO BE CHANGED
+        //ARBITRARY VALUE TO BE CHANGED HOW MANY POINTS TO PUT
         int points = 100;
         List<Coordinate> coords = new ArrayList<Coordinate>();
 
@@ -38,15 +38,12 @@ public class IrregMeshGen extends GeneralMesh {
             int yCoord = Val.nextInt(HEIGHT);
 
             System.out.println("Point Coordinates: (" + xCoord + ", " + yCoord + ")");
-            Coord.setX(xCoord);
-            Coord.setY(yCoord);
-
             Vertex newSite = Vertex.newBuilder().setX(xCoord).setY(yCoord).build();
+
             //ADD SITES TO COORDINATE LIST FOR VORONOI BUILDER
             coords.add(new Coordinate(xCoord,yCoord));
             //ADD SITES TO VERTEX LIST TO BE ABLE TO VISUALIZE
             siteList.add(newSite);
-//            vertexList.add(newSite);
         }
 
         voronoi.setSites(coords);
@@ -54,12 +51,8 @@ public class IrregMeshGen extends GeneralMesh {
 
         //allPolygons is like a finished puzzle, it contains all polygons
         Geometry allPolygons = voronoi.getDiagram(makePolygons);
-        Polygonizer polygonizer = new Polygonizer();
-        System.out.println("WTFFF"+allPolygons.getNumGeometries());
 
         int numPoly = allPolygons.getNumGeometries();
-        System.out.println(numPoly);
-
         List<Coordinate[]> allPolygonVertices = new ArrayList<>();
         for (int i = 0; i < numPoly; i++) { //will get vertices list of each individual polygon
             Geometry poly = allPolygons.getGeometryN(i);
@@ -70,8 +63,6 @@ public class IrregMeshGen extends GeneralMesh {
             centroidList.add(centroid);
             vertexList.add(centroid);
         }
-
-        System.out.println("HII" +allPolygonVertices.size());
 
         for (Coordinate[] vertice : allPolygonVertices) {
             List<Integer> polySegments = new ArrayList<>();

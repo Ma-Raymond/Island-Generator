@@ -20,9 +20,8 @@ import java.util.List;
 
 abstract class GeneralMesh {
     //THESE DATASETS ARE FOR REGULAR MESH
-    public final int WIDTH = 500;
-    public final int HEIGHT = 500;
-    public final int SQUARE_SIZE = 20;
+    public int WIDTH = 500;
+    public int HEIGHT = 500;
     Set<Vertex> vertices = new HashSet<>();
     Set<Segment> segments = new HashSet<>();
 
@@ -36,7 +35,7 @@ abstract class GeneralMesh {
 }
 
 public class MeshGen extends GeneralMesh{
-
+    public final int SQUARE_SIZE = 20;
     public void makeVertex(){
         Set<Integer> neighbourConnectionsPropertyList = new HashSet<>();
         for(int x = 0; x < WIDTH; x += SQUARE_SIZE) {

@@ -1,0 +1,10 @@
+@startuml
+class GraphicRenderer {
+    -int THICKNESS
+    +void render(Mesh aMesh, Graphics2D canvas)
+    -Color extractColor(List<Property> properties)
+}
+@enduml
+
+To run the plant thing do this:
+java -jar plantuml.jar visualizerDiagram.txt

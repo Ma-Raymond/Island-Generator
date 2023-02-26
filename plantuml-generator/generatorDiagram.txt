@@ -2,7 +2,6 @@
 abstract class GeneralMesh {
     +int WIDTH
     +int HEIGHT
-    +int SQUARE_SIZE
     +DecimalFormat precision
 }
 Vertex "1..* \n +vertices \n +centroidList \n +vertexList" <--  GeneralMesh
@@ -13,6 +12,7 @@ Segment "1..* \n +segments \n +segmentList \n +neighbourConnectionList" <-- Gene
 
 
 class MeshGen {
+    +int SQUARE_SIZE
     +Set<Integer> neighboursList
 
     +void makeVertex()
@@ -37,7 +37,4 @@ GeneralMesh <|-- MeshGen
 @enduml
 
 To run the plant thing do this:
-java -jar plantuml.jar classDiagram.txt
-
-Vertex "1..* \n +vertices" <--  GeneralMesh
-Vertex "1..* \n +vertexList" <--  GeneralMesh
+java -jar plantuml.jar generatorDiagram.txt

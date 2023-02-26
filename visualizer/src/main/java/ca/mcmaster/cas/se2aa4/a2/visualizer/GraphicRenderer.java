@@ -24,6 +24,8 @@ public class GraphicRenderer {
         Stroke stroke = new BasicStroke(0.5f);
         canvas.setStroke(stroke);
 
+
+
         for (Segment s: aMesh.getSegmentsList()){
 
             Vertex vertex = aMesh.getVerticesList().get(s.getV1Idx());

@@ -22,7 +22,7 @@ public class Main {
             max_y = (Double.compare(max_y, v.getY()) < 0? v.getY(): max_y);
         }
         // Creating the Canvas to draw the mesh
-        Graphics2D canvas = SVGCanvas.build((int) Math.ceil(max_x), (int) Math.ceil(max_y));
+        Graphics2D canvas = SVGCanvas.build((int) 500, (int) 500);
         GraphicRenderer renderer = new GraphicRenderer();
         // Painting the mesh on the canvas
         renderer.render(aMesh, canvas);

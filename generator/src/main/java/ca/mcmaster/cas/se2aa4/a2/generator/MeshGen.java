@@ -6,6 +6,14 @@ import ca.mcmaster.cas.se2aa4.a2.io.Structs.Mesh;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.*;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Polygon;
 
+//FROM JTS
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryCollection;
+import org.locationtech.jts.geom.GeometryFactory;
+//import org.locationtech.jts.geom.Polygon;
+import org.locationtech.jts.triangulate.VoronoiDiagramBuilder;
+
 import java.awt.*;
 
 import java.util.*;
@@ -17,6 +25,8 @@ abstract class GeneralMesh {
     public final int width = 500;
     public final int height = 500;
     public final int square_size = 20;
+
+    //THESE DATASETS ARE FOR REGULAR MESH
     Set<Vertex> vertices = new HashSet<>();
     Set<Segment> segments = new HashSet<>();
 
@@ -28,6 +38,10 @@ abstract class GeneralMesh {
     List<Segment> neighbourConnectionList = new ArrayList<>();
     Set<Segment> segmentsWithColors = new HashSet<>();
     Set<Integer> neighbourConnectionsList = new HashSet<>();
+
+    //THESE DATASETS ARE FOR IRREGULAR MESH
+    List<Coordinate> coords = new ArrayList<>();
+    List<Polygon> voronoiPolygons = new ArrayList<>();
 }
 public class MeshGen extends GeneralMesh{
 
@@ -142,23 +156,37 @@ public class MeshGen extends GeneralMesh{
     }
 
     //user gets to decide the number of polygons. Will be taken from command line
-    public void irregularMesh(int numPoly){
-        //Create points
-        for (int i = 0; i < numPoly; i++){
-            Random xVal = new Random();
-            Random yVal = new Random();
-            int x = xVal.nextInt(width);
-            int y = yVal.nextInt(height);
-            Vertex site = Vertex.newBuilder().setX((double) x).setY((double) y).build();
-            if (!vertices.contains(site)){     // add to set if not already in it
-                vertices.add(site);            // The set will prevent duplicates
-                vertexList.add(site);          //add to iterable ArrayList
-            }
+    public void irregularMesh(int numPoly) {
+        GeometryFactory voronoi = new GeometryFactory();
+        Random xVal = new Random();
+        Random yVal = new Random();
+        //GIVE ARBITRARY NUMBER OF SITES FOR NOW numPoly WILL BE USED LATER
+        int points = 100;
+
+        for (int i = 1; i <= points; i++) {
+            int xCoord = xVal.nextInt(width);
+            int yCoord = yVal.nextInt(height);
+
+            System.out.println("Point Coordinates: (" + xCoord + ", " + yCoord + ")");
+            Coordinate newPoint = new Coordinate(xCoord, yCoord);
+            Vertex newSite = Vertex.newBuilder().setX(xCoord).setY(yCoord).build();
+            //ADD SITES TO COORDINATE LIST FOR VORONOI BUILDER
+            coords.add(newPoint);
+            //ADD SITES TO VERTEX LIST TO BE ABLE TO VISUALIZE
+            vertexList.add(newSite);
         }
 
+        VoronoiDiagramBuilder newDiagram = new VoronoiDiagramBuilder();
+        newDiagram.setSites(coords);
+
+        Geometry makePolygons = newDiagram.getDiagram(voronoi);
+                
+            }
 
 
-    }
+
+
+
 
 
 

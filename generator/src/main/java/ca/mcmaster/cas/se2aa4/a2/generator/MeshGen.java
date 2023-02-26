@@ -19,11 +19,6 @@ import java.util.List;
 
 
 abstract class GeneralMesh {
-    Mesh myMesh;
-    public final int width = 500;
-    public final int height = 500;
-    public final int square_size = 20;
-
     //THESE DATASETS ARE FOR REGULAR MESH
     public final int WIDTH = 500;
     public final int HEIGHT = 500;

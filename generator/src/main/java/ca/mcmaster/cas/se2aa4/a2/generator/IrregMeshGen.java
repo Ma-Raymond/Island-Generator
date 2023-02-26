@@ -31,8 +31,8 @@ public class IrregMeshGen extends GeneralMesh {
         int points = 100;
 
         for (int i = 1; i <= points; i++) {
-            int xCoord = xVal.nextInt(width);
-            int yCoord = yVal.nextInt(height);
+            int xCoord = xVal.nextInt(WIDTH);
+            int yCoord = yVal.nextInt(HEIGHT);
 
             System.out.println("Point Coordinates: (" + xCoord + ", " + yCoord + ")");
             Coordinate newPoint = new Coordinate(xCoord, yCoord);

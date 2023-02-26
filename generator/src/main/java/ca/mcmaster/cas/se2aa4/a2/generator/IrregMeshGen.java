@@ -101,10 +101,7 @@ public class IrregMeshGen extends GeneralMesh {
                     polySegments.add(segmentList.indexOf(s));
                 }
             }
-//            Polygon poly = Polygon.newBuilder().addAllSegmentIdxs(polySegments).build();
-//            polygonList.add(poly);
         }
-
     }
 
     public Mesh generate() {

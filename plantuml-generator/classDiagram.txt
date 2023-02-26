@@ -5,17 +5,11 @@ abstract class GeneralMesh {
     +int SQUARE_SIZE
     +DecimalFormat precision
 }
-Vertex "1..* \n +vertices" <--  GeneralMesh
-Segment "1..* \n +segments" <-- GeneralMesh
-
-Vertex "1..* \n +vertexList" <--  GeneralMesh
-Segment "1..* \n +segmentList" <-- GeneralMesh
+Vertex "1..* \n +vertices \n +centroidList \n +vertexList" <--  GeneralMesh
 
 Polygon "1..* \n +polygonList" <--  GeneralMesh
 
-Segment "1..* \n +neighbourConnectionList" <-- GeneralMesh
-
-Vertex "1..* \n +centroidList" <--  GeneralMesh
+Segment "1..* \n +segments \n +segmentList \n +neighbourConnectionList" <-- GeneralMesh
 
 
 class MeshGen {
@@ -44,3 +38,6 @@ GeneralMesh <|-- MeshGen
 
 To run the plant thing do this:
 java -jar plantuml.jar classDiagram.txt
+
+Vertex "1..* \n +vertices" <--  GeneralMesh
+Vertex "1..* \n +vertexList" <--  GeneralMesh

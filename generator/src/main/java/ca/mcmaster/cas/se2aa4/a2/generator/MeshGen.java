@@ -1,7 +1,4 @@
 package ca.mcmaster.cas.se2aa4.a2.generator;
-import ca.mcmaster.cas.se2aa4.a2.generator.DotGen;
-import ca.mcmaster.cas.se2aa4.a2.io.MeshFactory;
-import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Mesh;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.*;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Polygon;
@@ -16,43 +13,55 @@ import org.locationtech.jts.triangulate.VoronoiDiagramBuilder;
 
 import java.awt.*;
 
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.List;
 
 
 abstract class GeneralMesh {
     Mesh myMesh;
+<<<<<<< HEAD
     public final int width = 500;
     public final int height = 500;
     public final int square_size = 20;
 
     //THESE DATASETS ARE FOR REGULAR MESH
+=======
+    public final int WIDTH = 500;
+    public final int HEIGHT = 500;
+    public final int SQUARE_SIZE = 20;
+>>>>>>> 5030750c06e939db1d7091a6c19d81dc154e4479
     Set<Vertex> vertices = new HashSet<>();
     Set<Segment> segments = new HashSet<>();
 
     List<Vertex> vertexList = new ArrayList<Vertex>();
     List<Segment> segmentList = new ArrayList<Segment>();
     List<Polygon> polygonList = new ArrayList<Polygon>();
-    List<Vertex> verticesWithColors = new ArrayList<>();
-    List<Vertex> centriodList = new ArrayList<>();
+    List<Vertex> centroidList = new ArrayList<>();
     List<Segment> neighbourConnectionList = new ArrayList<>();
+<<<<<<< HEAD
     Set<Segment> segmentsWithColors = new HashSet<>();
     Set<Integer> neighbourConnectionsList = new HashSet<>();
 
     //THESE DATASETS ARE FOR IRREGULAR MESH
     List<Coordinate> coords = new ArrayList<>();
     List<Polygon> voronoiPolygons = new ArrayList<>();
+=======
+    DecimalFormat precision  = new DecimalFormat("0.00");
+>>>>>>> 5030750c06e939db1d7091a6c19d81dc154e4479
 }
+
 public class MeshGen extends GeneralMesh{
 
     public void makeVertex(){
-        for(int x = 0; x < width; x += square_size) {
-            for(int y = 0; y < height; y += square_size) {
+        Set<Integer> neighbourConnectionsPropertyList = new HashSet<>();
+        for(int x = 0; x < WIDTH; x += SQUARE_SIZE) {
+            for(int y = 0; y < HEIGHT; y += SQUARE_SIZE) {
                 // Here I replicate a square with vertices
-                Vertex v1 = Vertex.newBuilder().setX((double) x).setY((double) y).build();      // Top left
-                Vertex v2 = Vertex.newBuilder().setX((double) x + square_size).setY((double) y).build();    // Top Right
-                Vertex v3 = Vertex.newBuilder().setX((double) x).setY((double) y + square_size).build();    // Bottom Left
-                Vertex v4 = Vertex.newBuilder().setX((double) x+square_size).setY((double) y + square_size).build();    // Bottom Right
+                Vertex v1 = Vertex.newBuilder().setX(Double.parseDouble(precision.format(x))).setY(Double.parseDouble(precision.format(y))).build();      // Top left
+                Vertex v2 = Vertex.newBuilder().setX(Double.parseDouble(precision.format(x + SQUARE_SIZE))).setY(Double.parseDouble(precision.format(y))).build();    // Top Right
+                Vertex v3 = Vertex.newBuilder().setX(Double.parseDouble(precision.format(x))).setY(Double.parseDouble(precision.format(y + SQUARE_SIZE))).build();    // Bottom Left
+                Vertex v4 = Vertex.newBuilder().setX( Double.parseDouble(precision.format(x+ SQUARE_SIZE))).setY(Double.parseDouble(precision.format(y + SQUARE_SIZE))).build();    // Bottom Right
                 // This list is made so I can conveniently run through each vertex in the square
                 List<Vertex> square = new ArrayList<Vertex>(Arrays.asList(v1,v2,v3,v4));
                 for (Vertex v : square){
@@ -100,19 +109,18 @@ public class MeshGen extends GeneralMesh{
             for (Integer i : poly.getNeighborIdxsList()){
                 Segment neighbourConnection = Segment.newBuilder().setV1Idx(poly.getCentroidIdx()).setV2Idx(polygonList.get(i).getCentroidIdx()).build();
 
-
                 System.out.println(neighbourConnection);
                 if (!segmentList.contains(neighbourConnection)){
                     segmentList.add(neighbourConnection);
                     neighbourConnectionList.add(neighbourConnection);
                 }
-                neighbourConnectionsList.add(segmentList.indexOf(neighbourConnection));
+                neighbourConnectionsPropertyList.add(segmentList.indexOf(neighbourConnection));
             }
 
-            Property neighbourConnections = Property.newBuilder().setKey("neighbourConnections").setValue(String.valueOf(neighbourConnectionsList)).build();
+            Property neighbourConnections = Property.newBuilder().setKey("neighbourConnections").setValue(String.valueOf(neighbourConnectionsPropertyList)).build();
             Polygon polyNew = Polygon.newBuilder(poly).addProperties(neighbourConnections).build();
             polygonList.set(polygonList.indexOf(poly), polyNew);
-            neighbourConnectionsList.clear();
+            neighbourConnectionsPropertyList.clear();
         }
         System.out.println(polygonList);
 
@@ -143,11 +151,13 @@ public class MeshGen extends GeneralMesh{
         Vertex vertex3 = vertexList.get(v3Id);
 
 
-        double centroidIdx = (double)(vertex1.getX()+vertex2.getX())/2;
-        double centroidIdy = (double)(vertex1.getY()+vertex3.getY())/2;
+        double centroidIdx = Double.parseDouble(precision.format((vertex1.getX()+vertex2.getX())/2));
+        double centroidIdy = Double.parseDouble(precision.format((vertex1.getY()+vertex3.getY())/2));
+        System.out.println(centroidIdx);
+        System.out.println(centroidIdy);
         Vertex centroid = Vertex.newBuilder().setX(centroidIdx).setY(centroidIdy).build();
         vertexList.add(centroid);
-        centriodList.add(centroid);
+        centroidList.add(centroid);
         Property vertices = Property.newBuilder().setKey("vertices").setValue(v1Id + "," + v2Id + "," + v3Id + "," + v4Id).build();
         // Creates a polygon object, adds the list of integers of segments to the object
         Polygon poly = Polygon.newBuilder().addAllSegmentIdxs(squarelist).setCentroidIdx(vertexList.indexOf(centroid)).addProperties(vertices).build();
@@ -156,6 +166,7 @@ public class MeshGen extends GeneralMesh{
     }
 
     //user gets to decide the number of polygons. Will be taken from command line
+<<<<<<< HEAD
     public void irregularMesh(int numPoly) {
         GeometryFactory voronoi = new GeometryFactory();
         Random xVal = new Random();
@@ -174,6 +185,20 @@ public class MeshGen extends GeneralMesh{
             coords.add(newPoint);
             //ADD SITES TO VERTEX LIST TO BE ABLE TO VISUALIZE
             vertexList.add(newSite);
+=======
+    public void irregularMesh(int numPoly){
+        //Create points
+        for (int i = 0; i < numPoly; i++){
+            Random xVal = new Random();
+            Random yVal = new Random();
+            int x = xVal.nextInt(WIDTH);
+            int y = yVal.nextInt(HEIGHT);
+            Vertex site = Vertex.newBuilder().setX((double) x).setY((double) y).build();
+            if (!vertices.contains(site)){     // add to set if not already in it
+                vertices.add(site);            // The set will prevent duplicates
+                vertexList.add(site);          //add to iterable ArrayList
+            }
+>>>>>>> 5030750c06e939db1d7091a6c19d81dc154e4479
         }
 
         VoronoiDiagramBuilder newDiagram = new VoronoiDiagramBuilder();
@@ -198,7 +223,7 @@ public class MeshGen extends GeneralMesh{
 
         if (Mode.equals("true")) {
             for (Vertex v : vertexList){
-                if (centriodList.contains(v)){
+                if (centroidList.contains(v)){
                     int red = 255;
                     int green = 0;
                     int blue = 0;
@@ -238,7 +263,7 @@ public class MeshGen extends GeneralMesh{
 
             Random bag = new Random();
             for (Vertex v : vertexList) {
-                if (!centriodList.contains(v)){
+                if (!centroidList.contains(v)){
                     int red = bag.nextInt(255);
                     int green = bag.nextInt(255);
                     int blue = bag.nextInt(255);
@@ -271,7 +296,7 @@ public class MeshGen extends GeneralMesh{
 
     }
 
-    public void colorVertex(Vertex vertex, int red, int green, int blue, int alpha){
+    private void colorVertex(Vertex vertex, int red, int green, int blue, int alpha){
         Random bag = new Random();
         String colorCode = red + "," + green + "," + blue + "," + alpha;
         Property color = Property.newBuilder().setKey("rgb_color").setValue(colorCode).build();
@@ -280,7 +305,7 @@ public class MeshGen extends GeneralMesh{
 
     }
 
-    public void colorSegment(Segment seg, int red, int green, int blue, int alpha){
+    private void colorSegment(Segment seg, int red, int green, int blue, int alpha){
         Property color = Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue+ "," + alpha).build();
         Segment colored = Segment.newBuilder(seg).addProperties(color).build();
         segmentList.set(segmentList.indexOf(seg), colored);

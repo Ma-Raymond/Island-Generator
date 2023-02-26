@@ -1,7 +1,4 @@
 package ca.mcmaster.cas.se2aa4.a2.generator;
-import ca.mcmaster.cas.se2aa4.a2.generator.DotGen;
-import ca.mcmaster.cas.se2aa4.a2.io.MeshFactory;
-import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Mesh;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.*;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Polygon;
@@ -15,9 +12,9 @@ import java.util.List;
 
 abstract class GeneralMesh {
     Mesh myMesh;
-    public final int width = 500;
-    public final int height = 500;
-    public final int square_size = 20;
+    public final int WIDTH = 500;
+    public final int HEIGHT = 500;
+    public final int SQUARE_SIZE = 20;
     Set<Vertex> vertices = new HashSet<>();
     Set<Segment> segments = new HashSet<>();
 
@@ -33,13 +30,13 @@ public class MeshGen extends GeneralMesh{
 
     public void makeVertex(){
         Set<Integer> neighbourConnectionsPropertyList = new HashSet<>();
-        for(int x = 0; x < width; x += square_size) {
-            for(int y = 0; y < height; y += square_size) {
+        for(int x = 0; x < WIDTH; x += SQUARE_SIZE) {
+            for(int y = 0; y < HEIGHT; y += SQUARE_SIZE) {
                 // Here I replicate a square with vertices
                 Vertex v1 = Vertex.newBuilder().setX(Double.parseDouble(precision.format(x))).setY(Double.parseDouble(precision.format(y))).build();      // Top left
-                Vertex v2 = Vertex.newBuilder().setX(Double.parseDouble(precision.format(x + square_size))).setY(Double.parseDouble(precision.format(y))).build();    // Top Right
-                Vertex v3 = Vertex.newBuilder().setX(Double.parseDouble(precision.format(x))).setY(Double.parseDouble(precision.format(y + square_size))).build();    // Bottom Left
-                Vertex v4 = Vertex.newBuilder().setX( Double.parseDouble(precision.format(x+square_size))).setY(Double.parseDouble(precision.format(y + square_size))).build();    // Bottom Right
+                Vertex v2 = Vertex.newBuilder().setX(Double.parseDouble(precision.format(x + SQUARE_SIZE))).setY(Double.parseDouble(precision.format(y))).build();    // Top Right
+                Vertex v3 = Vertex.newBuilder().setX(Double.parseDouble(precision.format(x))).setY(Double.parseDouble(precision.format(y + SQUARE_SIZE))).build();    // Bottom Left
+                Vertex v4 = Vertex.newBuilder().setX( Double.parseDouble(precision.format(x+ SQUARE_SIZE))).setY(Double.parseDouble(precision.format(y + SQUARE_SIZE))).build();    // Bottom Right
                 // This list is made so I can conveniently run through each vertex in the square
                 List<Vertex> square = new ArrayList<Vertex>(Arrays.asList(v1,v2,v3,v4));
                 for (Vertex v : square){
@@ -86,11 +83,7 @@ public class MeshGen extends GeneralMesh{
 //            System.out.println(poly);
             for (Integer i : poly.getNeighborIdxsList()){
                 Segment neighbourConnection = Segment.newBuilder().setV1Idx(poly.getCentroidIdx()).setV2Idx(polygonList.get(i).getCentroidIdx()).build();
-<<<<<<< HEAD
-=======
 
-
->>>>>>> 31783b5cb7c5323ddf797c1e0a0f19b978f0ddd8
                 System.out.println(neighbourConnection);
                 if (!segmentList.contains(neighbourConnection)){
                     segmentList.add(neighbourConnection);
@@ -153,8 +146,8 @@ public class MeshGen extends GeneralMesh{
         for (int i = 0; i < numPoly; i++){
             Random xVal = new Random();
             Random yVal = new Random();
-            int x = xVal.nextInt(width);
-            int y = yVal.nextInt(height);
+            int x = xVal.nextInt(WIDTH);
+            int y = yVal.nextInt(HEIGHT);
             Vertex site = Vertex.newBuilder().setX((double) x).setY((double) y).build();
             if (!vertices.contains(site)){     // add to set if not already in it
                 vertices.add(site);            // The set will prevent duplicates
@@ -249,7 +242,7 @@ public class MeshGen extends GeneralMesh{
 
     }
 
-    public void colorVertex(Vertex vertex, int red, int green, int blue, int alpha){
+    private void colorVertex(Vertex vertex, int red, int green, int blue, int alpha){
         Random bag = new Random();
         String colorCode = red + "," + green + "," + blue + "," + alpha;
         Property color = Property.newBuilder().setKey("rgb_color").setValue(colorCode).build();
@@ -258,7 +251,7 @@ public class MeshGen extends GeneralMesh{
 
     }
 
-    public void colorSegment(Segment seg, int red, int green, int blue, int alpha){
+    private void colorSegment(Segment seg, int red, int green, int blue, int alpha){
         Property color = Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue+ "," + alpha).build();
         Segment colored = Segment.newBuilder(seg).addProperties(color).build();
         segmentList.set(segmentList.indexOf(seg), colored);

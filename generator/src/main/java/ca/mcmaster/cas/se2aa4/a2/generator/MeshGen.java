@@ -36,8 +36,6 @@ abstract class GeneralMesh {
     List<Polygon> polygonList = new ArrayList<Polygon>();
     List<Vertex> centroidList = new ArrayList<>();
     List<Segment> neighbourConnectionList = new ArrayList<>();
-    Set<Segment> segmentsWithColors = new HashSet<>();
-    Set<Integer> neighbourConnectionsList = new HashSet<>();
 
     DecimalFormat precision  = new DecimalFormat("0.00");
 }

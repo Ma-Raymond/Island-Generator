@@ -15,34 +15,12 @@ import java.text.DecimalFormat;
 import java.util.*;
 import java.util.List;
 
-abstract class IrregMesh {
-    Mesh myMesh;
-    public final int width = 500;
-    public final int height = 500;
-    public final int square_size = 20;
-
-    //THESE DATASETS ARE FOR REGULAR MESH
-    public final int WIDTH = 500;
-    public final int HEIGHT = 500;
-    public final int SQUARE_SIZE = 20;
-    Set<Vertex> vertices = new HashSet<>();
-    Set<Segment> segments = new HashSet<>();
-
-    List<Vertex> vertexList = new ArrayList<Vertex>();
-    List<Segment> segmentList = new ArrayList<Segment>();
-    List<Polygon> polygonList = new ArrayList<Polygon>();
-    List<Vertex> centroidList = new ArrayList<>();
-    List<Segment> neighbourConnectionList = new ArrayList<>();
-    Set<Segment> segmentsWithColors = new HashSet<>();
-    Set<Integer> neighbourConnectionsList = new HashSet<>();
-
+public class IrregMeshGen extends GeneralMesh {
     //THESE DATASETS ARE FOR IRREGULAR MESH
     List<Coordinate> coords = new ArrayList<>();
     List<Polygon> voronoiPolygons = new ArrayList<>();
     DecimalFormat precision  = new DecimalFormat("0.00");
-}
 
-public class IrregMeshGen extends IrregMesh{
 
     //user gets to decide the number of polygons. Will be taken from command line
     public void irregularMesh(int numPoly) {

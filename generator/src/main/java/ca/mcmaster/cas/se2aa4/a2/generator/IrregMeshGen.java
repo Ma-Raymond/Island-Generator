@@ -5,6 +5,7 @@ import ca.mcmaster.cas.se2aa4.a2.generator.MeshGen.*;
 
 import org.locationtech.jts.geom.*;
 //import org.locationtech.jts.geom.Polygon;
+import org.locationtech.jts.operation.polygonize.Polygonizer;
 import org.locationtech.jts.triangulate.VoronoiDiagramBuilder;
 
 import java.awt.*;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class IrregMeshGen extends GeneralMesh {
     //THESE DATASETS ARE FOR IRREGULAR MESH
-    List<Coordinate> coords = new ArrayList<>();
+    List<Coordinate> coords = new ArrayList<Coordinate>();
     List<Coordinate[]> allPolygonVertices = new ArrayList<>();
     Set<Vertex> verticesSet = new HashSet<>();
     Set<Segment> segmentsSet = new HashSet<>();
@@ -30,10 +31,10 @@ public class IrregMeshGen extends GeneralMesh {
     public void IrregularMesh() {
         VoronoiDiagramBuilder voronoi = new VoronoiDiagramBuilder();
         Envelope env = new Envelope(new Coordinate(0, 0), new Coordinate(WIDTH, HEIGHT));
-        voronoi.setClipEnvelope(env);//given diagram size constraint
+//        voronoi.setClipEnvelope(env);//given diagram size constraint
         PrecisionModel pointAcc = new PrecisionModel(0.01);
-        GeometryFactory makePolygons = new GeometryFactory(pointAcc);
-        voronoi.setTolerance(0.01); //may be redundant
+
+//        voronoi.setTolerance(0.01); //may be redundant
 
         Random Val = new Random();
         Coordinate Coord = new Coordinate();
@@ -41,10 +42,9 @@ public class IrregMeshGen extends GeneralMesh {
         //ARBITRARY VALUE TO BE CHANGED
         int points = 100;
 
-        for (int i = 1; i <= points; i++) {
+        for (int i = 0; i < points; i++) {
             int xCoord = Val.nextInt(WIDTH);
             int yCoord = Val.nextInt(HEIGHT);
-
 
             System.out.println("Point Coordinates: (" + xCoord + ", " + yCoord + ")");
             Coord.setX(xCoord);
@@ -52,24 +52,32 @@ public class IrregMeshGen extends GeneralMesh {
 
             Vertex newSite = Vertex.newBuilder().setX(xCoord).setY(yCoord).build();
             //ADD SITES TO COORDINATE LIST FOR VORONOI BUILDER
-            coords.add(Coord);
+            coords.add(new Coordinate(xCoord,yCoord));
             //ADD SITES TO VERTEX LIST TO BE ABLE TO VISUALIZE
             siteList.add(newSite);
-
+            vertexList.add(newSite);
         }
 
         voronoi.setSites(coords);
+        GeometryFactory makePolygons = new GeometryFactory();
 
         //allPolygons is like a finished puzzle, it contains all polygons
         Geometry allPolygons = voronoi.getDiagram(makePolygons);
-        int numPoly = allPolygons.getNumGeometries(); // num of polygons
+        Polygonizer polygonizer = new Polygonizer();
+        polygonizer.add(allPolygons);
+        List<org.locationtech.jts.geom.Polygon> polys = new ArrayList<org.locationtech.jts.geom.Polygon>(polygonizer.getPolygons());
+
+        int numPoly = polys.size();
+        System.out.println(numPoly);
 
         for (int i = 0; i < numPoly; i++) {
-            allPolygonVertices.add(allPolygons.getGeometryN(i).getCoordinates()); //will get vertices list of each individual polygon
+            allPolygonVertices.add(polys.get(i).getCoordinates()); //will get vertices list of each individual polygon
         }
+        System.out.println("HII"+allPolygonVertices.size());
 
         for (Coordinate[] vertices : allPolygonVertices) {
             List<Integer> polySegments = new ArrayList<>();
+
             for (int j = 0; j < vertices.length - 1; j++) {
                 Coordinate vert1 = vertices[j];
                 Coordinate vert2 = vertices[j + 1];
@@ -103,9 +111,10 @@ public class IrregMeshGen extends GeneralMesh {
     }
 
     public Mesh generate() {
-
+        IrregularMesh();
+        System.out.println(segmentsSet.toString());
         //COLOUR SITE VERTEXES AND SEGMENTS
-        for (Vertex v : siteList) {
+        for (Vertex v : vertexList) {
             int red = 255;
             int green = 0;
             int blue = 0;
@@ -122,7 +131,7 @@ public class IrregMeshGen extends GeneralMesh {
             colorSegment(s,red,green,blue,alpha );
             }
 
-        return Mesh.newBuilder().addAllVertices(siteList).addAllSegments(segmentList).build();
+        return Mesh.newBuilder().addAllVertices(vertexList).addAllSegments(segmentList).build();
 
     }
 
@@ -132,8 +141,8 @@ public class IrregMeshGen extends GeneralMesh {
         Property color = Property.newBuilder().setKey("rgb_color").setValue(colorCode).build();
         Vertex colored = Vertex.newBuilder(vertex).addProperties(color).build();
         vertexList.set(vertexList.indexOf(vertex), colored);
-
     }
+
     private void colorSegment(Segment seg, int red, int green, int blue, int alpha){
         Property color = Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue+ "," + alpha).build();
         Segment colored = Segment.newBuilder(seg).addProperties(color).build();

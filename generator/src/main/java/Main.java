@@ -1,4 +1,5 @@
 import ca.mcmaster.cas.se2aa4.a2.generator.DotGen;
+import ca.mcmaster.cas.se2aa4.a2.generator.IrregMeshGen;
 import ca.mcmaster.cas.se2aa4.a2.generator.MeshGen;
 import ca.mcmaster.cas.se2aa4.a2.io.MeshFactory;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Mesh;
@@ -35,8 +36,8 @@ public class Main {
         //        DotGen generator = new DotGen();
         //        Mesh myMesh = generator.generate();
 
-        MeshGen gen = new MeshGen();
-        Mesh myMesh = gen.generate(Mode);
+        IrregMeshGen gen = new IrregMeshGen();
+        Mesh myMesh = gen.generate();
         MeshFactory factory = new MeshFactory();
         factory.write(myMesh, args[0]);
         System.out.println(Mode);

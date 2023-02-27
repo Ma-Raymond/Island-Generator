@@ -88,11 +88,9 @@ public class MeshGen extends GeneralMesh{
 
 
         for (Polygon poly:polygonList){
-//            System.out.println(poly);
             for (Integer i : poly.getNeighborIdxsList()){
                 Segment neighbourConnection = Segment.newBuilder().setV1Idx(poly.getCentroidIdx()).setV2Idx(polygonList.get(i).getCentroidIdx()).build();
 
-                System.out.println(neighbourConnection);
                 if (!segmentList.contains(neighbourConnection)){
                     segmentList.add(neighbourConnection);
                     neighbourConnectionList.add(neighbourConnection);
@@ -105,8 +103,6 @@ public class MeshGen extends GeneralMesh{
             polygonList.set(polygonList.indexOf(poly), polyNew);
             neighbourConnectionsPropertyList.clear();
         }
-        System.out.println(polygonList);
-
     }
     public void makePolygon(int v1Id,int v2Id,int v3Id,int v4Id){
         // Created Segments here based on the identifier of the vertexes to make a square shape
@@ -136,8 +132,6 @@ public class MeshGen extends GeneralMesh{
 
         double centroidIdx = Double.parseDouble(precision.format((vertex1.getX()+vertex2.getX())/2));
         double centroidIdy = Double.parseDouble(precision.format((vertex1.getY()+vertex3.getY())/2));
-        System.out.println(centroidIdx);
-        System.out.println(centroidIdy);
         Vertex centroid = Vertex.newBuilder().setX(centroidIdx).setY(centroidIdy).build();
         vertexList.add(centroid);
         centroidList.add(centroid);
@@ -145,7 +139,6 @@ public class MeshGen extends GeneralMesh{
         // Creates a polygon object, adds the list of integers of segments to the object
         Polygon poly = Polygon.newBuilder().addAllSegmentIdxs(squarelist).setCentroidIdx(vertexList.indexOf(centroid)).addProperties(vertices).build();
         polygonList.add(poly);      // Add the polygon object into the polygonList
-        System.out.println(poly);
     }
 
 

@@ -17,6 +17,11 @@ import java.util.List;
 // This is Part 3, stilling using the object-oriented approach but with irregular mesh
 public class IrregMeshGen extends GeneralMesh {
 
+    /**
+     * This function will take in a Voronoi Diagram, then we would relax the diagram by setting its centroid as the sites
+     * @param oldVoronoi
+     * @return VoronoiDiagramBuilder Object
+     */
     public VoronoiDiagramBuilder relaxation(VoronoiDiagramBuilder oldVoronoi){
         centroidList.clear();
         // Relaxed Version
@@ -43,7 +48,13 @@ public class IrregMeshGen extends GeneralMesh {
     }
     //user gets to decide the number of polygons. Will be taken from command line
 
-
+    /**
+     * This function will generate the Irregular Mesh using VoronoiDiagramBuilder from JTS
+     * 1. Randomize points onto mesh - (# of points based on user-input)
+     * 2. Relaxation Option - Dependent on User Input - Default 3
+     * 3. Create Meshes with vertices and segment lists
+     * @param numberPolygons
+     */
     public void IrregularMesh(int numberPolygons) {
         VoronoiDiagramBuilder voronoi = new VoronoiDiagramBuilder();
         Envelope env = new Envelope(new Coordinate(0, 0), new Coordinate(WIDTH, HEIGHT));
@@ -61,9 +72,6 @@ public class IrregMeshGen extends GeneralMesh {
         for (int i = 0; i < points; i++) {
             int xCoord = Val.nextInt(WIDTH);
             int yCoord = Val.nextInt(HEIGHT);
-
-            System.out.println("Point Coordinates: (" + xCoord + ", " + yCoord + ")");
-
             //ADD SITES TO COORDINATE LIST FOR VORONOI BUILDER
             coords.add(new Coordinate(xCoord,yCoord));
         }
@@ -128,7 +136,6 @@ public class IrregMeshGen extends GeneralMesh {
      * Runs the Irregular Mesh function, creates colors for segments and vertices
      * @return Mesh including all the colored vertexes and segments
      */
-
     public Mesh generate(int numberPolygons) {
         IrregularMesh(numberPolygons);
         //COLOUR SITE VERTEXES AND SEGMENTS
@@ -155,6 +162,14 @@ public class IrregMeshGen extends GeneralMesh {
 
     }
 
+    /**
+     * This function replaces the vertex given as a parameter and adds a rgb color property to it based on rgb value params
+     * @param vertex
+     * @param red
+     * @param green
+     * @param blue
+     * @param alpha
+     */
     private void colorVertex(Vertex vertex, int red, int green, int blue, int alpha){
         Random bag = new Random();
         String colorCode = red + "," + green + "," + blue + "," + alpha;
@@ -165,34 +180,19 @@ public class IrregMeshGen extends GeneralMesh {
         vertexList.set(vertexList.indexOf(vertex), colored);
     }
 
+    /**
+     * This function replaces the segment given as a parameter and adds a rgb color property to it based on rgb value params
+     * @param seg
+     * @param red
+     * @param green
+     * @param blue
+     * @param alpha
+     */
     private void colorSegment(Segment seg, int red, int green, int blue, int alpha){
         // Create new Property with "rgb_color" key and the rgb value as the value
         Property color = Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue+ "," + alpha).build();
         Segment colored = Segment.newBuilder(seg).addProperties(color).build();
         // Set the old segment in the list as the new one with color property
         segmentList.set(segmentList.indexOf(seg), colored);
-    }
-
-    private Color extractColor(List<Property> properties) {
-        String val = null;
-        // EXTRACTCOLOR GOES THROUGH ALL THE PROPERTIES OF THE OBJECT
-        for(Property p: properties) {
-            // TRY TO FIND THE RGB COLOR
-            if (p.getKey().equals("rgb_color")) {
-                val = p.getValue();
-            }
-        }
-        if (val == null) {       // IF THE RGB COLOR PROPERTY DOESN'T EXIST, COVER THAT CASE BY MAKING IT BLACK
-            return Color.BLACK; // COVERING CASE IF KEY RGB_COLOR DOESN'T EXIST
-        }
-        // IF RGB PROPERTY EXIST, GET VALUES OF EACH PARAMETER
-        String[] raw = val.split(",");
-        int red = Integer.parseInt(raw[0]);
-        int green = Integer.parseInt(raw[1]);
-        int blue = Integer.parseInt(raw[2]);
-        int alpha = Integer.parseInt(raw[3]);
-        // RETURN AS COLOR OBJECT
-        return new Color(red, green, blue, alpha);
-
     }
 }

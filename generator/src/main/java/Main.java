@@ -33,8 +33,8 @@ public class Main {
         }
 
         // Step 1 -----------
-        //        DotGen generator = new DotGen();
-        //        Mesh myMesh = generator.generate();
+//                DotGen generator = new DotGen();
+//                Mesh myMesh = generator.generate();
 
         // Step 2 ----------- OOP Approach w/ Neighbours and Centroids and Debug Mode
         //         MeshGen generator = new MeshGen();

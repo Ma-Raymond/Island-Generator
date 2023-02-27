@@ -87,7 +87,8 @@ public class DotGen {
             int red = bag.nextInt(255);
             int green = bag.nextInt(255);
             int blue = bag.nextInt(255);
-            String colorCode = red + "," + green + "," + blue;
+            int alpha = 255;
+            String colorCode = red + "," + green + "," + blue + ","+alpha;
             Property color = Property.newBuilder().setKey("rgb_color").setValue(colorCode).build();
             Vertex colored = Vertex.newBuilder(v).addProperties(color).build();
             verticesWithColors.add(colored);
@@ -105,8 +106,10 @@ public class DotGen {
             int red = (v1Color.getRed()+v2Color.getRed())/2;
             int green = (v1Color.getGreen()+v2Color.getGreen())/2;
             int blue = (v1Color.getBlue()+v2Color.getBlue())/2;
+            int alpha = 255;
+            String colorCode = red + "," + green + "," + blue + ","+alpha;
 //            Color segmentColour = new Color((v1Color.getRed()+v2Color.getRed())/2,(v1Color.getGreen()+v2Color.getGreen())/2, (v1Color.getBlue()+v2Color.getBlue())/2);
-            Property color = Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue).build();
+            Property color = Property.newBuilder().setKey("rgb_color").setValue(colorCode).build();
             Segment colored = Segment.newBuilder(s).addProperties(color).build();
             segmentsWithColors.add(colored);
         }
@@ -127,7 +130,9 @@ public class DotGen {
         int red = Integer.parseInt(raw[0]);
         int green = Integer.parseInt(raw[1]);
         int blue = Integer.parseInt(raw[2]);
-        return new Color(red, green, blue);
+        int alpha = Integer.parseInt(raw[3]);
+        // RETURN AS COLOR OBJECT
+        return new Color(red, green, blue, alpha);
     }
 
 

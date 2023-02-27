@@ -13,6 +13,7 @@ import ca.mcmaster.cas.se2aa4.a2.io.Structs.Property;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Mesh;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Segment;
 
+// This is Part 1
 public class DotGen {
 
     private final int width = 500;

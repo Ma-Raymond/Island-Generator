@@ -18,6 +18,7 @@ import java.util.*;
 import java.util.List;
 
 
+// This is Part 2 using a more Object-Oriented Approach
 abstract class GeneralMesh {
     //THESE DATASETS ARE FOR REGULAR MESH
     public int WIDTH = 500;
@@ -159,40 +160,29 @@ public class MeshGen extends GeneralMesh{
 
         if (Mode.equals("true")) {
             for (Vertex v : vertexList){
+                int red = 0;
+                int green = 0;
+                int blue = 0;
+                int alpha = 255;
                 if (centroidList.contains(v)){
-                    int red = 255;
-                    int green = 0;
-                    int blue = 0;
-                    int alpha = 255;
-                    colorVertex(v, red, green, blue,alpha);
+                    red = 255;
                 }
-                else{
-                    int red = 0;
-                    int green = 0;
-                    int blue = 0;
-                    int alpha = 255;
-                    colorVertex(v, red, green, blue, alpha);
-                }
-
+                colorVertex(v, red, green, blue,alpha);
             }
 
 
             //Make segments black
             for (Segment s : segmentList){
+                int red = 0;
+                int green = 0;
+                int blue = 0;
+                int alpha = 255;
                 if (neighbourConnectionList.contains(s)){
-                    int red = 169;
-                    int green = 169;
-                    int blue = 169;
-                    int alpha = 255;
-                    colorSegment(s,red, green, blue, alpha);
+                    red = 169;
+                    green = 169;
+                    blue = 169;
                 }
-                else{
-                    int red = 0;
-                    int green = 0;
-                    int blue = 0;
-                    int alpha = 255;
-                    colorSegment(s, red, green , blue, alpha);
-                }
+                colorSegment(s,red, green, blue, alpha);
             }
         }
         else {

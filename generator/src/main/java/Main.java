@@ -19,18 +19,53 @@ public class Main {
         Options options = new Options();
 
         options.addOption("X", false, "Toggles Debug Mode");
+        options.addOption("P", true, "Indicates number of Polygons");
+        options.addOption("I", false, "Toggles Irregular Mesh");
+        options.addOption("H", false, "Command information");
+        options.addOption("R", true, "Indicates Number of times to Relax Irregular Mesh");
 
-        String Mode = "";
+        //defaults to the regular mesh
+        String regOrNot = "Reg";
+        //Default debug mode toggle state
+        String debug = "debugOff";
+        //Default number of Polygons
+        String numPoly = "100";
+
         try {
             CommandLine commandline = parser.parse(options, args);
-            if (commandline.hasOption("X")){
-                Mode = "true";
+            if (commandline.hasOption("I")) {
+                regOrNot = "Irreg";
+                numPoly = commandline.getOptionValue("P");
+            } else {
+                if (commandline.hasOption("X")) {
+                    debug = "debugOn";
+                }
             }
 
+        } catch (ParseException e) {
+            System.out.println("IT DIDNT WORK!!!!!!!!!");
         }
-        catch (ParseException e) {
-            System.out.println("Error Occured within Parser");
+
+        //convert the number of polygons from string to int
+        int numOfPolygons = Integer.parseInt(numPoly);
+
+        if (regOrNot.equals("Irreg")) {
+            IrregMeshGen gen = new IrregMeshGen();
+            Mesh myMesh = gen.generate(numOfPolygons);
+            MeshFactory factory = new MeshFactory();
+            factory.write(myMesh, args[0]);
+        } else {
+            MeshGen gen = new MeshGen();
+            Mesh myMesh = gen.generate(debug);
+            MeshFactory factory = new MeshFactory();
+            factory.write(myMesh, args[0]);
         }
+
+        System.out.println(regOrNot);
+        System.out.println(numOfPolygons);
+
+
+
 
         // Step 1 -----------
 //                DotGen generator = new DotGen();
@@ -41,11 +76,7 @@ public class Main {
         //        Mesh myMesh = generator.generate(Mode);
 
         // Step 3 -----------
-        IrregMeshGen gen = new IrregMeshGen();
-        Mesh myMesh = gen.generate();
 
-        MeshFactory factory = new MeshFactory();
-        factory.write(myMesh, args[0]);
     }
 
 }

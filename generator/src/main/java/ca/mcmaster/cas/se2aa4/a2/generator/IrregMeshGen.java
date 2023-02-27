@@ -44,7 +44,7 @@ public class IrregMeshGen extends GeneralMesh {
     //user gets to decide the number of polygons. Will be taken from command line
 
 
-    public void IrregularMesh() {
+    public void IrregularMesh(int numberPolygons) {
         VoronoiDiagramBuilder voronoi = new VoronoiDiagramBuilder();
         Envelope env = new Envelope(new Coordinate(0, 0), new Coordinate(WIDTH, HEIGHT));
         voronoi.setClipEnvelope(env);//given diagram size constraint
@@ -52,8 +52,9 @@ public class IrregMeshGen extends GeneralMesh {
         voronoi.setTolerance(0.01); //may be redundant
         Random Val = new Random();
 
-        //ARBITRARY VALUE TO BE CHANGED HOW MANY POINTS TO PUT
-        int points = 100;
+
+        //Takes user input for the number of sites
+        int points = numberPolygons;
         List<Coordinate> coords = new ArrayList<Coordinate>();
 
         // Randomly generates coordinates based on the canvas size
@@ -81,7 +82,6 @@ public class IrregMeshGen extends GeneralMesh {
         //allPolygons is like a finished puzzle, it contains all polygons
         Geometry allPolygons = voronoi.getDiagram(makePolygons);
 
-        // Number of Polygons in the diagram
         int numPoly = allPolygons.getNumGeometries();
         // This variable will hold the Coordinates of all the polygon shape
         List<Coordinate[]> allPolygonVertices = new ArrayList<>();
@@ -128,8 +128,9 @@ public class IrregMeshGen extends GeneralMesh {
      * Runs the Irregular Mesh function, creates colors for segments and vertices
      * @return Mesh including all the colored vertexes and segments
      */
-    public Mesh generate() {
-        IrregularMesh();
+
+    public Mesh generate(int numberPolygons) {
+        IrregularMesh(numberPolygons);
         //COLOUR SITE VERTEXES AND SEGMENTS
         for (Vertex v : vertexList) {
             int red = 255;

@@ -27,7 +27,6 @@ public class GraphicRenderer {
 
 
         for (Segment s: aMesh.getSegmentsList()){
-
             Vertex vertex = aMesh.getVerticesList().get(s.getV1Idx());
             Vertex vertex2 = aMesh.getVerticesList().get(s.getV2Idx());
             double x1 = vertex.getX();

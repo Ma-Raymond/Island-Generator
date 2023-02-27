@@ -19,7 +19,7 @@ public class IrregMeshGen extends GeneralMesh {
     List<Vertex> siteList = new ArrayList<Vertex>();
 
     //user gets to decide the number of polygons. Will be taken from command line
-    public void IrregularMesh() {
+    public void IrregularMesh(int numberPolygons) {
         VoronoiDiagramBuilder voronoi = new VoronoiDiagramBuilder();
         Envelope env = new Envelope(new Coordinate(0, 0), new Coordinate(WIDTH, HEIGHT));
         voronoi.setClipEnvelope(env);//given diagram size constraint
@@ -29,8 +29,8 @@ public class IrregMeshGen extends GeneralMesh {
         Random Val = new Random();
         Coordinate Coord = new Coordinate();
 
-        //ARBITRARY VALUE TO BE CHANGED
-        int points = 100;
+        //Takes user input for the number of sites
+        int points = numberPolygons;
         List<Coordinate> coords = new ArrayList<Coordinate>();
 
         for (int i = 0; i < points; i++) {
@@ -55,7 +55,7 @@ public class IrregMeshGen extends GeneralMesh {
         //allPolygons is like a finished puzzle, it contains all polygons
         Geometry allPolygons = voronoi.getDiagram(makePolygons);
         Polygonizer polygonizer = new Polygonizer();
-        System.out.println("WTFFF"+allPolygons.getNumGeometries());
+        System.out.println("NumSites: "+allPolygons.getNumGeometries());
 
         int numPoly = allPolygons.getNumGeometries();
         System.out.println(numPoly);
@@ -71,7 +71,7 @@ public class IrregMeshGen extends GeneralMesh {
             vertexList.add(centroid);
         }
 
-        System.out.println("HII" +allPolygonVertices.size());
+        System.out.println("NumPolygons: " +allPolygonVertices.size());
 
         for (Coordinate[] vertice : allPolygonVertices) {
             List<Integer> polySegments = new ArrayList<>();
@@ -107,8 +107,8 @@ public class IrregMeshGen extends GeneralMesh {
 
     }
 
-    public Mesh generate() {
-        IrregularMesh();
+    public Mesh generate(int numberPolygons) {
+        IrregularMesh(numberPolygons);
         //COLOUR SITE VERTEXES AND SEGMENTS
         for (Vertex v : vertexList) {
             int red = 255;

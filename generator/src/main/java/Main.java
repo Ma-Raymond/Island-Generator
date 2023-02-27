@@ -30,16 +30,29 @@ public class Main {
         String debug = "debugOff";
         //Default number of Polygons
         String numPoly = "100";
+        //Default
+        String defaultRelaxTimes = "3";
 
         try {
             CommandLine commandline = parser.parse(options, args);
             if (commandline.hasOption("I")) {
                 regOrNot = "Irreg";
-                numPoly = commandline.getOptionValue("P");
+                if (commandline.hasOption("P")) {
+                    numPoly = commandline.getOptionValue("P");
+                }
             } else {
                 if (commandline.hasOption("X")) {
                     debug = "debugOn";
                 }
+            }
+            if (commandline.hasOption("H")){
+                System.out.println("You've reached the help menu!");
+                System.out.println("Enter these commands to personalize the mesh you would like to create! \n" +
+                                    "If no commands are entered, the default colourful mesh will appear.");
+                System.out.println("-I ~~ This creates the default irregular mesh with 100 polygons \n" +
+                                    "-P x ~~ In place of x enter a integer to choose how many polygons are created in the irregular mesh \n" +
+                                    "-R x ~~ In place of x enter an integer to choose the level of relaxation of the irregular mesh. \n" +
+                                    " NOTE: to toggle debug mode, use -X in the visualizer command line!");
             }
 
         } catch (ParseException e) {

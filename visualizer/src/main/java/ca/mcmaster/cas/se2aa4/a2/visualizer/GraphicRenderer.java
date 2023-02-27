@@ -3,6 +3,7 @@ package ca.mcmaster.cas.se2aa4.a2.visualizer;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Mesh;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Vertex;
+import ca.mcmaster.cas.se2aa4.a2.io.Structs.Polygon;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Property;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Segment;
 
@@ -12,7 +13,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.geom.Ellipse2D;
 import java.util.List;
-import java.awt.*;
 import javax.swing.*;
 import java.awt.geom.Line2D;
 
@@ -25,7 +25,9 @@ public class GraphicRenderer {
         canvas.setStroke(stroke);
 
 
+        for (Polygon p : aMesh.getPolygonsList()){
 
+        }
         for (Segment s: aMesh.getSegmentsList()){
             Vertex vertex = aMesh.getVerticesList().get(s.getV1Idx());
             Vertex vertex2 = aMesh.getVerticesList().get(s.getV2Idx());

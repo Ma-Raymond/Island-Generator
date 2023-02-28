@@ -30,7 +30,7 @@ public class Main {
         //Default number of Polygons
         String numPoly = "100";
         //Default
-        String defaultRelaxTimes = "0";
+        String defaultRelaxTimes = "1";
 
         try {
             CommandLine commandline = parser.parse(options, args);

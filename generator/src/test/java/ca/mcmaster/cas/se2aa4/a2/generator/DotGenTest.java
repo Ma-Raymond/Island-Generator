@@ -14,4 +14,12 @@ public class DotGenTest {
         assertNotNull(aMesh);
     }
 
+    @Test
+    public void meshIsEmpty() {
+        IrregMeshGen generator = new IrregMeshGen();
+        Structs.Mesh aMesh = generator.generate(-1,2);
+        assertNotNull(aMesh);
+    }
+
+
 }

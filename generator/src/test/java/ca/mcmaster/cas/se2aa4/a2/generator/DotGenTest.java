@@ -14,5 +14,18 @@ public class DotGenTest {
         assertNotNull(aMesh);
     }
 
+    @Test
+    public void negativeMeshes() {
+        IrregMeshGen generator = new IrregMeshGen();
+        Structs.Mesh aMesh = generator.generate(-1,2);
+        assertNotNull(aMesh);
+    }
+
+    @Test
+    public void largeMeshes() {
+        IrregMeshGen generator = new IrregMeshGen();
+        Structs.Mesh aMesh = generator.generate(1000,2);
+        assertNotNull(aMesh);
+    }
 
 }

@@ -249,6 +249,9 @@ public class IrregMeshGen extends GeneralMesh {
      * @return Mesh including all the colored vertexes and segments
      */
     public Mesh generate(int numberPolygons, int userRelax) {
+        if (numberPolygons < 0){
+            return Mesh.newBuilder().addAllVertices(vertexList).addAllSegments(segmentList).build();
+        }
         IrregularMesh(numberPolygons, userRelax);
         //COLOUR SITE VERTEXES AND SEGMENTS
         for (Vertex v : vertexList) {

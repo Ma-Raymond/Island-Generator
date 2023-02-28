@@ -51,11 +51,11 @@ public class IrregMeshGen extends GeneralMesh {
         int numPoly = allPolygons.getNumGeometries();
         List<Set<Integer>> neighbourConnectionsList = new ArrayList<>();
         System.out.println(allPolygonSegments);
-
+        // Looping through all the polygons
         for(int i = 0; i < numPoly; i++){
             Set<Integer> neighboursList = new HashSet<>();
-            Geometry poly = allPolygons.getGeometryN(i);
-            Vertex centroid = centroidList.get(i);
+
+            // POLYGON SEGMENTS
             List<Integer> polygonSegments = allPolygonSegments.get(i);
             System.out.println(polygonSegments);
             for(int j = 0; j<numPoly; j++){
@@ -73,18 +73,21 @@ public class IrregMeshGen extends GeneralMesh {
 
                 }
             }
-//            System.out.println("neighbours");
-//            System.out.println(neighboursList);
+//
+
             neighbourConnectionsList.add(neighboursList);
 //            System.out.println(neighboursList);
         }
-        System.out.println("connects:");
-        System.out.println(neighbourConnectionsList);
+
+
+
+
         for (int i = 0; i <numPoly; i++){
             Set<Integer> neighbours = neighbourConnectionsList.get(i);
             System.out.println(neighbours);
             for (Integer j: neighbours){
                 System.out.println(j);
+                // Creating the segmentation
                 Segment neighbourConnection = Segment.newBuilder().setV1Idx(vertexList.indexOf(centroidList.get(i))).setV2Idx(vertexList.indexOf(centroidList.get(j))).build();
                 if (!segmentList.contains(neighbourConnection)){
                     System.out.println(neighbourConnection);
@@ -93,7 +96,6 @@ public class IrregMeshGen extends GeneralMesh {
                 }
             }
         }
-        System.out.println(allPolygons.getGeometryN(0));
 
     }
     //user gets to decide the number of polygons. Will be taken from command line
@@ -174,8 +176,11 @@ public class IrregMeshGen extends GeneralMesh {
         }
 
         // Adds all the centroids vertexes after relaxation, to the vertexList
-        vertexList.addAll(centroidList);
+        allPolygons = voronoi.getDiagram(makePolygons);
+        constrainPoly(allPolygons);
+        loadCentroids(allPolygons);
 
+        vertexList.addAll(centroidList);
 
         int numPoly = allPolygons.getNumGeometries();
         // This variable will hold the Coordinates of all the polygon shape

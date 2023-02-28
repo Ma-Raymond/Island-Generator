@@ -18,7 +18,6 @@ public class Main {
         CommandLineParser parser = new DefaultParser();
         Options options = new Options();
 
-        options.addOption("X", false, "Toggles Debug Mode");
         options.addOption("P", true, "Indicates number of Polygons");
         options.addOption("I", false, "Toggles Irregular Mesh");
         options.addOption("H", false, "Command information");
@@ -31,7 +30,7 @@ public class Main {
         //Default number of Polygons
         String numPoly = "100";
         //Default
-        String defaultRelaxTimes = "3";
+        String defaultRelaxTimes = "0";
 
         try {
             CommandLine commandline = parser.parse(options, args);
@@ -40,9 +39,8 @@ public class Main {
                 if (commandline.hasOption("P")) {
                     numPoly = commandline.getOptionValue("P");
                 }
-            } else {
-                if (commandline.hasOption("X")) {
-                    debug = "debugOn";
+                if (commandline.hasOption("R")){
+                    defaultRelaxTimes = commandline.getOptionValue("R");
                 }
             }
             if (commandline.hasOption("H")){
@@ -52,7 +50,7 @@ public class Main {
                 System.out.println("-I ~~ This creates the default irregular mesh with 100 polygons \n" +
                                     "-P x ~~ In place of x enter a integer to choose how many polygons are created in the irregular mesh \n" +
                                     "-R x ~~ In place of x enter an integer to choose the level of relaxation of the irregular mesh. \n" +
-                                    " NOTE: to toggle debug mode, use -X in the visualizer command line!");
+                                    " NOTE: to toggle debug mode for either type of Mesh, use -X in the visualizer command line!");
             }
 
         } catch (ParseException e) {
@@ -61,10 +59,11 @@ public class Main {
 
         //convert the number of polygons from string to int
         int numOfPolygons = Integer.parseInt(numPoly);
+        int userRelaxRequests = Integer.parseInt(defaultRelaxTimes);
 
         if (regOrNot.equals("Irreg")) {
             IrregMeshGen gen = new IrregMeshGen();
-            Mesh myMesh = gen.generate(numOfPolygons);
+            Mesh myMesh = gen.generate(numOfPolygons, userRelaxRequests);
             MeshFactory factory = new MeshFactory();
             factory.write(myMesh, args[0]);
         } else {
@@ -81,8 +80,8 @@ public class Main {
 
 
         // Step 1 -----------
-        //        DotGen generator = new DotGen();
-        //        Mesh myMesh = generator.generate();
+//                DotGen generator = new DotGen();
+//                Mesh myMesh = generator.generate();
 
         // Step 2 ----------- OOP Approach w/ Neighbours and Centroids and Debug Mode
         //         MeshGen generator = new MeshGen();

@@ -1,4 +1,5 @@
 package ca.mcmaster.cas.se2aa4.a2.generator;
+import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.*;
 
 
@@ -10,6 +11,7 @@ import org.locationtech.jts.triangulate.VoronoiDiagramBuilder;
 
 import java.awt.*;
 
+import java.beans.VetoableChangeListener;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.List;
@@ -45,6 +47,56 @@ public class IrregMeshGen extends GeneralMesh {
         // Set new coords to the new diagram
         relaxVoronoi.setSites(coords);
         return relaxVoronoi;
+    }
+
+    public void delaunayTriangulation(Geometry allPolygons, List<List<Integer>> allPolygonSegments){
+
+        int numPoly = allPolygons.getNumGeometries();
+        List<Set<Integer>> neighbourConnectionsList = new ArrayList<>();
+        System.out.println(allPolygonSegments);
+
+        for(int i = 0; i < numPoly; i++){
+            Set<Integer> neighboursList = new HashSet<>();
+            Geometry poly = allPolygons.getGeometryN(i);
+            Vertex centroid = centroidList.get(i);
+            List<Integer> polygonSegments = allPolygonSegments.get(i);
+            System.out.println(polygonSegments);
+            for(int j = 0; j<numPoly; j++){
+                Vertex centroidCompare = centroidList.get(i);
+                List<Integer> polygonSegmentsCompare = allPolygonSegments.get(j);
+                for (int x = 0; x<polygonSegments.size(); x++){
+                    int segment = polygonSegments.get(x);
+                    for (int y = 0; y<polygonSegmentsCompare.size(); y++){
+                        int segmentCompare = polygonSegmentsCompare.get(y);
+                        if (segment == segmentCompare && i!=j){
+                            neighboursList.add(j);
+                            System.out.println(neighboursList);
+                        }
+                    }
+
+                }
+            }
+//            System.out.println("neighbours");
+//            System.out.println(neighboursList);
+            neighbourConnectionsList.add(neighboursList);
+//            System.out.println(neighboursList);
+        }
+        System.out.println("connects:");
+        System.out.println(neighbourConnectionsList);
+        for (int i = 0; i <numPoly; i++){
+            Set<Integer> neighbours = neighbourConnectionsList.get(i);
+            System.out.println(neighbours);
+            for (Integer j: neighbours){
+                System.out.println(j);
+                Segment neighbourConnection = Segment.newBuilder().setV1Idx(vertexList.indexOf(centroidList.get(i))).setV2Idx(vertexList.indexOf(centroidList.get(j))).build();
+                if (!segmentList.contains(neighbourConnection)){
+                    System.out.println(neighbourConnection);
+                    segmentList.add(neighbourConnection);
+                }
+            }
+        }
+        System.out.println(allPolygons.getGeometryN(0));
+
     }
     //user gets to decide the number of polygons. Will be taken from command line
 
@@ -99,9 +151,12 @@ public class IrregMeshGen extends GeneralMesh {
         }
 
         // For each coordinate, which is apart of a polygon
+        List<List<Integer>> allPolygonSegments = new ArrayList<>();
         for (Coordinate[] vertice : allPolygonVertices) {
             // Create Segments between each point connecting all the points in the polygon making a shape
+            List<Integer> polygonSegments = new ArrayList<>();
             for (int j = 0; j < vertice.length - 1; j++) {
+
                 // Get the two Vertices
                 Coordinate vert1 = vertice[j];
                 Coordinate vert2 = vertice[j + 1];
@@ -123,13 +178,36 @@ public class IrregMeshGen extends GeneralMesh {
                     }
                 }
                 // After checking if ther vertex already exist, we can make the segment and check if the segment already exist or not.
+//                System.out.println(vertexList);
                 Segment s = Segment.newBuilder().setV1Idx(vertexList.indexOf(v1)).setV2Idx(vertexList.indexOf(v2)).build();
-                if (!segments.contains(s)) {        // IF SEGMENT NOT IN THE SET ALREADY, ADD IT
+                Segment s2 = Segment.newBuilder().setV1Idx(vertexList.indexOf(v2)).setV2Idx(vertexList.indexOf(v1)).build();
+                if (!segmentList.contains(s) && !segmentList.contains(s2)) {        // IF SEGMENT NOT IN THE SET ALREADY, ADD IT
                     segments.add(s);                // ADD IT TO THE SET
                     segmentList.add(s);             // ADD IT TO THE SEGMENT LIST
                 }
+
+                else{
+                    System.out.println("cloneclone");
+                }
+
+                if (segmentList.contains(s)){
+                    polygonSegments.add(segmentList.indexOf(s));
+                }
+                else{
+                    polygonSegments.add(segmentList.indexOf(s2));
+                }
             }
+
+            allPolygonSegments.add(polygonSegments);
+
+//            polygonSegments.clear();
         }
+        System.out.println(allPolygonSegments);
+
+
+        delaunayTriangulation(allPolygons, allPolygonSegments);
+
+
     }
 
     /**

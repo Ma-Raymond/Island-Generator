@@ -49,18 +49,22 @@ public class Main {
         //convert the number of polygons from string to int
         int numOfPolygons = Integer.parseInt(numPoly);
 
-        if (regOrNot.equals("Irreg")) {
-            IrregMeshGen gen = new IrregMeshGen();
-            Mesh myMesh = gen.generate(numOfPolygons);
-            MeshFactory factory = new MeshFactory();
-            factory.write(myMesh, args[0]);
-        } else {
-            MeshGen gen = new MeshGen();
-            Mesh myMesh = gen.generate(debug);
-            MeshFactory factory = new MeshFactory();
-            factory.write(myMesh, args[0]);
-        }
+//        if (regOrNot.equals("Irreg")) {
+//            IrregMeshGen gen = new IrregMeshGen();
+//            Mesh myMesh = gen.generate(numOfPolygons);
+//            MeshFactory factory = new MeshFactory();
+//            factory.write(myMesh, args[0]);
+//        } else {
+//            MeshGen gen = new MeshGen();
+//            Mesh myMesh = gen.generate(debug);
+//            MeshFactory factory = new MeshFactory();
+////            factory.write(myMesh, args[0]);
+//        }
 
+        IrregMeshGen gen = new IrregMeshGen();
+        Mesh myMesh = gen.generate(numOfPolygons);
+        MeshFactory factory = new MeshFactory();
+//        factory.write(myMesh, args[0]);
         System.out.println(regOrNot);
         System.out.println(numOfPolygons);
 

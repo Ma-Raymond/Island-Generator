@@ -24,14 +24,21 @@ public class Main {
         CommandLineParser parser = new DefaultParser();
         Options options = new Options();
         options.addOption("X", false, "Toggles Debug Mode");
+        options.addOption("I", false, "Toggles Debug Mode");
+
 
         //Defaults to Debug being off
         String debug = "debugOff";
+        String Irreg = "IrregOff";
+
 
         try{
             CommandLine commandline = parser.parse(options, args);
             if (commandline.hasOption("X")){
                 debug = "debugOn";
+            }
+            if (commandline.hasOption("I")){
+                Irreg = "IrregOn";
             }
         } catch (ParseException e) {
             System.out.println("Why dont dis work :(");
@@ -49,7 +56,7 @@ public class Main {
         Graphics2D canvas = SVGCanvas.build((int) 500, (int) 500);
         GraphicRenderer renderer = new GraphicRenderer();
         // Painting the mesh on the canvas
-        renderer.render(aMesh, canvas, debug);
+        renderer.render(aMesh, canvas, debug, Irreg);
         // Storing the result in an SVG file
         SVGCanvas.write(canvas, output);
         // Dump the mesh to stdout

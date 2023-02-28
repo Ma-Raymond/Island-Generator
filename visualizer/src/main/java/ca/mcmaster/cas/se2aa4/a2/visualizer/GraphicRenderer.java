@@ -21,10 +21,12 @@ import java.util.Random;
 public class GraphicRenderer {
 
     private static final int THICKNESS = 3;
-    public void render(Mesh aMesh, Graphics2D canvas, String debug) {
+    public void render(Mesh aMesh, Graphics2D canvas, String debug, String Irreg) {
         canvas.setColor(Color.BLACK);
         Stroke stroke = new BasicStroke(0.5f);
         canvas.setStroke(stroke);
+
+
 
 
 
@@ -93,24 +95,48 @@ public class GraphicRenderer {
                     }
                 }
             }
-            if (debug.equals("debugOff") && !isCentroid) {
-                Color old = canvas.getColor();
-                canvas.setColor(extractColor(v.getPropertiesList()));
-                Ellipse2D point = new Ellipse2D.Double(centre_x, centre_y, THICKNESS, THICKNESS);
-                canvas.fill(point);
-                canvas.setColor(old);
-            }
-            if (debug.equals("debugOn")){
-                Color old = canvas.getColor();
-                if (isCentroid){
-                    System.out.println("IM A CETROID");
-                    canvas.setColor(Color.RED);
-                } else{
-                    canvas.setColor(Color.BLACK);
+            if (Irreg.equals("IrregOn")){
+                if (debug.equals("debugOff")) {
+                    Color old = canvas.getColor();
+                    canvas.setColor(extractColor(v.getPropertiesList()));
+                    Ellipse2D point = new Ellipse2D.Double(centre_x, centre_y, THICKNESS, THICKNESS);
+                    canvas.fill(point);
+                    canvas.setColor(old);
                 }
-                Ellipse2D point = new Ellipse2D.Double(centre_x, centre_y, THICKNESS, THICKNESS);
-                canvas.fill(point);
-                canvas.setColor(old);
+                if (debug.equals("debugOn")){
+                    Color old = canvas.getColor();
+                    if (isCentroid){
+                        System.out.println("IM A CETROID");
+                        canvas.setColor(Color.RED);
+                    } else{
+                        canvas.setColor(Color.BLACK);
+                    }
+                    Ellipse2D point = new Ellipse2D.Double(centre_x, centre_y, THICKNESS, THICKNESS);
+                    canvas.fill(point);
+                    canvas.setColor(old);
+                }
+            }
+            else {
+                if (debug.equals("debugOff") && !isCentroid) {
+                    Color old = canvas.getColor();
+
+                    canvas.setColor(extractColor(v.getPropertiesList()));
+                    Ellipse2D point = new Ellipse2D.Double(centre_x, centre_y, THICKNESS, THICKNESS);
+                    canvas.fill(point);
+                    canvas.setColor(old);
+                }
+                if (debug.equals("debugOn")) {
+                    Color old = canvas.getColor();
+                    if (isCentroid) {
+                        System.out.println("IM A CETROID");
+                        canvas.setColor(Color.RED);
+                    } else {
+                        canvas.setColor(Color.BLACK);
+                    }
+                    Ellipse2D point = new Ellipse2D.Double(centre_x, centre_y, THICKNESS, THICKNESS);
+                    canvas.fill(point);
+                    canvas.setColor(old);
+                }
             }
 
         }

@@ -4,6 +4,12 @@ import ca.mcmaster.cas.se2aa4.a2.visualizer.GraphicRenderer;
 import ca.mcmaster.cas.se2aa4.a2.visualizer.MeshDump;
 import ca.mcmaster.cas.se2aa4.a2.visualizer.SVGCanvas;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+
 import java.awt.*;
 import java.io.IOException;
 
@@ -13,6 +19,24 @@ public class Main {
         // Extracting command line parameters
         String input = args[0];
         String output = args[1];
+
+        //Command Line Parsing
+        CommandLineParser parser = new DefaultParser();
+        Options options = new Options();
+        options.addOption("X", false, "Toggles Debug Mode");
+
+        //Defaults to Debug being off
+        String debug = "debugOff";
+
+        try{
+            CommandLine commandline = parser.parse(options, args);
+            if (commandline.hasOption("X")){
+                debug = "debugOn";
+            }
+        } catch (ParseException e) {
+            System.out.println("Why dont dis work :(");
+        }
+
         // Getting width and height for the canvas
         Structs.Mesh aMesh = new MeshFactory().read(input);
         double max_x = Double.MIN_VALUE;
@@ -25,7 +49,7 @@ public class Main {
         Graphics2D canvas = SVGCanvas.build((int) 500, (int) 500);
         GraphicRenderer renderer = new GraphicRenderer();
         // Painting the mesh on the canvas
-        renderer.render(aMesh, canvas);
+        renderer.render(aMesh, canvas, debug);
         // Storing the result in an SVG file
         SVGCanvas.write(canvas, output);
         // Dump the mesh to stdout

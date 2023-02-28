@@ -24,14 +24,14 @@ public class IrregMeshGen extends GeneralMesh {
      * @param oldVoronoi
      * @return VoronoiDiagramBuilder Object
      */
-    public VoronoiDiagramBuilder relaxation(VoronoiDiagramBuilder oldVoronoi){
-        centroidList.clear();
+    private VoronoiDiagramBuilder relaxation(VoronoiDiagramBuilder oldVoronoi){
         // Relaxed Version
         VoronoiDiagramBuilder relaxVoronoi = new VoronoiDiagramBuilder();
 
         // Before-Relaxed diagram and polygon
         GeometryFactory makePolygons = new GeometryFactory();
         Geometry polygons = oldVoronoi.getDiagram(makePolygons);
+        constrainPoly(polygons);
         List<Coordinate> coords = new ArrayList<Coordinate>();  // Coordinate List to set the sites of the new voronoi
 
         // Goes through each polygon and gets the centroid, and based on that centroid, set them as my new sites for the relaxed voronoi
@@ -40,17 +40,14 @@ public class IrregMeshGen extends GeneralMesh {
             double xCoord = poly.getCentroid().getX();
             double yCoord = poly.getCentroid().getY();
             coords.add(new Coordinate(xCoord,yCoord));
-
-            // This to consistently keep centroidList updated everytime user wants to relax the diagram
-            centroidList.add(Vertex.newBuilder().setX(xCoord).setY(yCoord).build());
         }
+        loadCentroids(polygons);
         // Set new coords to the new diagram
         relaxVoronoi.setSites(coords);
         return relaxVoronoi;
     }
 
     public void delaunayTriangulation(Geometry allPolygons, List<List<Integer>> allPolygonSegments){
-
         int numPoly = allPolygons.getNumGeometries();
         List<Set<Integer>> neighbourConnectionsList = new ArrayList<>();
         System.out.println(allPolygonSegments);
@@ -92,6 +89,7 @@ public class IrregMeshGen extends GeneralMesh {
                 if (!segmentList.contains(neighbourConnection)){
                     System.out.println(neighbourConnection);
                     segmentList.add(neighbourConnection);
+                    neighbourConnectionList.add(neighbourConnection);
                 }
             }
         }
@@ -101,20 +99,54 @@ public class IrregMeshGen extends GeneralMesh {
     //user gets to decide the number of polygons. Will be taken from command line
 
     /**
+     * constrainPoly will clip all the polygon shapes into the 500x500 canvas.
+     * @param allPoly (Geometry) of the voronoi diagram
+     */
+    private void constrainPoly(Geometry allPoly){
+        for (int i= 0; i < allPoly.getNumGeometries();i++){
+            Coordinate[] poly = allPoly.getCoordinates();
+            for (Coordinate coord : poly){
+                // CONSTRAIN X
+                if (coord.getX() < 0)
+                    coord.setX(0);
+                else if (coord.getX() > 500)
+                    coord.setX(500);
+                // CONSTRAIN Y
+                if (coord.getY() < 0)
+                    coord.setY(0);
+                else if (coord.getY() > 500)
+                    coord.setY(500);
+            }
+        }
+        // ConvexHull to double check any conflicts
+        allPoly.convexHull();
+    }
+
+    // This to consistently keep centroidList updated everytime we want to load the updated centroids to centroidList
+    private void loadCentroids(Geometry polygons){
+        centroidList.clear();
+        for (int i=0; i < polygons.getNumGeometries();i++){
+            Geometry poly = polygons.getGeometryN(i);
+            double xCoord = poly.getCentroid().getX();
+            double yCoord = poly.getCentroid().getY();
+            centroidList.add(Vertex.newBuilder().setX(xCoord).setY(yCoord).build());
+        }
+    }
+
+    /**
      * This function will generate the Irregular Mesh using VoronoiDiagramBuilder from JTS
      * 1. Randomize points onto mesh - (# of points based on user-input)
      * 2. Relaxation Option - Dependent on User Input - Default 3
      * 3. Create Meshes with vertices and segment lists
      * @param numberPolygons
      */
-    public void IrregularMesh(int numberPolygons) {
+    public void IrregularMesh(int numberPolygons, int userRelax) {
         VoronoiDiagramBuilder voronoi = new VoronoiDiagramBuilder();
         Envelope env = new Envelope(new Coordinate(0, 0), new Coordinate(WIDTH, HEIGHT));
         voronoi.setClipEnvelope(env);//given diagram size constraint
         PrecisionModel pointAcc = new PrecisionModel(0.01);
         voronoi.setTolerance(0.01); //may be redundant
         Random Val = new Random();
-
 
         //Takes user input for the number of sites
         int points = numberPolygons;
@@ -131,16 +163,19 @@ public class IrregMeshGen extends GeneralMesh {
         voronoi.setSites(coords);
         GeometryFactory makePolygons = new GeometryFactory();
 
+        //allPolygons is like a finished puzzle, it contains all polygons
+        Geometry allPolygons = voronoi.getDiagram(makePolygons);
+        constrainPoly(allPolygons);
+        loadCentroids(allPolygons);
         // RELAXATION -----------------------
-        int relaxAmount = 3;        // RELAXATION AMOUNT BASED ON USER INPUT
+        int relaxAmount = userRelax;        // RELAXATION AMOUNT BASED ON USER INPUT
         for (int i=0; i < relaxAmount; i++){    // Based on user input, how many times to relax
             voronoi = relaxation(voronoi);      // Sets the voronoi to a new relaxed voronoi
         }
+
         // Adds all the centroids vertexes after relaxation, to the vertexList
         vertexList.addAll(centroidList);
 
-        //allPolygons is like a finished puzzle, it contains all polygons
-        Geometry allPolygons = voronoi.getDiagram(makePolygons);
 
         int numPoly = allPolygons.getNumGeometries();
         // This variable will hold the Coordinates of all the polygon shape
@@ -152,14 +187,13 @@ public class IrregMeshGen extends GeneralMesh {
 
         // For each coordinate, which is apart of a polygon
         List<List<Integer>> allPolygonSegments = new ArrayList<>();
-        for (Coordinate[] vertice : allPolygonVertices) {
+        for (Coordinate[] polyVertices : allPolygonVertices) {
+            List<Integer> polySegments = new ArrayList<>();
             // Create Segments between each point connecting all the points in the polygon making a shape
-            List<Integer> polygonSegments = new ArrayList<>();
-            for (int j = 0; j < vertice.length - 1; j++) {
-
+            for (int j = 0; j < polyVertices.length - 1; j++) {
                 // Get the two Vertices
-                Coordinate vert1 = vertice[j];
-                Coordinate vert2 = vertice[j + 1];
+                Coordinate vert1 = polyVertices[j];
+                Coordinate vert2 = polyVertices[j + 1];
                 // Get all the coordinates of V1 and V2
                 double x1 = vert1.getX();
                 double y1 = vert1.getY();
@@ -185,20 +219,20 @@ public class IrregMeshGen extends GeneralMesh {
                     segments.add(s);                // ADD IT TO THE SET
                     segmentList.add(s);             // ADD IT TO THE SEGMENT LIST
                 }
-
                 else{
                     System.out.println("cloneclone");
                 }
 
                 if (segmentList.contains(s)){
-                    polygonSegments.add(segmentList.indexOf(s));
+                    polySegments.add(segmentList.indexOf(s));
                 }
                 else{
-                    polygonSegments.add(segmentList.indexOf(s2));
+                    polySegments.add(segmentList.indexOf(s2));
                 }
+
             }
 
-            allPolygonSegments.add(polygonSegments);
+            allPolygonSegments.add(polySegments);
 
 //            polygonSegments.clear();
         }
@@ -214,8 +248,8 @@ public class IrregMeshGen extends GeneralMesh {
      * Runs the Irregular Mesh function, creates colors for segments and vertices
      * @return Mesh including all the colored vertexes and segments
      */
-    public Mesh generate(int numberPolygons) {
-        IrregularMesh(numberPolygons);
+    public Mesh generate(int numberPolygons, int userRelax) {
+        IrregularMesh(numberPolygons, userRelax);
         //COLOUR SITE VERTEXES AND SEGMENTS
         for (Vertex v : vertexList) {
             int red = 255;
@@ -233,6 +267,11 @@ public class IrregMeshGen extends GeneralMesh {
             int green = 0;
             int blue = 0;
             int alpha = 255;
+            if (neighbourConnectionList.contains(s)){
+                red = 169;
+                green = 169;
+                blue=169;
+            }
             colorSegment(s,red,green,blue,alpha );      // COLOUR THE SEGMENTS BLACK
             }
 

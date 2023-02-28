@@ -189,7 +189,7 @@ public class MeshGen extends GeneralMesh{
                     colorVertex(v,red,green,blue, alpha);
                 }
                 else{
-                    colorVertex(v, 0,0,0,0);
+                    colorVertex(v, 255,0,0,255);
                 }
             }
 
@@ -205,7 +205,7 @@ public class MeshGen extends GeneralMesh{
                     colorSegment(s,red,green,blue,alpha );
                 }
                 else{
-                    colorSegment(s, 0,0,0,0);
+                    colorSegment(s, 169,169,169,255);
                 }
             }
 

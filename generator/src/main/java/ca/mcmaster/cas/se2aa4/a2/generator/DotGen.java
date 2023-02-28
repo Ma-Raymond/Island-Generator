@@ -20,7 +20,7 @@ public class DotGen {
     private final int height = 500;
     private final int square_size = 20;
 
-    public List<Segment> segmentMaker(Integer i,Integer j, Integer[][] map, Set<Segment> segments,Set<Integer> visited){
+    private List<Segment> segmentMaker(Integer i,Integer j, Integer[][] map, Set<Segment> segments,Set<Integer> visited){
         Integer[][] directions = {{0,1},{0,-1},{1,0},{-1,0}};
         List<Segment> segmentList = new ArrayList<Segment>();
         for (Integer[] dir : directions){

@@ -27,7 +27,7 @@ public class MeshDump {
                 line.append(String.format("%s -> %s, ", p.getKey(), p.getValue()));
             }
             line.append("]");
-            System.out.println(line);
+//            System.out.println(line);
         }
     }
 }

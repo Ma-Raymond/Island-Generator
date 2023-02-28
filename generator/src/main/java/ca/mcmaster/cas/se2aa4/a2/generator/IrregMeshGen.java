@@ -89,7 +89,7 @@ public class IrregMeshGen extends GeneralMesh {
      * 3. Create Meshes with vertices and segment lists
      * @param numberPolygons
      */
-    private void IrregularMesh(int numberPolygons) {
+    public void IrregularMesh(int numberPolygons, int userRelax) {
         VoronoiDiagramBuilder voronoi = new VoronoiDiagramBuilder();
         Envelope env = new Envelope(new Coordinate(0, 0), new Coordinate(WIDTH, HEIGHT));
         voronoi.setClipEnvelope(env);//given diagram size constraint
@@ -117,7 +117,7 @@ public class IrregMeshGen extends GeneralMesh {
         constrainPoly(allPolygons);
         loadCentroids(allPolygons);
         // RELAXATION -----------------------
-        int relaxAmount = 1;        // RELAXATION AMOUNT BASED ON USER INPUT
+        int relaxAmount = userRelax;        // RELAXATION AMOUNT BASED ON USER INPUT
         for (int i=0; i < relaxAmount; i++){    // Based on user input, how many times to relax
             voronoi = relaxation(voronoi);      // Sets the voronoi to a new relaxed voronoi
         }
@@ -176,8 +176,8 @@ public class IrregMeshGen extends GeneralMesh {
      * Runs the Irregular Mesh function, creates colors for segments and vertices
      * @return Mesh including all the colored vertexes and segments
      */
-    public Mesh generate(int numberPolygons) {
-        IrregularMesh(numberPolygons);
+    public Mesh generate(int numberPolygons, int userRelax) {
+        IrregularMesh(numberPolygons, userRelax);
         //COLOUR SITE VERTEXES AND SEGMENTS
         for (Vertex v : vertexList) {
             int red = 255;

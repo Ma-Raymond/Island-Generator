@@ -9,17 +9,23 @@ public class DotGenTest {
 
     @Test
     public void meshIsNotNull() {
-        DotGen generator = new DotGen();
-        Structs.Mesh aMesh = generator.generate();
+        MeshGen generator = new MeshGen();
+        Structs.Mesh aMesh = generator.generate("");
         assertNotNull(aMesh);
     }
 
     @Test
-    public void meshIsEmpty() {
+    public void negativeMeshes() {
         IrregMeshGen generator = new IrregMeshGen();
         Structs.Mesh aMesh = generator.generate(-1,2);
         assertNotNull(aMesh);
     }
 
+    @Test
+    public void largeMeshes() {
+        IrregMeshGen generator = new IrregMeshGen();
+        Structs.Mesh aMesh = generator.generate(1000,2);
+        assertNotNull(aMesh);
+    }
 
 }

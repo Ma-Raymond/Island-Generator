@@ -1,4 +1,3 @@
-import ca.mcmaster.cas.se2aa4.a2.generator.DotGen;
 import ca.mcmaster.cas.se2aa4.a2.generator.IrregMeshGen;
 import ca.mcmaster.cas.se2aa4.a2.generator.MeshGen;
 import ca.mcmaster.cas.se2aa4.a2.io.MeshFactory;
@@ -61,6 +60,7 @@ public class Main {
         int numOfPolygons = Integer.parseInt(numPoly);
         int userRelaxRequests = Integer.parseInt(defaultRelaxTimes);
 
+
         if (regOrNot.equals("Irreg")) {
             IrregMeshGen gen = new IrregMeshGen();
             Mesh myMesh = gen.generate(numOfPolygons, userRelaxRequests);
@@ -72,6 +72,7 @@ public class Main {
             MeshFactory factory = new MeshFactory();
             factory.write(myMesh, args[0]);
         }
+
 
         System.out.println(regOrNot);
         System.out.println(numOfPolygons);

@@ -2,6 +2,8 @@
 class GraphicRenderer {
     -int THICKNESS
     +void render(Mesh aMesh, Graphics2D canvas)
+    -void renderSegments(Mesh aMesh, Graphics2D canvas, String debug)
+    -void renderVertices(Mesh aMesh, Graphics2D canvas, String debug, boolean isIrreg)
     -Color extractColor(List<Property> properties)
 
 }

@@ -41,64 +41,57 @@ public class IrregMeshGen extends GeneralMesh {
             double yCoord = poly.getCentroid().getY();
             coords.add(new Coordinate(xCoord,yCoord));
         }
-        loadCentroids(polygons);
         // Set new coords to the new diagram
         relaxVoronoi.setSites(coords);
         return relaxVoronoi;
     }
 
+    /**
+     * This method does the delaunay Triangulation and sets all Polygon's neighbour relations and creates segments based on it
+     * @param allPolygons
+     * @param allPolygonSegments
+     */
     public void delaunayTriangulation(Geometry allPolygons, List<List<Integer>> allPolygonSegments){
         int numPoly = allPolygons.getNumGeometries();
         List<Set<Integer>> neighbourConnectionsList = new ArrayList<>();
-        System.out.println(allPolygonSegments);
-        // Looping through all the polygons
+        // For all Polygons Find the neighbours for each polygons
         for(int i = 0; i < numPoly; i++){
             Set<Integer> neighboursList = new HashSet<>();
-
             // POLYGON SEGMENTS
             List<Integer> polygonSegments = allPolygonSegments.get(i);
-            System.out.println(polygonSegments);
+            // LOOPS through all the polygons to find matches
             for(int j = 0; j<numPoly; j++){
-                Vertex centroidCompare = centroidList.get(i);
                 List<Integer> polygonSegmentsCompare = allPolygonSegments.get(j);
+                // FOR EACH SEGMENT THE POLYGON HAS
                 for (int x = 0; x<polygonSegments.size(); x++){
                     int segment = polygonSegments.get(x);
+                    // COMPARE IT TO THE OTHER POLYGON TO SEE IF THEY HAVE A SHARING SEGMENT
                     for (int y = 0; y<polygonSegmentsCompare.size(); y++){
                         int segmentCompare = polygonSegmentsCompare.get(y);
+                        // FOUND SHARING SEGMENTS ADD THE POLYGON ID TO THE NEIGHBOUR LIST
                         if (segment == segmentCompare && i!=j){
                             neighboursList.add(j);
-                            System.out.println(neighboursList);
                         }
                     }
-
                 }
             }
-//
-
+            // Added the neighbourList to the neighbour Connection List
             neighbourConnectionsList.add(neighboursList);
-//            System.out.println(neighboursList);
         }
-
-
-
-
+        // Looping through each Polygon and getting it's neighbours
         for (int i = 0; i <numPoly; i++){
             Set<Integer> neighbours = neighbourConnectionsList.get(i);
-            System.out.println(neighbours);
             for (Integer j: neighbours){
-                System.out.println(j);
-                // Creating the segmentation
+                // Creating the segmentation and adding the neighbouring segments into the segmentList
                 Segment neighbourConnection = Segment.newBuilder().setV1Idx(vertexList.indexOf(centroidList.get(i))).setV2Idx(vertexList.indexOf(centroidList.get(j))).build();
                 if (!segmentList.contains(neighbourConnection)){
-                    System.out.println(neighbourConnection);
+                    // ADD SEGMENT TO THE SEGMENT LIST AND ADD TO THE NEIGHBOUTCONNECTIONLIST
                     segmentList.add(neighbourConnection);
                     neighbourConnectionList.add(neighbourConnection);
                 }
             }
         }
-
     }
-    //user gets to decide the number of polygons. Will be taken from command line
 
     /**
      * constrainPoly will clip all the polygon shapes into the 500x500 canvas.
@@ -108,12 +101,12 @@ public class IrregMeshGen extends GeneralMesh {
         for (int i= 0; i < allPoly.getNumGeometries();i++){
             Coordinate[] poly = allPoly.getCoordinates();
             for (Coordinate coord : poly){
-                // CONSTRAIN X
+                // CONSTRAIN X COORDINATES
                 if (coord.getX() < 0)
                     coord.setX(0);
                 else if (coord.getX() > 500)
                     coord.setX(500);
-                // CONSTRAIN Y
+                // CONSTRAIN Y COORDINATES
                 if (coord.getY() < 0)
                     coord.setY(0);
                 else if (coord.getY() > 500)
@@ -124,9 +117,14 @@ public class IrregMeshGen extends GeneralMesh {
         allPoly.convexHull();
     }
 
-    // This to consistently keep centroidList updated everytime we want to load the updated centroids to centroidList
+    /**
+     * This to consistently keep centroidList updated everytime we want to load the updated centroids to centroidList
+     * @param polygons
+     */
     private void loadCentroids(Geometry polygons){
+        // Clears the centroid list to check for any previous loaded centroids
         centroidList.clear();
+        // Loop through all the polygons, get their centroids and add it to the list based on their Geometry ID (GeometryN)
         for (int i=0; i < polygons.getNumGeometries();i++){
             Geometry poly = polygons.getGeometryN(i);
             double xCoord = poly.getCentroid().getX();
@@ -142,13 +140,12 @@ public class IrregMeshGen extends GeneralMesh {
      * 3. Create Meshes with vertices and segment lists
      * @param numberPolygons
      */
-    public void IrregularMesh(int numberPolygons, int userRelax) {
+    private void IrregularMesh(int numberPolygons, int userRelax) {
         VoronoiDiagramBuilder voronoi = new VoronoiDiagramBuilder();
         Envelope env = new Envelope(new Coordinate(0, 0), new Coordinate(WIDTH, HEIGHT));
         voronoi.setClipEnvelope(env);//given diagram size constraint
-        PrecisionModel pointAcc = new PrecisionModel(0.01);
-        voronoi.setTolerance(0.01); //may be redundant
-        Random Val = new Random();
+        voronoi.setTolerance(0.01); // Set Tolerance of Voronoi Diagram
+        Random Val = new Random();  // Random Variable to get random points on diagram
 
         //Takes user input for the number of sites
         int points = numberPolygons;
@@ -165,10 +162,12 @@ public class IrregMeshGen extends GeneralMesh {
         voronoi.setSites(coords);
         GeometryFactory makePolygons = new GeometryFactory();
 
-        //allPolygons is like a finished puzzle, it contains all polygons
+        //allPolygons contains all polygons, to access each polygon, you would have to do
         Geometry allPolygons = voronoi.getDiagram(makePolygons);
         constrainPoly(allPolygons);
         loadCentroids(allPolygons);
+
+
         // RELAXATION -----------------------
         int relaxAmount = userRelax;        // RELAXATION AMOUNT BASED ON USER INPUT
         for (int i=0; i < relaxAmount; i++){    // Based on user input, how many times to relax
@@ -177,11 +176,13 @@ public class IrregMeshGen extends GeneralMesh {
 
         // Adds all the centroids vertexes after relaxation, to the vertexList
         allPolygons = voronoi.getDiagram(makePolygons);
-        constrainPoly(allPolygons);
-        loadCentroids(allPolygons);
+        constrainPoly(allPolygons);     // Contrain to 500x500 after getting the voronoi diagram
 
+        // After loading all Centroids after relaxation or not, add all the centroids in vertexList as a Vertex Object
+        loadCentroids(allPolygons);
         vertexList.addAll(centroidList);
 
+        // Amount of polygons in the diagram
         int numPoly = allPolygons.getNumGeometries();
         // This variable will hold the Coordinates of all the polygon shape
         List<Coordinate[]> allPolygonVertices = new ArrayList<>();
@@ -217,18 +218,17 @@ public class IrregMeshGen extends GeneralMesh {
                     }
                 }
                 // After checking if ther vertex already exist, we can make the segment and check if the segment already exist or not.
-//                System.out.println(vertexList);
+                // We have two segments to double-check if the reversed segment exist too.
                 Segment s = Segment.newBuilder().setV1Idx(vertexList.indexOf(v1)).setV2Idx(vertexList.indexOf(v2)).build();
                 Segment s2 = Segment.newBuilder().setV1Idx(vertexList.indexOf(v2)).setV2Idx(vertexList.indexOf(v1)).build();
                 if (!segmentList.contains(s) && !segmentList.contains(s2)) {        // IF SEGMENT NOT IN THE SET ALREADY, ADD IT
                     segments.add(s);                // ADD IT TO THE SET
                     segmentList.add(s);             // ADD IT TO THE SEGMENT LIST
                 }
-                else{
-                    System.out.println("cloneclone");
-                }
 
-                if (segmentList.contains(s)){
+                // Linking the Polygons to the segments by creating a polygon segment list and adding it to allPolygonSegments List
+                // Now we will have a list of segment IDs for that aligns with the current polygon
+                if (segmentList.contains(s)){       // Would be either
                     polySegments.add(segmentList.indexOf(s));
                 }
                 else{
@@ -236,17 +236,11 @@ public class IrregMeshGen extends GeneralMesh {
                 }
 
             }
-
+            // Adds all the segments associated with the polygon into the allPolygonSegments list
             allPolygonSegments.add(polySegments);
-
-//            polygonSegments.clear();
         }
-        System.out.println(allPolygonSegments);
-
-
+        // After finishing the Irregular Mesh, we call the delaunayTriangulation method to make those neighbour relations
         delaunayTriangulation(allPolygons, allPolygonSegments);
-
-
     }
 
     /**
@@ -264,7 +258,8 @@ public class IrregMeshGen extends GeneralMesh {
             int green = 0;
             int blue = 0;
             int alpha = 255;
-            if (!centroidList.contains(v)){     // IF NOT A CENTROID, MAKE IT INVISIBLE
+            // IF NOT A CENTROID, MAKE IT INVISIBLE
+            if (!centroidList.contains(v)){
                 alpha = 0;
             }
             colorVertex(v, red, green, blue, alpha);
@@ -275,16 +270,16 @@ public class IrregMeshGen extends GeneralMesh {
             int green = 0;
             int blue = 0;
             int alpha = 255;
+            // IF THE SEGMENT IS A NEIGHBOUR, MAKE IT GREY COLOR
             if (neighbourConnectionList.contains(s)){
                 red = 169;
                 green = 169;
                 blue=169;
             }
             colorSegment(s,red,green,blue,alpha );      // COLOUR THE SEGMENTS BLACK
-            }
-
+        }
+        // RETURNS MESH TO BE READY FOR VISUALIZATION
         return Mesh.newBuilder().addAllVertices(vertexList).addAllSegments(segmentList).build();
-
     }
 
     /**

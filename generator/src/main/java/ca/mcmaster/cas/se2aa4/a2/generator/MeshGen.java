@@ -19,6 +19,10 @@ import java.util.List;
 
 
 // This is Part 2 using a more Object-Oriented Approach
+
+/**
+ * This abstract class serves as the base to a Mesh. This is a General Mesh containing all the nessasary components and attributes
+ */
 abstract class GeneralMesh {
     //THESE DATASETS ARE FOR REGULAR MESH
     public int WIDTH = 500;
@@ -34,10 +38,18 @@ abstract class GeneralMesh {
     DecimalFormat precision  = new DecimalFormat("0.00");
 }
 
+/**
+ * is the MeshGen Class where it contains the method generate() to generate the Mesh needed for the Mesh square grid.
+ */
 public class MeshGen extends GeneralMesh{
     public final int SQUARE_SIZE = 20;
-    public void makeVertex(){
-        Set<Integer> neighbourConnectionsPropertyList = new HashSet<>();
+
+    // This method includes creating grids, which incrementally calls makePolygon for each polygon
+
+    /**
+     * makeVertex will create the grid shape and call the makePolygon method to define each square as a polygon
+     */
+    private void makeVertex(){
         for(int x = 0; x < WIDTH; x += SQUARE_SIZE) {
             for(int y = 0; y < HEIGHT; y += SQUARE_SIZE) {
                 // Here I replicate a square with vertices
@@ -45,6 +57,7 @@ public class MeshGen extends GeneralMesh{
                 Vertex v2 = Vertex.newBuilder().setX(Double.parseDouble(precision.format(x + SQUARE_SIZE))).setY(Double.parseDouble(precision.format(y))).build();    // Top Right
                 Vertex v3 = Vertex.newBuilder().setX(Double.parseDouble(precision.format(x))).setY(Double.parseDouble(precision.format(y + SQUARE_SIZE))).build();    // Bottom Left
                 Vertex v4 = Vertex.newBuilder().setX( Double.parseDouble(precision.format(x+ SQUARE_SIZE))).setY(Double.parseDouble(precision.format(y + SQUARE_SIZE))).build();    // Bottom Right
+
                 // This list is made so I can conveniently run through each vertex in the square
                 List<Vertex> square = new ArrayList<Vertex>(Arrays.asList(v1,v2,v3,v4));
                 for (Vertex v : square){
@@ -53,58 +66,73 @@ public class MeshGen extends GeneralMesh{
                         vertexList.add(v);
                     }
                 }
-
-                // This function will create the segments and define the polygons of the square based on the vertexes made here
+                // This function will create the segments and define the square shape as a polygon on the vertexes made here
                 makePolygon(vertexList.indexOf(v1),vertexList.indexOf(v2),vertexList.indexOf(v3),vertexList.indexOf(v4));
             }
         }
+    }
 
-
+    /**
+     * After creating all the vertices and layout as a grid, here we load all the neighbour relations between all the polygons
+     * Also add the neighbour relations to the segmentList and neighbourConnectionsList
+     */
+    private void loadNeighbourRelations(){
+        // After all the polygons are made, here is where we make neighbour relations
         Set<Integer> neighboursList = new HashSet<>();
+        // FOR EACH POLYGON
         for(Polygon poly: polygonList){
+            // SINCE WE ONLY ADDED ONE EXTRA PROPERTY, get(0) gets the vertices relations
             String val = poly.getPropertiesList().get(0).getValue();
             String[] raw = val.split(",");
+            // Runs through the polygonList to find a neighbour match utilizing i as the neighbour ID
             for(int i = 0; i<polygonList.size(); i++){
+                // Get the comparing polygon as an object
                 Polygon polyCompare = polygonList.get(i);
-                String valCompare = polyCompare.getPropertiesList().get(0).getValue();
+                String valCompare = polyCompare.getPropertiesList().get(0).getValue();  // Get containing vertexes
                 String[] rawCompare = valCompare.split(",");
+                // Since we know they have 4 vertices since its a grid, run through all 4
                 for (int j = 0; j<4; j++){
                     int vertex = Integer.parseInt(raw[j]);
                     for (int y = 0; y<4; y++){
                         int vertexCompare = Integer.parseInt(rawCompare[y]);
+                        // If the centroids are not the same and they both share a vertex, they are neighbours.
                         if (vertex == vertexCompare && (poly.getCentroidIdx() != polyCompare.getCentroidIdx())){
-                            neighboursList.add(i);
-
+                            neighboursList.add(i);  // Add the polygon ID to the neighbour list of the current Polygon
                         }
                     }
-
                 }
             }
-            Property neighbours = Property.newBuilder().setKey("neighbours").setValue(String.valueOf(neighboursList)).build();
+            // CREATE A NEW POLYGON THAT CONTAINS THE NEIGHBOUR LIST
             Polygon polyNew = Polygon.newBuilder(poly).addAllNeighborIdxs(neighboursList).build();
-            polygonList.set(polygonList.indexOf(poly), polyNew);
-            neighboursList.clear();
+            polygonList.set(polygonList.indexOf(poly), polyNew);    // Set the polygon to the new polygon with neighbours
+            neighboursList.clear();     // Clear for next iteration
         }
 
-
+        // Here we will create the segment objects to connect the neighbour relations to visualize
         for (Polygon poly:polygonList){
             for (Integer i : poly.getNeighborIdxsList()){
+                // Segment object which is the actual neighbour relation
                 Segment neighbourConnection = Segment.newBuilder().setV1Idx(poly.getCentroidIdx()).setV2Idx(polygonList.get(i).getCentroidIdx()).build();
 
+                // If it not is already in the segmentList, add it
                 if (!segmentList.contains(neighbourConnection)){
                     segmentList.add(neighbourConnection);
                     neighbourConnectionList.add(neighbourConnection);
                 }
-                neighbourConnectionsPropertyList.add(segmentList.indexOf(neighbourConnection));
             }
-
-            Property neighbourConnections = Property.newBuilder().setKey("neighbourConnections").setValue(String.valueOf(neighbourConnectionsPropertyList)).build();
-            Polygon polyNew = Polygon.newBuilder(poly).addProperties(neighbourConnections).build();
-            polygonList.set(polygonList.indexOf(poly), polyNew);
-            neighbourConnectionsPropertyList.clear();
         }
     }
-    public void makePolygon(int v1Id,int v2Id,int v3Id,int v4Id){
+
+
+    /**
+     * Given 4 parameters of vertex IDs, we can create polygons and segments.
+     * Polygons created will also be updated on the polygonList data so that we can use it for other features
+     * @param v1Id
+     * @param v2Id
+     * @param v3Id
+     * @param v4Id
+     */
+    private void makePolygon(int v1Id,int v2Id,int v3Id,int v4Id){
         // Created Segments here based on the identifier of the vertexes to make a square shape
         Segment s1 = Segment.newBuilder().setV1Idx(v1Id).setV2Idx(v2Id).build();
         Segment s2 = Segment.newBuilder().setV1Idx(v2Id).setV2Idx(v4Id).build();
@@ -123,17 +151,18 @@ public class MeshGen extends GeneralMesh{
         List<Integer> squarelist = new ArrayList<Integer>(Arrays.asList(segmentList.indexOf(s1),segmentList.indexOf(s2),segmentList.indexOf(s3),segmentList.indexOf(s4)));
 
 
-
-        // Gayan will make centroids
+        // Getting the vertexes to reference to calculate the centroid location
         Vertex vertex1 = vertexList.get(v1Id);
         Vertex vertex2 = vertexList.get(v2Id);
         Vertex vertex3 = vertexList.get(v3Id);
 
-
+        // Get the coordinate of the centroid X and Y values
         double centroidIdx = Double.parseDouble(precision.format((vertex1.getX()+vertex2.getX())/2));
         double centroidIdy = Double.parseDouble(precision.format((vertex1.getY()+vertex3.getY())/2));
+        // Create a CENTROID as a Vertex object to be visualized later
         Vertex centroid = Vertex.newBuilder().setX(centroidIdx).setY(centroidIdy).build();
         vertexList.add(centroid);
+        // Add to a CENTROID List to be used for colouring
         centroidList.add(centroid);
         Property vertices = Property.newBuilder().setKey("vertices").setValue(v1Id + "," + v2Id + "," + v3Id + "," + v4Id).build();
         // Creates a polygon object, adds the list of integers of segments to the object
@@ -143,77 +172,57 @@ public class MeshGen extends GeneralMesh{
 
 
 
+    public Mesh generate() {
 
-    public Mesh generate(String Mode) {
-
-        // This will make the vertexes
+        // This will run the program to create the grid and fill in the vertices, segments and polygon
         makeVertex();
+        loadNeighbourRelations();
 
-
-        if (Mode.equals("true")) {
-            for (Vertex v : vertexList){
-                int red = 0;
-                int green = 0;
-                int blue = 0;
+        Random bag = new Random();
+        for (Vertex v : vertexList) {
+            // If not a centroid, color randomly
+            if (!centroidList.contains(v)){
+                int red = bag.nextInt(255);
+                int green = bag.nextInt(255);
+                int blue = bag.nextInt(255);
                 int alpha = 255;
-                if (centroidList.contains(v)){
-                    red = 255;
-                }
-                colorVertex(v, red, green, blue,alpha);
+                colorVertex(v,red,green,blue, alpha);
             }
-
-
-            //Make segments black
-            for (Segment s : segmentList){
-                int red = 0;
-                int green = 0;
-                int blue = 0;
-                int alpha = 255;
-                if (neighbourConnectionList.contains(s)){
-                    red = 169;
-                    green = 169;
-                    blue = 169;
-                }
-                colorSegment(s,red, green, blue, alpha);
+            else{
+                // If centroid, colour red
+                colorVertex(v, 255,0,0,255);
             }
         }
-        else {
 
-            Random bag = new Random();
-            for (Vertex v : vertexList) {
-                if (!centroidList.contains(v)){
-                    int red = bag.nextInt(255);
-                    int green = bag.nextInt(255);
-                    int blue = bag.nextInt(255);
-                    int alpha = 255;
-                    colorVertex(v,red,green,blue, alpha);
-                }
-                else{
-                    colorVertex(v, 255,0,0,255);
-                }
+        //Coloring the Segments
+        for (Segment s : segmentList) {
+            // If segment not a neighbour relation, colour based on the two vertices it is attached to
+            if (!neighbourConnectionList.contains(s)){
+                Color v1Color = extractColor(vertexList.get(s.getV1Idx()).getPropertiesList());
+                Color v2Color = extractColor(vertexList.get(s.getV2Idx()).getPropertiesList());
+                int red = (v1Color.getRed() + v2Color.getRed()) / 2;
+                int green = (v1Color.getGreen() + v2Color.getGreen()) / 2;
+                int blue = (v1Color.getBlue() + v2Color.getBlue()) / 2;
+                int alpha = 255;
+                colorSegment(s,red,green,blue,alpha );
             }
-
-            //Coloring the Segments
-            for (Segment s : segmentList) {
-                if (!neighbourConnectionList.contains(s)){
-                    Color v1Color = extractColor(vertexList.get(s.getV1Idx()).getPropertiesList());
-                    Color v2Color = extractColor(vertexList.get(s.getV2Idx()).getPropertiesList());
-                    int red = (v1Color.getRed() + v2Color.getRed()) / 2;
-                    int green = (v1Color.getGreen() + v2Color.getGreen()) / 2;
-                    int blue = (v1Color.getBlue() + v2Color.getBlue()) / 2;
-                    int alpha = 255;
-                    colorSegment(s,red,green,blue,alpha );
-                }
-                else{
-                    colorSegment(s, 169,169,169,255);
-                }
+            else{
+                // If the segment is a neighbour relation, colour it grey
+                colorSegment(s, 169,169,169,255);
             }
-
         }
-        return Mesh.newBuilder().addAllVertices(vertexList).addAllSegments(segmentList).build();
-
+        // RETURN MESH OBJECT TO BE VISUALIZED
+        return Mesh.newBuilder().addAllVertices(vertexList).addAllSegments(segmentList).addAllPolygons(polygonList).build();
     }
 
+    /**
+     * Called when given a vertex, and replaces the vertex with added colour
+     * @param vertex
+     * @param red
+     * @param green
+     * @param blue
+     * @param alpha
+     */
     private void colorVertex(Vertex vertex, int red, int green, int blue, int alpha){
         Random bag = new Random();
         String colorCode = red + "," + green + "," + blue + "," + alpha;
@@ -223,6 +232,14 @@ public class MeshGen extends GeneralMesh{
 
     }
 
+    /**
+     * Called when given a segment, and replaces the segment with added colour
+     * @param seg
+     * @param red
+     * @param green
+     * @param blue
+     * @param alpha
+     */
     private void colorSegment(Segment seg, int red, int green, int blue, int alpha){
         Property color = Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue+ "," + alpha).build();
         Segment colored = Segment.newBuilder(seg).addProperties(color).build();
@@ -230,6 +247,11 @@ public class MeshGen extends GeneralMesh{
     }
 
 
+    /**
+     * Give a property list, return back the colour of the Vertex/Segment Object
+     * @param properties
+     * @return
+     */
     private Color extractColor(List<Property> properties) {
         String val = null;
         for(Property p: properties) {
@@ -237,7 +259,7 @@ public class MeshGen extends GeneralMesh{
                 val = p.getValue();
             }
         }
-        if (val == null)
+        if (val == null)    // If colour not found, return colour black
             return Color.BLACK;
         String[] raw = val.split(",");
         int red = Integer.parseInt(raw[0]);

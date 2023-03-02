@@ -10,10 +10,9 @@ public class DotGenTest {
     @Test
     public void meshIsNotNull() {
         MeshGen generator = new MeshGen();
-        Structs.Mesh aMesh = generator.generate("");
+        Structs.Mesh aMesh = generator.generate();
         assertNotNull(aMesh);
     }
-
     @Test
     public void negativeMeshes() {
         IrregMeshGen generator = new IrregMeshGen();
@@ -25,6 +24,12 @@ public class DotGenTest {
     public void largeMeshes() {
         IrregMeshGen generator = new IrregMeshGen();
         Structs.Mesh aMesh = generator.generate(1000,2);
+        assertNotNull(aMesh);
+    }
+    @Test
+    public void negativeRelaxation() {
+        IrregMeshGen generator = new IrregMeshGen();
+        Structs.Mesh aMesh = generator.generate(10,-2);
         assertNotNull(aMesh);
     }
 

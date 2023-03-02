@@ -18,18 +18,20 @@ import javax.swing.*;
 import java.awt.geom.Line2D;
 import java.util.Random;
 
+/**
+ * This Graphic Renderer is the core of rendering the mesh, colouring all polygons
+ */
 public class GraphicRenderer {
 
     private static final int THICKNESS = 3;
-    public void render(Mesh aMesh, Graphics2D canvas, String debug, String Irreg) {
-        canvas.setColor(Color.BLACK);
-        Stroke stroke = new BasicStroke(0.5f);
-        canvas.setStroke(stroke);
 
-
-
-
-
+    /**
+     * Renders all Segments
+     * @param aMesh
+     * @param canvas
+     * @param debug
+     */
+    private void renderSegments(Mesh aMesh, Graphics2D canvas, String debug){
         // FOR EACH SEGMENT IN THE MESH FILE, GET THE VERTEXES BASED ON THE V1Idx and V2Idx
         for (Segment s: aMesh.getSegmentsList()){
             Vertex vertex = aMesh.getVerticesList().get(s.getV1Idx());
@@ -45,31 +47,29 @@ public class GraphicRenderer {
                 if (p.getKey().equals("rgb_color")) {
                     if (p.getValue().equals("169,169,169,255")){
                         isNeighbour = true;
-                        System.out.println(p.getValue().toString());
                     }
                 }
             }
-            System.out.println(isNeighbour);
-            System.out.println(debug);
+            // If the debugMode is Off and the segment is not a neighbour relation
             if (debug.equals("debugOff") && !isNeighbour) {
                 Color old = canvas.getColor();
                 Stroke oldStroke = canvas.getStroke();
                 canvas.setColor(extractColor(s.getPropertiesList()));
                 Line2D seg = new Line2D.Double(x1, y1, x2, y2);
-                Stroke stroke1 = new BasicStroke(2);
+                Stroke stroke1 = new BasicStroke(1);
                 canvas.setStroke(stroke1);
                 canvas.draw(seg);
                 canvas.setStroke(oldStroke);
                 canvas.setColor(old);
             }
+            // If debug is on, show the neighbour relations
             else if (debug.equals("debugOn")){
                 Color old = canvas.getColor();
                 Stroke oldStroke = canvas.getStroke();
 
-                if (isNeighbour){
-                    System.out.println("IM A Neighbour");
+                if (isNeighbour){       // Colour the Neighbour Relations Grey
                     canvas.setColor(new Color(169,169,169,50));
-                } else{
+                } else{     // Colour the Segments Black
                     canvas.setColor(Color.BLACK);
                 }
                 Line2D seg = new Line2D.Double(x1, y1, x2, y2);
@@ -79,9 +79,17 @@ public class GraphicRenderer {
                 canvas.setStroke(oldStroke);
                 canvas.setColor(old);
             }
-
         }
+    }
 
+    /**
+     * Renders all Vertices
+     * @param aMesh
+     * @param canvas
+     * @param debug
+     * @param isIrreg
+     */
+    private void renderVertices(Mesh aMesh, Graphics2D canvas, String debug, boolean isIrreg){
         // FOR EACH VERTEX GET THE X AND Y VALUE, GET THE COLOR AND CREATE AN ELLIPSE2D VISUALIZED DOT
         for (Vertex v: aMesh.getVerticesList()) {
             double centre_x = v.getX() - (THICKNESS/2.0d);
@@ -90,47 +98,36 @@ public class GraphicRenderer {
             for (Property p : v.getPropertiesList()) {
                 // TRY TO FIND THE RGB COLOR
                 if (p.getKey().equals("rgb_color")) {
-                    if (p.getValue().equals("255,0,0,255")){
+                    if (p.getValue().equals("255,0,0,255")){    // If a vertex is red, it is a centroid
                         isCentroid = true;
                     }
                 }
             }
-            if (Irreg.equals("IrregOn")){
-                if (debug.equals("debugOff")) {
-                    Color old = canvas.getColor();
-                    canvas.setColor(extractColor(v.getPropertiesList()));
-                    Ellipse2D point = new Ellipse2D.Double(centre_x, centre_y, THICKNESS, THICKNESS);
-                    canvas.fill(point);
-                    canvas.setColor(old);
-                }
-                if (debug.equals("debugOn")){
-                    Color old = canvas.getColor();
-                    if (isCentroid){
-                        System.out.println("IM A CETROID");
-                        canvas.setColor(Color.RED);
-                    } else{
-                        canvas.setColor(Color.BLACK);
-                    }
-                    Ellipse2D point = new Ellipse2D.Double(centre_x, centre_y, THICKNESS, THICKNESS);
-                    canvas.fill(point);
-                    canvas.setColor(old);
-                }
+            // If it is a irregular mode, show the centroids even without debug
+            if (isIrreg){
+                // If it is in debug mode, get all vertices colours
+                Color old = canvas.getColor();
+                canvas.setColor(extractColor(v.getPropertiesList()));
+                Ellipse2D point = new Ellipse2D.Double(centre_x, centre_y, THICKNESS, THICKNESS);
+                canvas.fill(point);
+                canvas.setColor(old);
             }
             else {
+                // Regular Mode/Grid Mode
                 if (debug.equals("debugOff") && !isCentroid) {
+                    // Debug Mode should not show centroids for Grid Mode
                     Color old = canvas.getColor();
-
                     canvas.setColor(extractColor(v.getPropertiesList()));
                     Ellipse2D point = new Ellipse2D.Double(centre_x, centre_y, THICKNESS, THICKNESS);
                     canvas.fill(point);
                     canvas.setColor(old);
                 }
                 if (debug.equals("debugOn")) {
+                    // DEBUG MODE ON
                     Color old = canvas.getColor();
-                    if (isCentroid) {
-                        System.out.println("IM A CETROID");
+                    if (isCentroid) {   // Show Centroid
                         canvas.setColor(Color.RED);
-                    } else {
+                    } else {    // Colour the Vertices Black
                         canvas.setColor(Color.BLACK);
                     }
                     Ellipse2D point = new Ellipse2D.Double(centre_x, centre_y, THICKNESS, THICKNESS);
@@ -138,14 +135,24 @@ public class GraphicRenderer {
                     canvas.setColor(old);
                 }
             }
-
         }
-
-
-
     }
 
+    public void render(Mesh aMesh, Graphics2D canvas, String debug) {
+        canvas.setColor(Color.BLACK);
+        Stroke stroke = new BasicStroke(0.5f);
+        canvas.setStroke(stroke);
+        // Since the Irregular Mesh is made with the Voronoi Library, it doesn't have a Structs.Polygon mesh. Here is how we differentiate the two
+        boolean isIrreg = (aMesh.getPolygonsCount() == 0);
+        renderSegments(aMesh,canvas,debug);
+        renderVertices(aMesh,canvas,debug,isIrreg);
+    }
 
+    /**
+     * This function will extract the colour from the property rgb_color and if there isn't a property of gb_colour, color it black
+     * @param properties
+     * @return
+     */
     private Color extractColor(List<Property> properties) {
         String val = null;
         // EXTRACTCOLOR GOES THROUGH ALL THE PROPERTIES OF THE OBJECT
@@ -167,7 +174,4 @@ public class GraphicRenderer {
         // RETURN AS COLOR OBJECT
         return new Color(red, green, blue, alpha);
     }
-
-
-
 }

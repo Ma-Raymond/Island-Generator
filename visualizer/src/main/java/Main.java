@@ -24,24 +24,28 @@ public class Main {
         CommandLineParser parser = new DefaultParser();
         Options options = new Options();
         options.addOption("X", false, "Toggles Debug Mode");
-        options.addOption("I", false, "Toggles Debug Mode");
-
+        options.addOption("h", "help",false, "Help Menu, lists possible commands");
 
         //Defaults to Debug being off
         String debug = "debugOff";
-        String Irreg = "IrregOff";
-
 
         try{
             CommandLine commandline = parser.parse(options, args);
             if (commandline.hasOption("X")){
                 debug = "debugOn";
             }
-            if (commandline.hasOption("I")){
-                Irreg = "IrregOn";
+            if (commandline.hasOption("h")){
+                System.out.println("You've reached the help menu!");
+                System.out.println("Enter these commands to personalize the mesh you would like to visualize! \n" +
+                        "If no commands are entered, the default mesh will appear.");
+                System.out.println("-X ~~ Toggle debug mode. Works for both regular and irregular mesh. \n");
             }
         } catch (ParseException e) {
-            System.out.println("Why dont dis work :(");
+            System.out.println("----------------------------------------------ERROR MESSAGE----------------------------------------------\n");
+            System.out.println("Please Re-Enter. ERROR RECEIVED: \""+e.getMessage()+"\". Use --help/-h");
+            System.out.println("-X ~~ Toggle debug mode. Works for both regular and irregular mesh. \n");
+            System.out.println("----------------------------------------------ERROR MESSAGE----------------------------------------------\n");
+            System.exit(1);
         }
 
         // Getting width and height for the canvas
@@ -56,7 +60,7 @@ public class Main {
         Graphics2D canvas = SVGCanvas.build((int) 500, (int) 500);
         GraphicRenderer renderer = new GraphicRenderer();
         // Painting the mesh on the canvas
-        renderer.render(aMesh, canvas, debug, Irreg);
+        renderer.render(aMesh, canvas, debug);
         // Storing the result in an SVG file
         SVGCanvas.write(canvas, output);
         // Dump the mesh to stdout

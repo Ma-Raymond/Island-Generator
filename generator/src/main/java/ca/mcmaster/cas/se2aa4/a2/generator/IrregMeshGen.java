@@ -77,6 +77,7 @@ public class IrregMeshGen extends GeneralMesh {
             }
             // Added the neighbourList to the neighbour Connection List
             neighbourConnectionsList.add(neighboursList);
+            polygonList.set(i, Structs.Polygon.newBuilder(polygonList.get(i)).addAllNeighborIdxs(neighboursList).build());
         }
         // Looping through each Polygon and getting it's neighbours
         for (int i = 0; i <numPoly; i++){
@@ -90,6 +91,7 @@ public class IrregMeshGen extends GeneralMesh {
                     neighbourConnectionList.add(neighbourConnection);
                 }
             }
+
         }
     }
 
@@ -151,13 +153,23 @@ public class IrregMeshGen extends GeneralMesh {
         int points = numberPolygons;
         List<Coordinate> coords = new ArrayList<Coordinate>();
 
-        // Randomly generates coordinates based on the canvas size
+//         Randomly generates coordinates based on the canvas size
         for (int i = 0; i < points; i++) {
             int xCoord = Val.nextInt(WIDTH);
             int yCoord = Val.nextInt(HEIGHT);
             //ADD SITES TO COORDINATE LIST FOR VORONOI BUILDER
             coords.add(new Coordinate(xCoord,yCoord));
         }
+
+        // SQUARES
+//        int SQUARE_SIZE = 25;
+//        for(int x = SQUARE_SIZE; x < WIDTH; x += SQUARE_SIZE) {
+//            for(int y = SQUARE_SIZE; y < HEIGHT; y += SQUARE_SIZE) {
+//                //ADD SITES TO COORDINATE LIST FOR VORONOI BUILDER
+//                coords.add(new Coordinate(x,y));
+//            }
+//        }
+//
         // SET THE COORDINATES AS SITES TO THE VORONOI
         voronoi.setSites(coords);
         GeometryFactory makePolygons = new GeometryFactory();
@@ -189,11 +201,15 @@ public class IrregMeshGen extends GeneralMesh {
         for (int i = 0; i < numPoly; i++) { //will get vertices list of each individual polygon
             Geometry poly = allPolygons.getGeometryN(i); // Indivdiual Polygon N
             allPolygonVertices.add(poly.getCoordinates());  // Add the coordinates of the polygon N into the polygonVertices list
+
         }
 
         // For each coordinate, which is apart of a polygon
         List<List<Integer>> allPolygonSegments = new ArrayList<>();
-        for (Coordinate[] polyVertices : allPolygonVertices) {
+        for (int i =0; i< allPolygonVertices.size(); i++){
+            //
+            Coordinate[] polyVertices = allPolygonVertices.get(i);
+            List<Integer> polyVerticesIdx = new ArrayList<>();
             List<Integer> polySegments = new ArrayList<>();
             // Create Segments between each point connecting all the points in the polygon making a shape
             for (int j = 0; j < polyVertices.length - 1; j++) {
@@ -217,6 +233,14 @@ public class IrregMeshGen extends GeneralMesh {
                         vertexList.add(v);              // ADD IT TO THE VERTEX LIST
                     }
                 }
+                if (j == polyVertices.length - 2){
+                    polyVerticesIdx.add(vertexList.indexOf(v1));
+                    polyVerticesIdx.add(vertexList.indexOf(v2));
+                }
+                else{
+                    polyVerticesIdx.add(vertexList.indexOf(v1));
+                }
+
                 // After checking if ther vertex already exist, we can make the segment and check if the segment already exist or not.
                 // We have two segments to double-check if the reversed segment exist too.
                 Segment s = Segment.newBuilder().setV1Idx(vertexList.indexOf(v1)).setV2Idx(vertexList.indexOf(v2)).build();
@@ -234,13 +258,24 @@ public class IrregMeshGen extends GeneralMesh {
                 else{
                     polySegments.add(segmentList.indexOf(s2));
                 }
-
             }
+            String vertexStrings = "";
+            for (int k = 0; k < polyVerticesIdx.size(); k++){
+                if (k == polyVerticesIdx.size() -1){
+                    vertexStrings = vertexStrings + polyVerticesIdx.get(k);
+                    continue;
+                }
+                vertexStrings = vertexStrings + polyVerticesIdx.get(k) + ",";
+            }
+            Property vertices = Property.newBuilder().setKey("vertices").setValue(vertexStrings).build();
+            polygonList.add(Structs.Polygon.newBuilder().addAllSegmentIdxs(polySegments).addProperties(vertices).setCentroidIdx(vertexList.indexOf(centroidList.get(i))).build());
             // Adds all the segments associated with the polygon into the allPolygonSegments list
             allPolygonSegments.add(polySegments);
         }
         // After finishing the Irregular Mesh, we call the delaunayTriangulation method to make those neighbour relations
         delaunayTriangulation(allPolygons, allPolygonSegments);
+
+        // Converting Polygon to Structs Version
     }
 
     /**
@@ -279,7 +314,7 @@ public class IrregMeshGen extends GeneralMesh {
             colorSegment(s,red,green,blue,alpha );      // COLOUR THE SEGMENTS BLACK
         }
         // RETURNS MESH TO BE READY FOR VISUALIZATION
-        return Mesh.newBuilder().addAllVertices(vertexList).addAllSegments(segmentList).build();
+        return Mesh.newBuilder().addAllVertices(vertexList).addAllSegments(segmentList).addAllPolygons(polygonList).build();
     }
 
     /**

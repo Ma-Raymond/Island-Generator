@@ -68,3 +68,4 @@ public class Main {
         dumper.dump(aMesh);
     }
 }
+// java -jar visualizer.jar ../island/island.mesh sample.svg

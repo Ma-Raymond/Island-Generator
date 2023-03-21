@@ -229,7 +229,6 @@ public class MeshGen extends GeneralMesh{
         Property color = Property.newBuilder().setKey("rgb_color").setValue(colorCode).build();
         Vertex colored = Vertex.newBuilder(vertex).addProperties(color).build();
         vertexList.set(vertexList.indexOf(vertex), colored);
-
     }
 
     /**

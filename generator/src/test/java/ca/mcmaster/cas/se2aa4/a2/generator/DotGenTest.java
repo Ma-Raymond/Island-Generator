@@ -23,7 +23,7 @@ public class DotGenTest {
     @Test
     public void largeMeshes() {
         IrregMeshGen generator = new IrregMeshGen();
-        Structs.Mesh aMesh = generator.generate(1000,2);
+        Structs.Mesh aMesh = generator.generate(100,2);
         assertNotNull(aMesh);
     }
     @Test

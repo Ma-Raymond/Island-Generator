@@ -3,16 +3,14 @@ package ca.mcmaster.cas.se2aa4.a2.visualizer;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Mesh;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Vertex;
-import ca.mcmaster.cas.se2aa4.a2.io.Structs.Polygon;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Property;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Segment;
 
 
-import java.awt.Graphics2D;
-import java.awt.Stroke;
-import java.awt.BasicStroke;
-import java.awt.Color;
+import java.awt.*;
+import java.awt.Polygon;
 import java.awt.geom.Ellipse2D;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import java.awt.geom.Line2D;
@@ -138,12 +136,55 @@ public class GraphicRenderer {
         }
     }
 
+    private void renderPolygon(Mesh aMesh, Graphics2D canvas, String debug){
+        for (Structs.Polygon poly : aMesh.getPolygonsList()){
+            Color old = canvas.getColor();
+
+            canvas.setColor(extractColor(poly.getPropertiesList()));
+            Polygon polyFill = new Polygon();
+            List<Segment> segmentList = aMesh.getSegmentsList();
+            List<Vertex> vertexList = aMesh.getVerticesList();
+            List<Integer> polyVertices = extractVertices(poly.getPropertiesList());
+
+            for (int i =0; i< polyVertices.size(); i++){
+                double x = vertexList.get(polyVertices.get(i)).getX();
+                double y = vertexList.get(polyVertices.get(i)).getY();
+                polyFill.addPoint((int)x,(int)y);
+            }
+            //Get color of polygon, set canvas color to color of polygon
+            Color color = extractColor(poly.getPropertiesList());
+            canvas.setColor(color);
+            canvas.fillPolygon(polyFill);
+            canvas.setColor(old);
+        }
+    }
+    private List<Integer> extractVertices(List<Property> properties){
+        String val = null;
+        for(Property p: properties) {
+            // TRY TO FIND THE RGB COLOR
+            if (p.getKey().equals("vertices")) {
+                val = p.getValue();
+            }
+        }
+        if (val == null){       // IF THE RGB COLOR PROPERTY DOESNT EXIST, COVER THAT CASE BY MAKING IT BLACK
+            System.out.println("NO VERTEX PROPERTY");
+            return null;
+        }
+        String[] raw = val.split(",");
+        List<Integer> rawInts = new ArrayList<>();
+        for (int i =0; i< raw.length;i++){
+            Integer value = Integer.parseInt(raw[i]);
+            rawInts.add(value);
+        }
+        return rawInts;
+    }
     public void render(Mesh aMesh, Graphics2D canvas, String debug) {
         canvas.setColor(Color.BLACK);
         Stroke stroke = new BasicStroke(0.5f);
         canvas.setStroke(stroke);
         // Since the Irregular Mesh is made with the Voronoi Library, it doesn't have a Structs.Polygon mesh. Here is how we differentiate the two
         boolean isIrreg = (aMesh.getPolygonsCount() == 0);
+        renderPolygon(aMesh,canvas,debug);
         renderSegments(aMesh,canvas,debug);
         renderVertices(aMesh,canvas,debug,isIrreg);
     }

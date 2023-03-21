@@ -27,9 +27,9 @@ public class Main {
         //Default debug mode toggle state
         String debug = "debugOff";
         //Default number of Polygons
-        String numPoly = "100";
+        String numPoly = "450";
         //Default relaxations
-        String defaultRelaxTimes = "1";
+        String defaultRelaxTimes = "200";
 
 
         // Default Values

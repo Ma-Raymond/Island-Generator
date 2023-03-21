@@ -91,16 +91,17 @@ public class IslandGen {
         }
         System.out.println(heightPoints.toString());
         Random rand = new Random();
-        for (int i = 0; i < rand.nextInt(2);i++){
+        for (int i = 0; i < rand.nextInt(1,4);i++){
             int randIdx = rand.nextInt(heightPoints.size());
-            Polygon poly = polygonList.get(heightPoints.get(randIdx));
+            int polyIdx = heightPoints.get(randIdx);
+            Polygon poly = polygonList.get(polyIdx);
             List<Integer> neighbourList = poly.getNeighborIdxsList();
             colorHeight(poly,1.5);
-            elevations.set(polygonList.indexOf(poly),1.5);
+            elevations.set(polyIdx,1.5);
             for (Integer j : neighbourList){
                 Polygon neighbourPoly = polygonList.get(j);
                 colorHeight(neighbourPoly,1.2);
-                elevations.set(polygonList.indexOf(neighbourPoly),1.2);
+                elevations.set(j,1.2);
             }
         }
     }

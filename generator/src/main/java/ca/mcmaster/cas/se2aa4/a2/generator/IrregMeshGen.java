@@ -201,7 +201,6 @@ public class IrregMeshGen extends GeneralMesh {
         for (int i = 0; i < numPoly; i++) { //will get vertices list of each individual polygon
             Geometry poly = allPolygons.getGeometryN(i); // Indivdiual Polygon N
             allPolygonVertices.add(poly.getCoordinates());  // Add the coordinates of the polygon N into the polygonVertices list
-
         }
 
         // For each coordinate, which is apart of a polygon

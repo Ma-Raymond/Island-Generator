@@ -17,7 +17,7 @@ public class Main {
 
         // Island Generation
         IslandGen gen = new IslandGen();
-        Mesh myMesh = gen.generate(aMesh);
+        Mesh myMesh = gen.generate(aMesh,"Circle");
 
         // Outputing to new Mesh object
         MeshFactory factory = new MeshFactory();

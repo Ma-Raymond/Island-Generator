@@ -17,7 +17,7 @@ public class IslandGen {
     List<Polygon> polygonList;
     List<Segment> segmentList;
     List<Vertex> vertexList;
-    List<Integer> elevations;
+    List<Double> elevations;
     String islandColor = "253,255,208,255";
     List<Integer> islandBlocks = new ArrayList<>();
 
@@ -53,7 +53,7 @@ public class IslandGen {
 
         // Set new Stats
         int nPolygons = polygonList.size();
-        elevations = new ArrayList<Integer>(Collections.nCopies(nPolygons, 0));
+        elevations = new ArrayList<Double>(Collections.nCopies(nPolygons, 1.0));
         // New Island Meshes
         circleIsland(aMesh);
 
@@ -96,9 +96,11 @@ public class IslandGen {
             Polygon poly = polygonList.get(islandBlocks.get(randIdx));
             List<Integer> neighbourList = poly.getNeighborIdxsList();
             colorHeight(poly,1.5);
+            elevations.set(polygonList.indexOf(poly),1.5);
             for (Integer j : neighbourList){
                 Polygon neighbourPoly = polygonList.get(j);
                 colorHeight(neighbourPoly,1.2);
+                elevations.set(polygonList.indexOf(neighbourPoly),1.2);
             }
         }
     }

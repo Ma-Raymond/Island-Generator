@@ -89,11 +89,11 @@ public class IslandGen {
                 heightPoints.add(polyIdx);
             }
         }
-
+        System.out.println(heightPoints.toString());
         Random rand = new Random();
         for (int i = 0; i < rand.nextInt(2);i++){
-            int randIdx = rand.nextInt(islandBlocks.size());
-            Polygon poly = polygonList.get(islandBlocks.get(randIdx));
+            int randIdx = rand.nextInt(heightPoints.size());
+            Polygon poly = polygonList.get(heightPoints.get(randIdx));
             List<Integer> neighbourList = poly.getNeighborIdxsList();
             colorHeight(poly,1.5);
             elevations.set(polygonList.indexOf(poly),1.5);

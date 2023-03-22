@@ -41,6 +41,24 @@ public class IslandGen extends IslandSeed {
     List<Integer> heightPoints = new ArrayList<>();
     DecimalFormat precision  = new DecimalFormat("0.00");
 
+    private void islandSelector(int shapeSeed, Mesh aMesh){
+
+        if (shapeSeed == 0){
+            circleIsland(aMesh);
+        }
+        else if (shapeSeed == 1){
+            ovalIsland(aMesh);
+        }
+
+        else if (shapeSeed ==2){
+            moonIsland(aMesh);
+        }
+        else{
+            crossIsland(aMesh);
+        }
+
+    }
+
     private void circleIsland(Mesh aMesh){
         for (int i =0; i< aMesh.getPolygonsCount(); i++){
             Polygon poly = polygonList.get(i);
@@ -100,6 +118,7 @@ public class IslandGen extends IslandSeed {
     private double inOval(int a,int b,int offsetX, int offsetY, double x, double y){
         double result = Math.pow(((x-offsetX)/a),2) + Math.pow(((y-offsetY)/b),2) -1;
         return result;
+
     }
 
     private void moonIsland(Mesh aMesh){
@@ -169,7 +188,8 @@ public class IslandGen extends IslandSeed {
      * @param aMesh
      * @return
      */
-    public Mesh generate(Mesh aMesh,String shape){
+    public Mesh generate(Mesh aMesh,String seed){
+
         // Get old mesh details
         polygonList = new ArrayList<>(aMesh.getPolygonsList());
         segmentList = new ArrayList<>(aMesh.getSegmentsList());

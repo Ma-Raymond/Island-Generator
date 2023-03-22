@@ -13,13 +13,33 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class IslandGen {
+
+abstract class IslandSeed{
+    int shape;
+    int AltType;
+    int AltNum;
+    int lakeNum;
+    int lakeStartIdx;
+    int riverNum;
+    int riverStartIdx;
+    int aquaNum;
+    int aquaStartIdx;
+    int soil;
+    int biome;
+
+}
+
+public class IslandGen extends IslandSeed {
+
     List<Polygon> polygonList;
     List<Segment> segmentList;
     List<Vertex> vertexList;
     List<Double> elevations;
+    List<Double> humidity;
+
     String islandColor = "253,255,208,255";
     List<Integer> islandBlocks = new ArrayList<>();
+    List<Integer> heightPoints = new ArrayList<>();
 
     private void circleIsland(Mesh aMesh){
         for (int i =0; i< aMesh.getPolygonsCount(); i++){
@@ -28,10 +48,12 @@ public class IslandGen {
             double x = centroid.getX();
             double y = centroid.getY();
             double distance = Math.sqrt(Math.pow(x-255,2)+Math.pow(y-255,2));
-            if (distance < 100){
-                colorPolygon(poly, 102, 178,255,255);
-            }
-            else if (distance < 200){
+            //lake
+//            if (distance < 100){
+//                colorPolygon(poly, 102, 178,255,255);
+//            }
+            //island
+            if (distance < 200){
                 colorPolygon(poly, 253, 255,208,255);
             }
             else{
@@ -39,6 +61,25 @@ public class IslandGen {
             }
         }
     }
+
+    private void createLakes(Mesh aMesh, int maxLakes){
+        Random startLake = new Random();
+        int startIndexL = startLake.nextInt(heightPoints.size());
+        Random randLakeNum = new Random();
+        int numLakes = randLakeNum.nextInt(1,maxLakes);
+        for (int i = 0; i < numLakes; i ++){
+            int polyIndex = (startIndexL + i) % heightPoints.size();
+            int validPolyId  = heightPoints.get(polyIndex);
+            Polygon poly = polygonList.get(validPolyId);
+            colorPolygon(poly, 102, 178,255,255);
+
+       }
+        lakeStartIdx = startIndexL;
+    }
+    private void addLakeHumidity(){
+
+    }
+
 
     /**
      * Generate the new Islands
@@ -54,14 +95,18 @@ public class IslandGen {
         // Set new Stats
         int nPolygons = polygonList.size();
         elevations = new ArrayList<Double>(Collections.nCopies(nPolygons, 1.0));
+        humidity = new ArrayList<Double>(Collections.nCopies(nPolygons, 100.0));
+
         // New Island Meshes
         circleIsland(aMesh);
+
 
         // Get Island Blocks
         getIslandBlocks();
 
         // Generate Elevation
         generateElevation();
+        createLakes(aMesh, 100);
 
         // Assigning Biomes and Types
 
@@ -75,9 +120,10 @@ public class IslandGen {
                 islandBlocks.add(i);
             }
         }
+        Collections.shuffle(islandBlocks,new Random(2));
     }
     private void generateElevation(){
-        List<Integer> heightPoints = new ArrayList<>();
+
         for (Integer polyIdx : islandBlocks){
             boolean allNeighbourIslands = true;
             Polygon poly = polygonList.get(polyIdx);
@@ -91,6 +137,7 @@ public class IslandGen {
                 heightPoints.add(polyIdx);
             }
         }
+
 
         // Have it incrementally do it with the seed
         Random rand = new Random();

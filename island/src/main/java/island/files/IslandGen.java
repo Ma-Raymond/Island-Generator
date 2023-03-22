@@ -190,6 +190,18 @@ public class IslandGen extends IslandSeed {
      */
     public Mesh generate(Mesh aMesh,String seed){
 
+        //Get island details from seed
+        String[] seedDetails = seed.split("-");
+        int islandShape = Integer.parseInt(seedDetails[0]);
+        int altitudeFormation = Integer.parseInt(seedDetails[1]);
+        int altitudeStartIdx = Integer.parseInt(seedDetails[2]);
+        int numLakes = Integer.parseInt(seedDetails[3]);
+        int lakeStartIdx = Integer.parseInt(seedDetails[4]);
+        int numAquifers = Integer.parseInt(seedDetails[5]);
+        int aquiferStartIdx = Integer.parseInt(seedDetails[6]);
+        int soilMoisture = Integer.parseInt(seedDetails[7]);
+        int biome = Integer.parseInt(seedDetails[8]);
+
         // Get old mesh details
         polygonList = new ArrayList<>(aMesh.getPolygonsList());
         segmentList = new ArrayList<>(aMesh.getSegmentsList());
@@ -202,6 +214,7 @@ public class IslandGen extends IslandSeed {
 
         // New Island Meshes -- Will need to change to option
         crossIsland(aMesh);
+//        islandSelector(islandShape, aMesh);
 
         // Get Island Blocks
         getIslandBlocks();

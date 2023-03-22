@@ -39,6 +39,46 @@ public class IslandGen {
             }
         }
     }
+    private void waveyIsland(Mesh aMesh){
+        for (int i =0; i< aMesh.getPolygonsCount(); i++){
+            Polygon poly = polygonList.get(i);
+            Vertex centroid = vertexList.get(poly.getCentroidIdx());
+            double x = centroid.getX();
+            double y = centroid.getY();
+            double distance = Math.sqrt(Math.pow(x-250,2)+Math.pow(y-250,2));
+
+            if (distance < 200){
+                colorPolygon(poly, 253, 255,208,255);
+            }
+            else{
+                colorPolygon(poly, 35, 85,138,255);
+            }
+
+            distance = Math.sqrt(Math.pow(x,2)+Math.pow(y-250,2));
+        }
+    }
+
+    private void ovalIsland(Mesh aMesh){
+        Random bag = new Random();
+        int a = bag.nextInt(100, 200);
+        int b = bag.nextInt(50, 150);
+        for (int i =0; i< aMesh.getPolygonsCount(); i++){
+            Polygon poly = polygonList.get(i);
+            Vertex centroid = vertexList.get(poly.getCentroidIdx());
+            double x = centroid.getX();
+            double y = centroid.getY();
+            double result = Math.pow(((x-250)/a),2) + Math.pow(((y-250)/b),2) -1;
+
+            if (result < 0) {
+                colorPolygon(poly, 253, 255, 208, 255);
+            }
+
+            else{
+                colorPolygon(poly, 35, 85,138,255);
+            }
+
+        }
+    }
 
     /**
      * Generate the new Islands

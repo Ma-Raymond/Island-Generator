@@ -42,11 +42,6 @@ public class IslandGen extends IslandSeed {
     DecimalFormat precision  = new DecimalFormat("0.00");
 
     private void islandSelector(int shapeSeed, Mesh aMesh){
-        HashMap<Integer, String> islandShapes = new HashMap<Integer, String>();
-        islandShapes.put(0, "Circle");
-        islandShapes.put(1, "Oval");
-        islandShapes.put(2, "Moon");
-        islandShapes.put(3, "Cross");
 
         if (shapeSeed == 0){
             circleIsland(aMesh);

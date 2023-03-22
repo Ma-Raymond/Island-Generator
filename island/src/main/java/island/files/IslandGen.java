@@ -9,10 +9,8 @@ import ca.mcmaster.cas.se2aa4.a2.io.Structs.Mesh;
 
 import java.awt.*;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
 
 
 abstract class IslandSeed{
@@ -148,7 +146,7 @@ public class IslandGen extends IslandSeed {
         getIslandBlocks();
 
         // Generate Elevation
-        generateElevation(5);
+        generateHills(5);
 
         //
         createLakes(aMesh, 100);
@@ -185,7 +183,7 @@ public class IslandGen extends IslandSeed {
         }
     }
 
-    private void generateElevation(int startIdx){
+    private void generateHills(int startIdx){
         // Have it incrementally do it with the seed
         altStartIdx = startIdx;
         for (int i = 0; i < heightPoints.size()/2; i++){
@@ -204,8 +202,37 @@ public class IslandGen extends IslandSeed {
             }
         }
     }
+    private void volcano(int startIdx){
+        altStartIdx = startIdx;
+        Deque<Integer> deque = new ArrayDeque<>();
+        Set<Integer> visited = new HashSet<>();
+        int polyIdx = heightPoints.get(startIdx);
+        double volcanoHeight = 150.0;
+        visited.add(polyIdx);
+        deque.add(polyIdx);
+        double visual = 5;
+        while (!deque.isEmpty()){
+            int idxVal = deque.removeFirst();
+            Polygon poly = polygonList.get(idxVal);
+            elevations.set(idxVal,volcanoHeight);
+            List<Integer> neighbourList = poly.getNeighborIdxsList();
+            colorHeight(poly,visual);
+            for (Integer idx : neighbourList){
+                if (!visited.contains(idx) && islandBlocks.contains(idx)){
+                    visited.add(idx);
+                    deque.add(idx);
+                }
+            }
+            visual -= 0.01;
+            volcanoHeight -= 10;
+        }
+
+    }
     private void colorHeight(Polygon poly, double value){
         // Island is "253,255,208,255"
+        if (value < 1){
+            value = 1;
+        }
         double red = 253/value;
         double green = 255/value;
         double blue = 208/value;

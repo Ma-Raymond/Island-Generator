@@ -40,6 +40,7 @@ public class IslandGen {
         }
     }
     private void waveyIsland(Mesh aMesh){
+        Random bag = new Random();
         for (int i =0; i< aMesh.getPolygonsCount(); i++){
             Polygon poly = polygonList.get(i);
             Vertex centroid = vertexList.get(poly.getCentroidIdx());
@@ -47,17 +48,16 @@ public class IslandGen {
             double y = centroid.getY();
             double distance = Math.sqrt(Math.pow(x-250,2)+Math.pow(y-250,2));
 
-            if (distance < 200){
+            double distance1 = Math.sqrt(Math.pow(x-450,2)+Math.pow(y-250,2));
+
+            if (distance < 200 && distance1 > 100){
                 colorPolygon(poly, 253, 255,208,255);
             }
             else{
                 colorPolygon(poly, 35, 85,138,255);
             }
-
-            distance = Math.sqrt(Math.pow(x,2)+Math.pow(y-250,2));
         }
     }
-
     private void ovalIsland(Mesh aMesh){
         Random bag = new Random();
         int a = bag.nextInt(100, 200);
@@ -78,6 +78,7 @@ public class IslandGen {
             }
 
         }
+
     }
 
     /**
@@ -95,7 +96,7 @@ public class IslandGen {
         int nPolygons = polygonList.size();
         elevations = new ArrayList<Double>(Collections.nCopies(nPolygons, 1.0));
         // New Island Meshes
-        circleIsland(aMesh);
+        waveyIsland(aMesh);
 
         // Get Island Blocks
         getIslandBlocks();

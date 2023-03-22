@@ -27,7 +27,7 @@ public class Main {
         //Default debug mode toggle state
         String debug = "debugOff";
         //Default number of Polygons
-        String numPoly = "600";
+        String numPoly = "1500";
         //Default relaxations
         String defaultRelaxTimes = "200";
 
@@ -108,3 +108,5 @@ public class Main {
     }
 
 }
+
+// java -jar generator.jar sample.mesh

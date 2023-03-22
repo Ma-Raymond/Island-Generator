@@ -63,6 +63,8 @@ public class IslandGen {
         // Generate Elevation
         generateElevation();
 
+        // Assigning Biomes and Types
+
         return Mesh.newBuilder().addAllVertices(vertexList).addAllSegments(segmentList).addAllPolygons(polygonList).build();
     }
 
@@ -89,9 +91,10 @@ public class IslandGen {
                 heightPoints.add(polyIdx);
             }
         }
-        System.out.println(heightPoints.toString());
+
+        // Have it incrementally do it with the seed
         Random rand = new Random();
-        for (int i = 0; i < rand.nextInt(1,4);i++){
+        for (int i = 0; i < rand.nextInt(1,4); i++){
             int randIdx = rand.nextInt(heightPoints.size());
             int polyIdx = heightPoints.get(randIdx);
             Polygon poly = polygonList.get(polyIdx);
@@ -116,6 +119,24 @@ public class IslandGen {
         Structs.Property color = Structs.Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue+ "," + alpha).build();
         Polygon colored = Polygon.newBuilder(poly).addProperties(color).build();
         polygonList.set(polygonList.indexOf(poly), colored);
+    }
+    private void assignType(Polygon poly, String type){
+        Structs.Property typeProperty = Structs.Property.newBuilder().setKey("Type").setValue(type).build();
+        Polygon typed = Polygon.newBuilder(poly).addProperties(typeProperty).build();
+        polygonList.set(polygonList.indexOf(poly), typed);
+    }
+    private String extractType(List<Structs.Property> properties){
+        String val = null;
+        for(Structs.Property p: properties) {
+            // TRY TO FIND THE RGB COLOR
+            if (p.getKey().equals("Type")) {
+                val = p.getValue();
+            }
+        }
+        if (val == null){       // IF THE RGB COLOR PROPERTY DOESNT EXIST, COVER THAT CASE BY MAKING IT BLACK
+            return "None"; // COVERING CASE IF KEY RGB_COLOR DOESN'T EXIST
+        }
+        return val;
     }
     private String extractColorString(List<Structs.Property> properties){
         String val = null;

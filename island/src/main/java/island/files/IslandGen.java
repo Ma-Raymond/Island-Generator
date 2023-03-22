@@ -177,7 +177,7 @@ public class IslandGen extends IslandSeed {
 
         // Set new Stats
         int nPolygons = polygonList.size();
-        elevations = new ArrayList<Double>(Collections.nCopies(nPolygons, 1.0));
+        elevations = new ArrayList<Double>(Collections.nCopies(nPolygons, 0.0));
         humidity = new ArrayList<Double>(Collections.nCopies(nPolygons, 100.0));
 
         // New Island Meshes -- Will need to change to option
@@ -187,8 +187,7 @@ public class IslandGen extends IslandSeed {
         getIslandBlocks();
 
         // Generate Elevation
-        generateHills(5);
-
+        volcano(5);
         //
         createLakes(aMesh, 100);
 
@@ -306,7 +305,6 @@ public class IslandGen extends IslandSeed {
     }
     private String extractColorString(List<Structs.Property> properties){
         String val = null;
-
         for(Structs.Property p: properties) {
             // TRY TO FIND THE RGB COLOR
             if (p.getKey().equals("rgb_color")) {

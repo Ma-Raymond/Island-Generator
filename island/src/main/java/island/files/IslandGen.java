@@ -9,10 +9,8 @@ import ca.mcmaster.cas.se2aa4.a2.io.Structs.Mesh;
 
 import java.awt.*;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
 
 
 abstract class IslandSeed{
@@ -42,6 +40,29 @@ public class IslandGen extends IslandSeed {
     List<Integer> islandBlocks = new ArrayList<>();
     List<Integer> heightPoints = new ArrayList<>();
     DecimalFormat precision  = new DecimalFormat("0.00");
+
+    private void islandSelector(int shapeSeed, Mesh aMesh){
+        HashMap<Integer, String> islandShapes = new HashMap<Integer, String>();
+        islandShapes.put(0, "Circle");
+        islandShapes.put(1, "Oval");
+        islandShapes.put(2, "Moon");
+        islandShapes.put(3, "Cross");
+
+        if (shapeSeed == 0){
+            circleIsland(aMesh);
+        }
+        else if (shapeSeed == 1){
+            ovalIsland(aMesh);
+        }
+
+        else if (shapeSeed ==2){
+            moonIsland(aMesh);
+        }
+        else{
+            crossIsland(aMesh);
+        }
+
+    }
 
     private void circleIsland(Mesh aMesh){
         for (int i =0; i< aMesh.getPolygonsCount(); i++){
@@ -102,6 +123,7 @@ public class IslandGen extends IslandSeed {
     private double inOval(int a,int b,int offsetX, int offsetY, double x, double y){
         double result = Math.pow(((x-offsetX)/a),2) + Math.pow(((y-offsetY)/b),2) -1;
         return result;
+
     }
 
     private void moonIsland(Mesh aMesh){
@@ -171,7 +193,8 @@ public class IslandGen extends IslandSeed {
      * @param aMesh
      * @return
      */
-    public Mesh generate(Mesh aMesh,String shape){
+    public Mesh generate(Mesh aMesh,String seed){
+
         // Get old mesh details
         polygonList = new ArrayList<>(aMesh.getPolygonsList());
         segmentList = new ArrayList<>(aMesh.getSegmentsList());

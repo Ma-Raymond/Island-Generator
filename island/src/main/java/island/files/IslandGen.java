@@ -8,6 +8,7 @@ import ca.mcmaster.cas.se2aa4.a2.io.Structs.Vertex;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Mesh;
 
 import java.awt.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -16,8 +17,8 @@ import java.util.Random;
 
 abstract class IslandSeed{
     int shape;
-    int AltType;
-    int AltNum;
+    int altType;
+    int altStartIdx;
     int lakeNum;
     int lakeStartIdx;
     int riverNum;
@@ -40,6 +41,7 @@ public class IslandGen extends IslandSeed {
     String islandColor = "253,255,208,255";
     List<Integer> islandBlocks = new ArrayList<>();
     List<Integer> heightPoints = new ArrayList<>();
+    DecimalFormat precision  = new DecimalFormat("0.00");
 
     private void circleIsland(Mesh aMesh){
         for (int i =0; i< aMesh.getPolygonsCount(); i++){
@@ -116,6 +118,7 @@ public class IslandGen extends IslandSeed {
 
        }
         lakeStartIdx = startIndexL;
+        lakeNum = numLakes;
     }
     private void addLakeHumidity(){
 
@@ -138,19 +141,19 @@ public class IslandGen extends IslandSeed {
         elevations = new ArrayList<Double>(Collections.nCopies(nPolygons, 1.0));
         humidity = new ArrayList<Double>(Collections.nCopies(nPolygons, 100.0));
 
-        // New Island Meshes
+        // New Island Meshes -- Will need to change to option
         waveyIsland(aMesh);
-
 
         // Get Island Blocks
         getIslandBlocks();
 
         // Generate Elevation
-        generateElevation();
+        generateElevation(5);
+
+        //
         createLakes(aMesh, 100);
 
         // Assigning Biomes and Types
-
         return Mesh.newBuilder().addAllVertices(vertexList).addAllSegments(segmentList).addAllPolygons(polygonList).build();
     }
 
@@ -159,12 +162,14 @@ public class IslandGen extends IslandSeed {
             Polygon poly = polygonList.get(i);
             if (extractColorString(poly.getPropertiesList()).equals(islandColor)){
                 islandBlocks.add(i);
+                elevations.set(i,1.0);
             }
         }
         Collections.shuffle(islandBlocks,new Random(2));
+        generateInnerIsland();
     }
-    private void generateElevation(){
-
+    private void generateInnerIsland(){
+        // heightPoint Island Blocks
         for (Integer polyIdx : islandBlocks){
             boolean allNeighbourIslands = true;
             Polygon poly = polygonList.get(polyIdx);
@@ -178,21 +183,24 @@ public class IslandGen extends IslandSeed {
                 heightPoints.add(polyIdx);
             }
         }
+    }
 
-
+    private void generateElevation(int startIdx){
         // Have it incrementally do it with the seed
-        Random rand = new Random();
-        for (int i = 0; i < rand.nextInt(1,4); i++){
-            int randIdx = rand.nextInt(heightPoints.size());
-            int polyIdx = heightPoints.get(randIdx);
+        altStartIdx = startIdx;
+        for (int i = 0; i < heightPoints.size()/2; i++){
+            int Idx = (startIdx + i) % heightPoints.size();
+            int polyIdx = heightPoints.get(Idx);
             Polygon poly = polygonList.get(polyIdx);
             List<Integer> neighbourList = poly.getNeighborIdxsList();
             colorHeight(poly,1.5);
-            elevations.set(polyIdx,1.5);
+            double elevationVal = Double.parseDouble(precision.format(elevations.get(polyIdx)+1.5));
+            elevations.set(polyIdx,elevationVal);
             for (Integer j : neighbourList){
                 Polygon neighbourPoly = polygonList.get(j);
                 colorHeight(neighbourPoly,1.2);
-                elevations.set(j,1.2);
+                double elevationVal2 = Double.parseDouble(precision.format(elevations.get(polyIdx)+1.2));
+                elevations.set(j,elevationVal2);
             }
         }
     }
@@ -239,26 +247,5 @@ public class IslandGen extends IslandSeed {
             return "0,0,0,0"; // COVERING CASE IF KEY RGB_COLOR DOESN'T EXIST
         }
         return val;
-    }
-    private Color extractColor(List<Structs.Property> properties) {
-        String val = null;
-        // EXTRACTCOLOR GOES THROUGH ALL THE PROPERTIES OF THE OBJECT
-        for(Structs.Property p: properties) {
-            // TRY TO FIND THE RGB COLOR
-            if (p.getKey().equals("rgb_color")) {
-                val = p.getValue();
-            }
-        }
-        if (val == null){       // IF THE RGB COLOR PROPERTY DOESNT EXIST, COVER THAT CASE BY MAKING IT BLACK
-            return Color.BLACK; // COVERING CASE IF KEY RGB_COLOR DOESN'T EXIST
-        }
-        // IF RGB PROPERTY EXIST, GET VALUES OF EACH PARAMETER
-        String[] raw = val.split(",");
-        int red = Integer.parseInt(raw[0]);
-        int green = Integer.parseInt(raw[1]);
-        int blue = Integer.parseInt(raw[2]);
-        int alpha = Integer.parseInt(raw[3]);
-        // RETURN AS COLOR OBJECT
-        return new Color(red, green, blue, alpha);
     }
 }

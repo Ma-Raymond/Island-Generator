@@ -190,8 +190,6 @@ public class IslandGen extends IslandSeed {
             double humidityValNeigbours = Double.parseDouble(precision.format(humidity.get(n)+100));
             humidity.set(n,humidityValNeigbours);
         }
-
-
     }
 
     private void createAquifers(int aquaNum, int startIndexA){
@@ -214,12 +212,6 @@ public class IslandGen extends IslandSeed {
             humidity.set(n,humidityValNeigbours);
         }
     }
-    private void addLakeHumidity(){
-        
-    }
-
-
-
     private void seedDecoder(String seed){
         //Get island details from seed
         String[] seedDetails = seed.split("-");
@@ -322,15 +314,14 @@ public class IslandGen extends IslandSeed {
 
     private void getRiverNum(String numRivers){
         Random rand = new Random();
-        ArrayList riverVertexList = new ArrayList();//get rid of this when you make the actual vertex list for rivers
-        int maxLand = riverVertexList.size();
+        int maxLand = islandVertices.size();
         if (numRivers.equals("")){
             riverNum = rand.nextInt(0, maxLand/20);
         }
         else{
             int rivers = Integer.parseInt(numRivers);
-            if (rivers>maxLand/20){
-                riverNum = maxLand/20;
+            if (rivers>maxLand/100){
+                riverNum = maxLand/100;
             }
             else{
                 riverNum = rivers;

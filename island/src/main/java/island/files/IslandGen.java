@@ -172,10 +172,12 @@ public class IslandGen extends IslandSeed {
             int validPolyId  = heightPoints.get(polyIndex);
             colorPolygon(102, 178,255,255, validPolyId);
             addLakeHumidity(validPolyId);
+
        }
         lakeStartIdx = startIndexL;
         lakeNum = numLakes;
     }
+
     private void addLakeHumidity(int lakePoly){
         Polygon poly = polygonList.get(lakePoly);
         double humidityValLake = Double.parseDouble(precision.format(humidity.get(lakePoly)+150));
@@ -211,23 +213,27 @@ public class IslandGen extends IslandSeed {
             humidity.set(n,humidityValNeigbours);
         }
     }
+    private void addLakeHumidity(){
+        
+    }
 
 
-//    private void seedDecoder(String seed){
-//        //Get island details from seed
-//        String[] seedDetails = seed.split("-");
-//        islandShape = Integer.parseInt(seedDetails[0]);
-//        altType = Integer.parseInt(seedDetails[1]);
-//        altStartIdx = Integer.parseInt(seedDetails[2]);
-//        lakeNum = Integer.parseInt(seedDetails[3]);
-//        lakeStartIdx = Integer.parseInt(seedDetails[4]);
-//        riverNum = Integer.parseInt(seedDetails[5]);
-//        riverStartIdx = Integer.parseInt(seedDetails[6]);
-//        aquaNum = Integer.parseInt(seedDetails[7]);
-//        aquaStartIdx = Integer.parseInt(seedDetails[8]);
-//        soilMoisture = Integer.parseInt(seedDetails[9]);
-//        biome = Integer.parseInt(seedDetails[10]);
-//    }
+
+    private void seedDecoder(String seed){
+        //Get island details from seed
+        String[] seedDetails = seed.split("-");
+        islandShape = Integer.parseInt(seedDetails[0]);
+        altType = Integer.parseInt(seedDetails[1]);
+        altStartIdx = Integer.parseInt(seedDetails[2]);
+        lakeNum = Integer.parseInt(seedDetails[3]);
+        lakeStartIdx = Integer.parseInt(seedDetails[4]);
+        riverNum = Integer.parseInt(seedDetails[5]);
+        riverStartIdx = Integer.parseInt(seedDetails[6]);
+        aquaNum = Integer.parseInt(seedDetails[7]);
+        aquaStartIdx = Integer.parseInt(seedDetails[8]);
+        soilMoisture = Integer.parseInt(seedDetails[9]);
+        biome = Integer.parseInt(seedDetails[10]);
+    }
 
     /**
      * Generate the new Islands

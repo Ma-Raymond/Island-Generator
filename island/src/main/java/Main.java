@@ -22,7 +22,6 @@ public class Main {
         String shape = null;
         String elevType = null;
         String maxNumLakes = "0";
-        String seed = "None";
 
         //turn string into int
         int intMaxNumLakes = Integer.parseInt(maxNumLakes);
@@ -47,7 +46,7 @@ public class Main {
             if (commandline.hasOption("h")){
                 System.out.println("----------------------------------------------HELP MENU----------------------------------------------\n");
                 System.out.println("Enter these commands to personalize the Island you would like to create! \n" );
-
+                System.out.println("");
             }
 
         } catch (ParseException e) {
@@ -60,7 +59,7 @@ public class Main {
 
         // Island Generation
         IslandGen gen = new IslandGen();
-        Mesh myMesh = gen.generate(aMesh, "Circle");
+        Mesh myMesh = gen.generate(aMesh, shape);
 
         // Outputing to new Mesh object
         MeshFactory factory = new MeshFactory();

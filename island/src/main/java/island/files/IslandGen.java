@@ -14,7 +14,7 @@ import java.util.List;
 
 
 abstract class IslandSeed{
-    int shape;
+    int islandShape;
     int altType;
     int altStartIdx;
     int lakeNum;
@@ -23,7 +23,7 @@ abstract class IslandSeed{
     int riverStartIdx;
     int aquaNum;
     int aquaStartIdx;
-    int soil;
+    int soilMoisture;
     int biome;
 
 }
@@ -183,24 +183,31 @@ public class IslandGen extends IslandSeed {
     }
 
 
+    private void seedDecoder(String seed){
+        //Get island details from seed
+        String[] seedDetails = seed.split("-");
+        islandShape = Integer.parseInt(seedDetails[0]);
+        altType = Integer.parseInt(seedDetails[1]);
+        altStartIdx = Integer.parseInt(seedDetails[2]);
+        lakeNum = Integer.parseInt(seedDetails[3]);
+        lakeStartIdx = Integer.parseInt(seedDetails[4]);
+        riverNum = Integer.parseInt(seedDetails[5]);
+        riverStartIdx = Integer.parseInt(seedDetails[6]);
+        aquaNum = Integer.parseInt(seedDetails[7]);
+        aquaStartIdx = Integer.parseInt(seedDetails[8]);
+        soilMoisture = Integer.parseInt(seedDetails[9]);
+        biome = Integer.parseInt(seedDetails[10]);
+    }
+
     /**
      * Generate the new Islands
      * @param aMesh
      * @return
      */
     public Mesh generate(Mesh aMesh,String seed){
-
-        //Get island details from seed
-        String[] seedDetails = seed.split("-");
-        int islandShape = Integer.parseInt(seedDetails[0]);
-        int altitudeFormation = Integer.parseInt(seedDetails[1]);
-        int altitudeStartIdx = Integer.parseInt(seedDetails[2]);
-        int numLakes = Integer.parseInt(seedDetails[3]);
-        int lakeStartIdx = Integer.parseInt(seedDetails[4]);
-        int numAquifers = Integer.parseInt(seedDetails[5]);
-        int aquiferStartIdx = Integer.parseInt(seedDetails[6]);
-        int soilMoisture = Integer.parseInt(seedDetails[7]);
-        int biome = Integer.parseInt(seedDetails[8]);
+        if (!seed.equals("None")){
+            seedDecoder(seed);
+        }
 
         // Get old mesh details
         polygonList = new ArrayList<>(aMesh.getPolygonsList());
@@ -214,7 +221,7 @@ public class IslandGen extends IslandSeed {
 
         // New Island Meshes -- Will need to change to option
         crossIsland(aMesh);
-//        islandSelector(islandShape, aMesh);
+        // islandSelector(islandShape, aMesh);
 
         // Get Island Blocks
         getIslandBlocks();
@@ -222,7 +229,7 @@ public class IslandGen extends IslandSeed {
         // Generate Elevation
         volcano(5);
         //
-        createLakes(aMesh, 100);
+        createLakes(aMesh, 10);
 
         // Assigning Biomes and Types
         return Mesh.newBuilder().addAllVertices(vertexList).addAllSegments(segmentList).addAllPolygons(polygonList).build();

@@ -255,6 +255,25 @@ public class IslandGen extends IslandSeed {
 
     }
 
+    private void getElevationStartIdx(String elevationStartIdx){
+        Random rand = new Random();
+        int maxIdx = heightPoints.size();
+        if (elevationStartIdx.equals("")){
+            altStartIdx = rand.nextInt(0, maxIdx);
+        }
+        else{
+            int startIdx = Integer.parseInt(elevationStartIdx);
+            if (startIdx>maxIdx){
+                altStartIdx = maxIdx;
+            }
+            else{
+                altStartIdx = startIdx;
+            }
+        }
+
+
+    }
+
     private void getLakeNum(String maxNumLakes){
         Random rand = new Random();
         int maxLand = islandBlocks.size();
@@ -273,13 +292,90 @@ public class IslandGen extends IslandSeed {
         }
 
     }
+    private void getLakeStartIdx(String lakeStartingIdx) {
+        Random rand = new Random();
+        int maxIdx = islandBlocks.size();
+        if (lakeStartingIdx.equals("")) {
+            lakeStartIdx = rand.nextInt(0, maxIdx);
+        } else {
+            int startIdx = Integer.parseInt(lakeStartingIdx);
+            if (startIdx > maxIdx) {
+                lakeStartIdx = maxIdx;
+            } else {
+                lakeStartIdx = startIdx;
+            }
+        }
+    }
 
+    private void getRiverNum(String numRivers){
+        Random rand = new Random();
+        ArrayList riverVertexList = new ArrayList();//get rid of this when you make the actual vertex list for rivers
+        int maxLand = riverVertexList.size();
+        if (numRivers.equals("")){
+            riverNum = rand.nextInt(0, maxLand/20);
+        }
+        else{
+            int rivers = Integer.parseInt(numRivers);
+            if (rivers>maxLand/20){
+                riverNum = maxLand/20;
+            }
+            else{
+                riverNum = rivers;
+            }
 
-
-    private void seedCreator(String shape, String elevType, String maxNumLakes, String lakeStartIdx, String rivers, String riverStartIdx, String aquifers, String aquiferStartIdx, String soil, String biomeSelect, Mesh aMesh){
-
+        }
 
     }
+    private void getRiverStartIdx(String riverIdx) {
+        ArrayList riverVertexList = new ArrayList();//get rid of this when you make the actual vertex list for rivers
+        Random rand = new Random();
+        int maxIdx = riverVertexList.size();
+        if (riverIdx.equals("")) {
+            riverStartIdx = rand.nextInt(0, maxIdx);
+        } else {
+            int startIdx = Integer.parseInt(riverIdx);
+            if (startIdx > maxIdx) {
+                riverStartIdx = maxIdx;
+            } else {
+                riverStartIdx = startIdx;
+            }
+        }
+    }
+
+    private void getAquiferNum(String maxNumAquifer){
+        Random rand = new Random();
+        int maxLand = islandBlocks.size();
+        if (maxNumAquifer.equals("")){
+            aquaNum = rand.nextInt(0, maxLand/20);
+        }
+        else{
+            int maxAqua = Integer.parseInt(maxNumAquifer);
+            if (maxAqua>maxLand/20){
+                aquaNum = maxLand/20;
+            }
+            else{
+                aquaNum = maxAqua;
+            }
+
+        }
+
+    }
+    private void getAquiferStartIdx(String aquiferStartingIdx) {
+        Random rand = new Random();
+        int maxIdx = islandBlocks.size();
+        if (aquiferStartingIdx.equals("")) {
+            aquaStartIdx = rand.nextInt(0, maxIdx);
+        } else {
+            int startIdx = Integer.parseInt(aquiferStartingIdx);
+            if (startIdx > maxIdx) {
+                aquaStartIdx = maxIdx;
+            } else {
+                aquaStartIdx = startIdx;
+            }
+        }
+    }
+
+    
 
     /**
      * Generate the new Islands
@@ -287,18 +383,23 @@ public class IslandGen extends IslandSeed {
      * @return
      */
 
-    public Mesh generate(Mesh aMesh,String seed, String shape, String elevType, String maxNumLakes, String lakeStartIdx, String rivers, String riverStartIdx, String aquifers, String aquiferStartIdx, String soil, String biomeSelect){
+    public Mesh generate(Mesh aMesh,String seed, String shape, String elevType, String elevationStartIdx,String maxNumLakes, String lakeStartingIdx, String rivers, String riverStartingIdx, String aquifers, String aquiferStartingIdx, String soil, String biomeSelect){
         if (!seed.equals("")){
             seedDecoder(seed);
+            islandSelector(islandShape, aMesh);
         }
 
         else{
             getIslandShape(shape);
             islandSelector(islandShape, aMesh);
+            getElevationStartIdx(elevationStartIdx);
             getElevationType(elevType);
+            getLakeStartIdx(lakeStartingIdx);
             getLakeNum(maxNumLakes);
-
-
+            getRiverNum(rivers);
+            getRiverStartIdx(riverStartingIdx);
+            getAquiferNum(aquifers);
+            getAquiferStartIdx(aquiferStartingIdx);
         }
 
         // Get old mesh details
@@ -311,16 +412,18 @@ public class IslandGen extends IslandSeed {
         elevations = new ArrayList<Double>(Collections.nCopies(nPolygons, 0.0));
         humidity = new ArrayList<Double>(Collections.nCopies(nPolygons, 100.0));
 
-        // New Island Meshes -- Will need to change to option
-        crossIsland(aMesh);
-
-        // Get Island Blocks
-        getIslandBlocks();
 
         // Generate Elevation
-        volcano(5);
-        //
-        createLakes( 100, 6);
+        selectElevation(altType);
+
+        //Lakes
+        createLakes(lakeNum, lakeStartIdx);
+
+        //Rivers
+
+        //Aquifers
+
+
 
         // Assigning Biomes and Types
         return Mesh.newBuilder().addAllVertices(vertexList).addAllSegments(segmentList).addAllPolygons(polygonList).build();
@@ -354,6 +457,16 @@ public class IslandGen extends IslandSeed {
         }
     }
 
+    private void selectElevation(int elevationNum){
+        if (elevationNum == 0){
+            volcano(altStartIdx);
+        }
+
+        else if (elevationNum == 1){
+            generateHills(altStartIdx);
+        }
+
+    }
     private void generateHills(int startIdx){
         // Have it incrementally do it with the seed
         altStartIdx = startIdx;

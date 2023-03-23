@@ -33,6 +33,7 @@ public class Main {
         String biome = String.valueOf(rand.nextInt(0, 7));
 
         //These can all be randomized after island generation
+        String elevationStartIdx = "";
         String maxNumLakes = "";
         String lakeStartIdx = "";
         String aquifers = "";
@@ -101,7 +102,7 @@ public class Main {
 
         // Island Generation
         IslandGen gen = new IslandGen();
-        Mesh myMesh = gen.generate(aMesh, seed, shape, elevType, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome);
+        Mesh myMesh = gen.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome);
 
         // Outputing to new Mesh object
         MeshFactory factory = new MeshFactory();

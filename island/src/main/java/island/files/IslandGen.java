@@ -39,6 +39,7 @@ public class IslandGen extends IslandSeed {
     String islandColor = "253,255,208,255";
     List<Integer> islandBlocks = new ArrayList<>();
     List<Integer> heightPoints = new ArrayList<>();
+    List<Integer> islandVertices = new ArrayList<>();
     DecimalFormat precision  = new DecimalFormat("0.00");
 
     private void islandSelector(int shapeSeed, Mesh aMesh){
@@ -276,7 +277,7 @@ public class IslandGen extends IslandSeed {
         else{
             int startIdx = Integer.parseInt(elevationStartIdx);
             if (startIdx>maxIdx){
-                altStartIdx = maxIdx;
+                altStartIdx = maxIdx - 1;
             }
             else{
                 altStartIdx = startIdx;
@@ -312,7 +313,7 @@ public class IslandGen extends IslandSeed {
         } else {
             int startIdx = Integer.parseInt(lakeStartingIdx);
             if (startIdx > maxIdx) {
-                lakeStartIdx = maxIdx;
+                lakeStartIdx = maxIdx -1;
             } else {
                 lakeStartIdx = startIdx;
             }
@@ -339,15 +340,14 @@ public class IslandGen extends IslandSeed {
 
     }
     private void getRiverStartIdx(String riverIdx) {
-        ArrayList riverVertexList = new ArrayList();//get rid of this when you make the actual vertex list for rivers
         Random rand = new Random();
-        int maxIdx = riverVertexList.size();
+        int maxIdx = islandVertices.size();
         if (riverIdx.equals("")) {
             riverStartIdx = rand.nextInt(0, maxIdx);
         } else {
             int startIdx = Integer.parseInt(riverIdx);
             if (startIdx > maxIdx) {
-                riverStartIdx = maxIdx;
+                riverStartIdx = maxIdx -1;
             } else {
                 riverStartIdx = startIdx;
             }
@@ -388,14 +388,7 @@ public class IslandGen extends IslandSeed {
     }
 
 
-
-    /**
-     * Generate the new Islands
-     * @param aMesh
-     * @return
-     */
-
-    public Mesh generate(Mesh aMesh,String seed, String shape, String elevType, String elevationStartIdx,String maxNumLakes, String lakeStartingIdx, String rivers, String riverStartingIdx, String aquifers, String aquiferStartingIdx, String soil, String biomeSelect){
+    public void defaultValues(Mesh aMesh){
         // Get old mesh details
         polygonList = new ArrayList<>(aMesh.getPolygonsList());
         segmentList = new ArrayList<>(aMesh.getSegmentsList());
@@ -405,15 +398,17 @@ public class IslandGen extends IslandSeed {
         int nPolygons = polygonList.size();
         elevations = new ArrayList<Double>(Collections.nCopies(nPolygons, 0.0));
         humidity = new ArrayList<Double>(Collections.nCopies(nPolygons, 100.0));
+    }
 
+    public Mesh generate(Mesh aMesh,String seed, String shape, String elevType, String elevationStartIdx,String maxNumLakes, String lakeStartingIdx, String rivers, String riverStartingIdx, String aquifers, String aquiferStartingIdx, String soil, String biomeSelect){
         //Create new island
+        defaultValues(aMesh);
 
         //If user input a seed
         if (!seed.equals("")){
             seedDecoder(seed);
             islandSelector(islandShape, aMesh);
         }
-
         //If user did not input seed
         else{
             getIslandShape(shape);
@@ -428,7 +423,6 @@ public class IslandGen extends IslandSeed {
             getAquiferNum(aquifers);
             getAquiferStartIdx(aquiferStartingIdx);
         }
-
 
         // Generate Elevation
         selectElevation(altType);
@@ -452,10 +446,33 @@ public class IslandGen extends IslandSeed {
             if (extractColorString(poly.getPropertiesList()).equals(islandColor)){
                 islandBlocks.add(i);
                 elevations.set(i,1.0);
+                List<Integer> neighbourList = extractVertices(poly.getPropertiesList());
+                if (neighbourList != null)
+                    islandVertices.addAll(neighbourList);
             }
         }
         Collections.shuffle(islandBlocks,new Random(2));
         generateInnerIsland();
+    }
+    private List<Integer> extractVertices(List<Structs.Property> properties){
+        String val = null;
+        for(Structs.Property p: properties) {
+            // TRY TO FIND THE RGB COLOR
+            if (p.getKey().equals("vertices")) {
+                val = p.getValue();
+            }
+        }
+        if (val == null){       // IF THE RGB COLOR PROPERTY DOESNT EXIST, COVER THAT CASE BY MAKING IT BLACK
+            System.out.println("NO VERTEX PROPERTY");
+            return null;
+        }
+        String[] raw = val.split(",");
+        List<Integer> rawInts = new ArrayList<>();
+        for (int i =0; i< raw.length;i++){
+            Integer value = Integer.parseInt(raw[i]);
+            rawInts.add(value);
+        }
+        return rawInts;
     }
     private void generateInnerIsland(){
         // heightPoint Island Blocks

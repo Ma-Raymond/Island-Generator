@@ -4,55 +4,90 @@ import island.files.IslandGen;
 import org.apache.commons.cli.*;
 
 import java.io.IOException;
+import java.util.Random;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-
+        Random rand = new Random();
         CommandLineParser parser = new DefaultParser();
         Options options = new Options();
 
         options.addOption("I", true, "Input");
         options.addOption("O", true, "Output");
-        options.addOption("S", true, "Shape");
-        options.addOption("E", true, "Elevation Type");
-        options.addOption("L", true, "Number of Lakes");
-        options.addOption("h", "help", false, "Command information");
+        options.addOption("shape", true, "Shape");
+        options.addOption("altitude", true, "Elevation Type");
+        options.addOption("aquifers", true, "Number of Aquifers");
+        options.addOption("lakes", true, "Max Number of Lakes");
+        options.addOption("rivers", true, "Number of Rivers");
+        options.addOption("soil", true, "Soil Profile");
+        options.addOption("biomes", true, "Biome");
+        options.addOption("seed", true, "Island Seed");
+        options.addOption("H", "help", false, "Command information");
+
         String input = null;
         String output = null;
-        String shape = null;
-        String elevType = null;
-        String maxNumLakes = "0";
 
-        //turn string into int
-        int intMaxNumLakes = Integer.parseInt(maxNumLakes);
+        //Seed Parameters
+        String shape = String.valueOf(rand.nextInt(0, 3));
+        String elevType = String.valueOf(rand.nextInt(0, 2));
+        String biome = String.valueOf(rand.nextInt(0, 7));
+
+        //These can all be randomized after island generation
+        String maxNumLakes = "0";
+        String lakeStartIdx = "0";
+        String aquifers = "0";
+        String aquiferStartIdx = "0";
+        String rivers = "0";
+        String riverStartIdx = "0";
+        String soil = "0";
+
+
 
         try {
             CommandLine commandline = parser.parse(options, args);
+
+            if (commandline.hasOption("H")){
+                System.out.println("----------------------------------------------HELP MENU----------------------------------------------\n");
+                System.out.println("Enter these commands to personalize the Island you would like to create! \n" );
+
+            }
+            
             if (commandline.hasOption("I")) {
                 input = commandline.getOptionValue("I");
             }
             if (commandline.hasOption("O")) {
                 output = commandline.getOptionValue("O");
             }
-            if (commandline.hasOption("S")) {
-                shape = commandline.getOptionValue("S");
+            if (commandline.hasOption("shape")) {
+                shape = commandline.getOptionValue("shape");
             }
-            if (commandline.hasOption("E")){
-                elevType = commandline.getOptionValue("E");
+            if (commandline.hasOption("altitude")){
+                elevType = commandline.getOptionValue("altitude");
             }
-            if (commandline.hasOption("L")){
-                maxNumLakes = commandline.getOptionValue("E");
-            }
-            if (commandline.hasOption("h")){
-                System.out.println("----------------------------------------------HELP MENU----------------------------------------------\n");
-                System.out.println("Enter these commands to personalize the Island you would like to create! \n" );
 
+            if (commandline.hasOption("aquifers")){
+                aquifers = commandline.getOptionValue("aquifers");
             }
+
+            if (commandline.hasOption("lakes")){
+                maxNumLakes = commandline.getOptionValue("lakes");
+            }
+            if (commandline.hasOption("rivers")){
+                rivers = commandline.getOptionValue("rivers");
+            }
+            if (commandline.hasOption("soil")){
+                soil = commandline.getOptionValue("soil");
+            }
+            if (commandline.hasOption("biomes")){
+                biome = commandline.getOptionValue("biomes");
+            }
+
+
+
 
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-
 
         // Old Mesh to write on
         Mesh aMesh = new MeshFactory().read(input);

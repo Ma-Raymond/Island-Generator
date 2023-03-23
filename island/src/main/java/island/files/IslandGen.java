@@ -173,11 +173,11 @@ public class IslandGen extends IslandSeed {
             Polygon poly = polygonList.get(validPolyId);
             colorPolygon(102, 178,255,255, validPolyId);
 
-
        }
         lakeStartIdx = startIndexL;
         lakeNum = numLakes;
     }
+
     private void addLakeHumidity(int lakePoly){
         Polygon poly = polygonList.get(lakePoly);
         double humidityValLake = Double.parseDouble(precision.format(humidity.get(lakePoly)+150));
@@ -198,6 +198,10 @@ public class IslandGen extends IslandSeed {
     private void addAquaHumidity(){
 
     }
+    private void addLakeHumidity(){
+        
+    }
+
 
 
     /**

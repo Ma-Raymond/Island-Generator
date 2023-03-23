@@ -64,19 +64,49 @@ When you develop features and enrich the product, remember that you have first t
 ### Product Backlog
 
 
-| Id  | Feature title                                                      | Who?             | Start  | End    | Status |
-|:---:|--------------------------------------------------------------------|------------------|--------|--------|--------|
-| F0  | Segment Generated                                                  | Raymond Ma       | Feb 5  | Feb 9  | Done   |
-| F1  | Segment Colour Added                                               | Gayan Athukorala | Feb 9  | Feb 9  | Done   |
-| F2  | Segment Visualizer                                                 | Rhea Gokhale     | Feb 9  | Feb 9  | Done   |
-| F3  | Creating a mesh ADT                                                | Raymond Ma       | Feb 16 | Feb 16 | Done   |
-| F4  | Producing full meshes                                              | Gayan Athukorala | Feb 17 | Feb 22 | Done   |
-| F5  | Implementing Debug Mode                                            | Gayan + Rhea     | Feb 22 | Feb 24 | Done   |
-| F6  | PlantUML Diagram                                                   | Raymond Ma       | Feb 24 | Feb 25 | Done   |
-| F7  | Produce Full Irregular Meshes                                      | Raymond + Rhea   | Feb 25 | Feb 25 | Done   |
-| F8  | Mesh Relaxation                                                    | Raymond Ma       | Feb 26 | Feb 26 | Done   |
-| F9  | Compute neighbourhood relationships using Delaunay’s triangulation | Gayan Athukorala | Feb 27 | Feb 27 | Done   |
-| F10 | Help Center with -H impelmented CLI visualizer and generator       | Rhea + Raymond   | Feb 27 | Feb 27 | Done   |
+| Id  | Feature title                                                      | Who?             | Start  | End    | Status  |
+|:---:|--------------------------------------------------------------------|------------------|--------|--------|---------|
+| F0  | Segment Generated                                                  | Raymond Ma       | Feb 5  | Feb 9  | Done    |
+| F1  | Segment Colour Added                                               | Gayan Athukorala | Feb 9  | Feb 9  | Done    |
+| F2  | Segment Visualizer                                                 | Rhea Gokhale     | Feb 9  | Feb 9  | Done    |
+| F3  | Creating a mesh ADT                                                | Raymond Ma       | Feb 16 | Feb 16 | Done    |
+| F4  | Producing full meshes                                              | Gayan Athukorala | Feb 17 | Feb 22 | Done    |
+| F5  | Implementing Debug Mode                                            | Gayan + Rhea     | Feb 22 | Feb 24 | Done    |
+| F6  | PlantUML Diagram                                                   | Raymond Ma       | Feb 24 | Feb 25 | Done    |
+| F7  | Produce Full Irregular Meshes                                      | Raymond + Rhea   | Feb 25 | Feb 25 | Done    |
+| F8  | Mesh Relaxation                                                    | Raymond Ma       | Feb 26 | Feb 26 | Done    |
+| F9  | Compute neighbourhood relationships using Delaunay’s triangulation | Gayan Athukorala | Feb 27 | Feb 27 | Done    |
+| F10 | Help Center with -H implementation CLI visualizer and generator    | Rhea + Raymond   | Feb 27 | Feb 27 | Done    |
+| F11 | MVP Sandbox                                                        | Raymond Ma       | Mar 20 | Mar 20 | Done    |
+| F12 | Implement different Island Shapes                                  | Gayan Athukorala | Mar 21 |        | Started |
+| F13 | Shape Command Line - Shapes                                        | Gayan Athukorala | Mar 22 |        | Started |
+| F14 | Create a generic altimetric profile builder                        | Raymond Ma       | Mar 21 | Mar 21 | Done    |
+| F15 | Implement Volcanos                                                 | Raymond Ma       | Mar 22 |        | Started |
+| F16 | altimetric command line args                                       |                  |        |        | Pending |
+| F17 | Implement lakes inside of the island                               | Rhea Gokhale     |        |        | Pending |
+| F18 | Increase humidity to nearby land                                   | Rhea Gokhale     |        |        | Pending |
+| F19 | Influence vegetation that grows near the lake                      |                  |        |        | Pending |
+| F20 | Control number of lakes through command line                       |                  |        |        | Pending |
+| F21 | Implement river segments in the island                             |                  |        |        | Pending |
+| F22 | Increase humidity to nearby land                                   |                  |        |        | Pending |
+| F23 | Control number of rivers through command line                      |                  |        |        | Pending |
+| F24 | Increase discharge level and thickness of rivers that merge        |                  |        |        | Pending |
+| F25 | Increase moisture to soils surrounding merged rivers               |                  |        |        | Pending |
+| F26 | Create aquifer water body generator                                |                  |        |        | Pending |
+| F27 | Increase moisture to tiles surrounding the aquifer                 |                  |        |        | Pending |
+| F28 | Control the number of aquifers through command line                |                  |        |        | Pending |
+| F29 | Abstract Soil Absorption Calculator                                |                  |        |        | Pending |
+| F30 | Tundra Biome                                                       |                  |        |        | Pending |
+| F31 | Forest Biome                                                       |                  |        |        | Pending |
+| F32 | Field Biome                                                        |                  |        |        | Pending |
+| F33 | Mangrove Biome                                                     |                  |        |        | Pending |
+| F34 | Beach Biome                                                        |                  |        |        | Pending |
+| F35 | Abstract whittaker diagram builder                                 |                  |        |        | Pending |
+| F36 | Assign seeds to attributes of randomly generated islands           |                  |        |        | Pending |
+| F37 | Command line args to take seed                                     | Raymond Ma       | Mar 22 |        | Started |
+
+
+
 
 
 

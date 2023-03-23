@@ -9,10 +9,8 @@ import ca.mcmaster.cas.se2aa4.a2.io.Structs.Mesh;
 
 import java.awt.*;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
 
 
 abstract class IslandSeed{
@@ -43,6 +41,24 @@ public class IslandGen extends IslandSeed {
     List<Integer> heightPoints = new ArrayList<>();
     DecimalFormat precision  = new DecimalFormat("0.00");
 
+    private void islandSelector(int shapeSeed, Mesh aMesh){
+
+        if (shapeSeed == 0){
+            circleIsland(aMesh);
+        }
+        else if (shapeSeed == 1){
+            ovalIsland(aMesh);
+        }
+
+        else if (shapeSeed ==2){
+            moonIsland(aMesh);
+        }
+        else{
+            crossIsland(aMesh);
+        }
+
+    }
+
     private void circleIsland(Mesh aMesh){
         for (int i =0; i< aMesh.getPolygonsCount(); i++){
             Polygon poly = polygonList.get(i);
@@ -56,14 +72,56 @@ public class IslandGen extends IslandSeed {
 //            }
             //island
             if (distance < 200){
-                colorPolygon(poly, 253, 255,208,255);
+                colorPolygon(253, 255,208,255, i);
             }
             else{
-                colorPolygon(poly, 35, 85,138,255);
+                colorPolygon( 35, 85,138,255, i);
             }
         }
     }
-    private void waveyIsland(Mesh aMesh){
+    private void crossIsland(Mesh aMesh){
+        Random bag = new Random();
+        for (int i =0; i< aMesh.getPolygonsCount(); i++){
+            Polygon poly = polygonList.get(i);
+            Vertex centroid = vertexList.get(poly.getCentroidIdx());
+            double x = centroid.getX();
+            double y = centroid.getY();
+            double distance = Math.sqrt(Math.pow(x-250,2)+Math.pow(y-250,2));
+
+            if (distance < 200){
+                colorPolygon(253, 255,208,255, i);
+            }
+            else{
+                colorPolygon( 35, 85,138,255, i);
+            }
+
+            for (int j = 100; j<= 400; j+=150) {
+                if (inOval(50, 100, j, 50, x, y) < 0) {
+                    colorPolygon( 35, 85, 138, 255, i);
+                }
+                if (inOval(50, 100, j, 450, x, y) < 0) {
+                    colorPolygon(35, 85, 138, 255, i);
+                }
+                if (inOval(100, 50, 50, j, x, y) < 0) {
+                    colorPolygon( 35, 85, 138, 255, i);
+                }
+
+                if (inOval(100, 50, 450, j, x, y) < 0) {
+                    colorPolygon(35, 85, 138, 255, i);
+                }
+
+            }
+
+        }
+    }
+
+    private double inOval(int a,int b,int offsetX, int offsetY, double x, double y){
+        double result = Math.pow(((x-offsetX)/a),2) + Math.pow(((y-offsetY)/b),2) -1;
+        return result;
+
+    }
+
+    private void moonIsland(Mesh aMesh){
         Random bag = new Random();
         for (int i =0; i< aMesh.getPolygonsCount(); i++){
             Polygon poly = polygonList.get(i);
@@ -75,10 +133,10 @@ public class IslandGen extends IslandSeed {
             double distance1 = Math.sqrt(Math.pow(x-450,2)+Math.pow(y-250,2));
 
             if (distance < 200 && distance1 > 100){
-                colorPolygon(poly, 253, 255,208,255);
+                colorPolygon(253, 255,208,255, i);
             }
             else{
-                colorPolygon(poly, 35, 85,138,255);
+                colorPolygon(35, 85,138,255, i);
             }
         }
     }
@@ -94,11 +152,11 @@ public class IslandGen extends IslandSeed {
             double result = Math.pow(((x-250)/a),2) + Math.pow(((y-250)/b),2) -1;
 
             if (result < 0) {
-                colorPolygon(poly, 253, 255, 208, 255);
+                colorPolygon(253, 255, 208, 255, i);
             }
 
             else{
-                colorPolygon(poly, 35, 85,138,255);
+                colorPolygon(35, 85,138,255, i);
             }
 
         }
@@ -113,7 +171,7 @@ public class IslandGen extends IslandSeed {
             int polyIndex = (startIndexL + i) % heightPoints.size();
             int validPolyId  = heightPoints.get(polyIndex);
             Polygon poly = polygonList.get(validPolyId);
-            colorPolygon(poly, 102, 178,255,255);
+            colorPolygon(102, 178,255,255, validPolyId);
 
 
        }
@@ -147,7 +205,20 @@ public class IslandGen extends IslandSeed {
      * @param aMesh
      * @return
      */
-    public Mesh generate(Mesh aMesh,String shape){
+    public Mesh generate(Mesh aMesh,String seed){
+
+        //Get island details from seed
+        String[] seedDetails = seed.split("-");
+        int islandShape = Integer.parseInt(seedDetails[0]);
+        int altitudeFormation = Integer.parseInt(seedDetails[1]);
+        int altitudeStartIdx = Integer.parseInt(seedDetails[2]);
+        int numLakes = Integer.parseInt(seedDetails[3]);
+        int lakeStartIdx = Integer.parseInt(seedDetails[4]);
+        int numAquifers = Integer.parseInt(seedDetails[5]);
+        int aquiferStartIdx = Integer.parseInt(seedDetails[6]);
+        int soilMoisture = Integer.parseInt(seedDetails[7]);
+        int biome = Integer.parseInt(seedDetails[8]);
+
         // Get old mesh details
         polygonList = new ArrayList<>(aMesh.getPolygonsList());
         segmentList = new ArrayList<>(aMesh.getSegmentsList());
@@ -155,18 +226,18 @@ public class IslandGen extends IslandSeed {
 
         // Set new Stats
         int nPolygons = polygonList.size();
-        elevations = new ArrayList<Double>(Collections.nCopies(nPolygons, 1.0));
+        elevations = new ArrayList<Double>(Collections.nCopies(nPolygons, 0.0));
         humidity = new ArrayList<Double>(Collections.nCopies(nPolygons, 100.0));
 
         // New Island Meshes -- Will need to change to option
-        waveyIsland(aMesh);
+        crossIsland(aMesh);
+//        islandSelector(islandShape, aMesh);
 
         // Get Island Blocks
         getIslandBlocks();
 
         // Generate Elevation
-        generateElevation(5);
-
+        volcano(5);
         //
         createLakes(aMesh, 100, 6);
 
@@ -202,7 +273,7 @@ public class IslandGen extends IslandSeed {
         }
     }
 
-    private void generateElevation(int startIdx){
+    private void generateHills(int startIdx){
         // Have it incrementally do it with the seed
         altStartIdx = startIdx;
         for (int i = 0; i < heightPoints.size()/2; i++){
@@ -221,17 +292,48 @@ public class IslandGen extends IslandSeed {
             }
         }
     }
+    private void volcano(int startIdx){
+        altStartIdx = startIdx;
+        Deque<Integer> deque = new ArrayDeque<>();
+        Set<Integer> visited = new HashSet<>();
+        int polyIdx = heightPoints.get(startIdx);
+        double volcanoHeight = 150.0;
+        visited.add(polyIdx);
+        deque.add(polyIdx);
+        double visual = 5;
+        while (!deque.isEmpty()){
+            int idxVal = deque.removeFirst();
+            Polygon poly = polygonList.get(idxVal);
+            elevations.set(idxVal,volcanoHeight);
+            List<Integer> neighbourList = poly.getNeighborIdxsList();
+            colorHeight(poly,visual);
+            for (Integer idx : neighbourList){
+                if (!visited.contains(idx) && islandBlocks.contains(idx)){
+                    visited.add(idx);
+                    deque.add(idx);
+                }
+            }
+            visual -= 0.01;
+            volcanoHeight -= 10;
+        }
+
+    }
     private void colorHeight(Polygon poly, double value){
         // Island is "253,255,208,255"
+        if (value < 1){
+            value = 1;
+        }
         double red = 253/value;
         double green = 255/value;
         double blue = 208/value;
-        colorPolygon(poly,(int)red,(int)green,(int)blue,255);
+        int index = polygonList.indexOf(poly);
+        colorPolygon((int)red,(int)green,(int)blue,255, index);
     }
-    private void colorPolygon(Polygon poly, int red, int green, int blue, int alpha){
+    private void colorPolygon(int red, int green, int blue, int alpha, int index){
+        Polygon poly = polygonList.get(index);
         Structs.Property color = Structs.Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue+ "," + alpha).build();
         Polygon colored = Polygon.newBuilder(poly).addProperties(color).build();
-        polygonList.set(polygonList.indexOf(poly), colored);
+        polygonList.set(index, colored);
     }
     private void assignType(Polygon poly, String type){
         Structs.Property typeProperty = Structs.Property.newBuilder().setKey("Type").setValue(type).build();
@@ -253,7 +355,6 @@ public class IslandGen extends IslandSeed {
     }
     private String extractColorString(List<Structs.Property> properties){
         String val = null;
-
         for(Structs.Property p: properties) {
             // TRY TO FIND THE RGB COLOR
             if (p.getKey().equals("rgb_color")) {

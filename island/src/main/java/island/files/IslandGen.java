@@ -213,21 +213,21 @@ public class IslandGen extends IslandSeed {
     }
 
 
-    private void seedDecoder(String seed){
-        //Get island details from seed
-        String[] seedDetails = seed.split("-");
-        islandShape = Integer.parseInt(seedDetails[0]);
-        altType = Integer.parseInt(seedDetails[1]);
-        altStartIdx = Integer.parseInt(seedDetails[2]);
-        lakeNum = Integer.parseInt(seedDetails[3]);
-        lakeStartIdx = Integer.parseInt(seedDetails[4]);
-        riverNum = Integer.parseInt(seedDetails[5]);
-        riverStartIdx = Integer.parseInt(seedDetails[6]);
-        aquaNum = Integer.parseInt(seedDetails[7]);
-        aquaStartIdx = Integer.parseInt(seedDetails[8]);
-        soilMoisture = Integer.parseInt(seedDetails[9]);
-        biome = Integer.parseInt(seedDetails[10]);
-    }
+//    private void seedDecoder(String seed){
+//        //Get island details from seed
+//        String[] seedDetails = seed.split("-");
+//        islandShape = Integer.parseInt(seedDetails[0]);
+//        altType = Integer.parseInt(seedDetails[1]);
+//        altStartIdx = Integer.parseInt(seedDetails[2]);
+//        lakeNum = Integer.parseInt(seedDetails[3]);
+//        lakeStartIdx = Integer.parseInt(seedDetails[4]);
+//        riverNum = Integer.parseInt(seedDetails[5]);
+//        riverStartIdx = Integer.parseInt(seedDetails[6]);
+//        aquaNum = Integer.parseInt(seedDetails[7]);
+//        aquaStartIdx = Integer.parseInt(seedDetails[8]);
+//        soilMoisture = Integer.parseInt(seedDetails[9]);
+//        biome = Integer.parseInt(seedDetails[10]);
+//    }
 
     /**
      * Generate the new Islands

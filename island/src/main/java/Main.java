@@ -22,6 +22,7 @@ public class Main {
         String shape = null;
         String elevType = null;
         String maxNumLakes = "0";
+        String seed = "None";
 
         //turn string into int
         int intMaxNumLakes = Integer.parseInt(maxNumLakes);
@@ -59,7 +60,7 @@ public class Main {
 
         // Island Generation
         IslandGen gen = new IslandGen();
-        Mesh myMesh = gen.generate(aMesh, shape);
+        Mesh myMesh = gen.generate(aMesh, "Circle");
 
         // Outputing to new Mesh object
         MeshFactory factory = new MeshFactory();

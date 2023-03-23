@@ -28,8 +28,8 @@ public class Main {
         String output = null;
 
         //Seed Parameters
-        String shape = String.valueOf(rand.nextInt(0, 3));
-        String elevType = String.valueOf(rand.nextInt(0, 2));
+        String shape = "";
+        String elevType = "";
         String biome = String.valueOf(rand.nextInt(0, 7));
 
         //These can all be randomized after island generation

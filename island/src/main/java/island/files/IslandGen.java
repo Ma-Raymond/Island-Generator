@@ -175,8 +175,7 @@ public class IslandGen extends IslandSeed {
             addLakeHumidity(validPolyId);
 
        }
-        lakeStartIdx = startIndexL;
-        lakeNum = numLakes;
+
     }
 
     private void addLakeHumidity(int lakePoly){
@@ -237,21 +236,34 @@ public class IslandGen extends IslandSeed {
     }
 
     private void getIslandShape(String shape){
-        HashMap<String, Integer> islandShapes = new HashMap<String, Integer>();
-        islandShapes.put("Circle", 0);
-        islandShapes.put("Oval", 1);
-        islandShapes.put("Moon", 2);
-        islandShapes.put("Cross", 3);
-        islandShape = islandShapes.get(shape);
+        Random rand = new Random();
+        if (shape.equals("")){
+            islandShape = (rand.nextInt(0, 4));
+        }
+        else{
+            HashMap<String, Integer> islandShapes = new HashMap<String, Integer>();
+            islandShapes.put("Circle", 0);
+            islandShapes.put("Oval", 1);
+            islandShapes.put("Moon", 2);
+            islandShapes.put("Cross", 3);
+            islandShape = islandShapes.get(shape);
+        }
 
     }
 
     private void getElevationType(String elevType){
-        HashMap<String, Integer> elevationTypes = new HashMap<String, Integer>();
-        elevationTypes.put("Volcano", 0);
-        elevationTypes.put("Flat", 1);
-        elevationTypes.put("Hill", 2);
-        altType = elevationTypes.get(elevType);
+        Random rand = new Random();
+        if (elevType.equals("")){
+            altType = (rand.nextInt(0, 3));
+        }
+
+        else{
+            HashMap<String, Integer> elevationTypes = new HashMap<String, Integer>();
+            elevationTypes.put("Volcano", 0);
+            elevationTypes.put("Flat", 1);
+            elevationTypes.put("Hill", 2);
+            altType = elevationTypes.get(elevType);
+        }
 
     }
 
@@ -375,7 +387,7 @@ public class IslandGen extends IslandSeed {
         }
     }
 
-    
+
 
     /**
      * Generate the new Islands
@@ -384,24 +396,6 @@ public class IslandGen extends IslandSeed {
      */
 
     public Mesh generate(Mesh aMesh,String seed, String shape, String elevType, String elevationStartIdx,String maxNumLakes, String lakeStartingIdx, String rivers, String riverStartingIdx, String aquifers, String aquiferStartingIdx, String soil, String biomeSelect){
-        if (!seed.equals("")){
-            seedDecoder(seed);
-            islandSelector(islandShape, aMesh);
-        }
-
-        else{
-            getIslandShape(shape);
-            islandSelector(islandShape, aMesh);
-            getElevationStartIdx(elevationStartIdx);
-            getElevationType(elevType);
-            getLakeStartIdx(lakeStartingIdx);
-            getLakeNum(maxNumLakes);
-            getRiverNum(rivers);
-            getRiverStartIdx(riverStartingIdx);
-            getAquiferNum(aquifers);
-            getAquiferStartIdx(aquiferStartingIdx);
-        }
-
         // Get old mesh details
         polygonList = new ArrayList<>(aMesh.getPolygonsList());
         segmentList = new ArrayList<>(aMesh.getSegmentsList());
@@ -411,6 +405,29 @@ public class IslandGen extends IslandSeed {
         int nPolygons = polygonList.size();
         elevations = new ArrayList<Double>(Collections.nCopies(nPolygons, 0.0));
         humidity = new ArrayList<Double>(Collections.nCopies(nPolygons, 100.0));
+
+        //Create new island
+
+        //If user input a seed
+        if (!seed.equals("")){
+            seedDecoder(seed);
+            islandSelector(islandShape, aMesh);
+        }
+
+        //If user did not input seed
+        else{
+            getIslandShape(shape);
+            islandSelector(islandShape, aMesh);
+            getElevationStartIdx(elevationStartIdx);
+            getElevationType(elevType);
+            getLakeStartIdx(lakeStartingIdx);
+            getLakeNum(maxNumLakes);
+            //Un Comment these when u add rivers bc they being baka rn without a real river list
+//            getRiverNum(rivers);
+//            getRiverStartIdx(riverStartingIdx);
+            getAquiferNum(aquifers);
+            getAquiferStartIdx(aquiferStartingIdx);
+        }
 
 
         // Generate Elevation

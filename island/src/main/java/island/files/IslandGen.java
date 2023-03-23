@@ -35,11 +35,13 @@ public class IslandGen extends IslandSeed {
     List<Vertex> vertexList;
     List<Double> elevations;
     List<Double> humidity;
+    List<Double> vertexHeights;
 
     String islandColor = "253,255,208,255";
     List<Integer> islandBlocks = new ArrayList<>();
     List<Integer> heightPoints = new ArrayList<>();
     List<Integer> islandVertices = new ArrayList<>();
+
     DecimalFormat precision  = new DecimalFormat("0.00");
 
     private void islandSelector(int shapeSeed, Mesh aMesh){
@@ -291,7 +293,7 @@ public class IslandGen extends IslandSeed {
                 lakeNum = maxLand/20;
             }
             else{
-                lakeNum = maxLakes;
+                lakeNum = maxLakes - 1;
             }
 
         }
@@ -345,6 +347,7 @@ public class IslandGen extends IslandSeed {
         }
     }
 
+
     private void getAquiferNum(String maxNumAquifer){
         Random rand = new Random();
         int maxLand = islandBlocks.size();
@@ -361,7 +364,6 @@ public class IslandGen extends IslandSeed {
             }
 
         }
-
     }
     private void getAquiferStartIdx(String aquiferStartingIdx) {
         Random rand = new Random();
@@ -387,8 +389,10 @@ public class IslandGen extends IslandSeed {
 
         // Set new Stats
         int nPolygons = polygonList.size();
+        int nVertices = vertexList.size();
         elevations = new ArrayList<Double>(Collections.nCopies(nPolygons, 0.0));
         humidity = new ArrayList<Double>(Collections.nCopies(nPolygons, 100.0));
+        vertexHeights = new ArrayList<>(Collections.nCopies(nVertices, 0.0));
     }
 
     public Mesh generate(Mesh aMesh,String seed, String shape, String elevType, String elevationStartIdx,String maxNumLakes, String lakeStartingIdx, String rivers, String riverStartingIdx, String aquifers, String aquiferStartingIdx, String soil, String biomeSelect){
@@ -417,13 +421,16 @@ public class IslandGen extends IslandSeed {
 
         // Generate Elevation
         selectElevation(altType);
-
+        // Rivers lol
+        generateVTPRelation();
+        generateVertexHeights();
         //Lakes
         createLakes(lakeNum, lakeStartIdx);
 
         //Rivers
 
         //Aquifers
+        //
 
 
 
@@ -437,9 +444,7 @@ public class IslandGen extends IslandSeed {
             if (extractColorString(poly.getPropertiesList()).equals(islandColor)){
                 islandBlocks.add(i);
                 elevations.set(i,1.0);
-                List<Integer> neighbourList = extractVertices(poly.getPropertiesList());
-                if (neighbourList != null)
-                    islandVertices.addAll(neighbourList);
+
             }
         }
         Collections.shuffle(islandBlocks,new Random(2));
@@ -467,6 +472,7 @@ public class IslandGen extends IslandSeed {
     }
     private void generateInnerIsland(){
         // heightPoint Island Blocks
+        Set<Integer> verticesInIsland = new HashSet<>();
         for (Integer polyIdx : islandBlocks){
             boolean allNeighbourIslands = true;
             Polygon poly = polygonList.get(polyIdx);
@@ -478,23 +484,64 @@ public class IslandGen extends IslandSeed {
             }
             if (allNeighbourIslands){
                 heightPoints.add(polyIdx);
+                List<Integer> islandVertexList = extractVertices(poly.getPropertiesList());
+                if (islandVertexList != null)
+                    for (Integer i : islandVertexList){
+                        if (!verticesInIsland.contains(i)){
+                            islandVertices.add(i);
+                            verticesInIsland.add(i);
+                        }
+                    }
             }
+        }
+        Collections.shuffle(islandVertices,new Random(2));
+    }
+    private void generateVertexHeights(){
+        for (Integer vertIdx : islandVertices){
+            List<Integer> polysAssociated = VTPRelations.get(vertIdx);
+            Double lowestValue = null;
+            for (Integer polyIdx : polysAssociated){
+                Double height = elevations.get(polyIdx);
+                if (lowestValue == null){
+                    lowestValue = height;
+                    continue;
+                }
+                if (height < lowestValue){
+                    lowestValue = height;
+                }
+            }
+            vertexHeights.set(vertIdx,lowestValue);
         }
     }
 
+    List<List<Integer>> VTPRelations;
+    private void generateVTPRelation(){
+        VTPRelations = new ArrayList<>(Collections.nCopies(vertexList.size(),new ArrayList<>()));
+        for (Integer polyIdx : islandBlocks){
+            Polygon poly = polygonList.get(polyIdx);
+            List<Integer> vertice = extractVertices(poly.getPropertiesList());
+            for (Integer v : vertice){
+                List<Integer> vList = VTPRelations.get(v);
+                if (!vList.contains(polyIdx)){
+                    List<Integer> vList2 = new ArrayList<>(vList);
+                    vList2.add(polyIdx);
+                    VTPRelations.set(v,vList2);
+                }
+            }
+        }
+    }
     private void selectElevation(int elevationNum){
         if (elevationNum == 0){
             volcano(altStartIdx);
         }
-
-        else if (elevationNum == 1){
+        else if (elevationNum == 2){
             generateHills(altStartIdx);
         }
 
     }
     private void generateHills(int startIdx){
         // Have it incrementally do it with the seed
-        altStartIdx = startIdx;
+        altStartIdx = startIdx % heightPoints.size();
         for (int i = 0; i < heightPoints.size()/2; i++){
             int Idx = (startIdx + i) % heightPoints.size();
             int polyIdx = heightPoints.get(Idx);
@@ -512,11 +559,11 @@ public class IslandGen extends IslandSeed {
         }
     }
     private void volcano(int startIdx){
-        altStartIdx = startIdx;
+        altStartIdx = startIdx % heightPoints.size();
         Deque<Integer> deque = new ArrayDeque<>();
         Set<Integer> visited = new HashSet<>();
         int polyIdx = heightPoints.get(startIdx);
-        double volcanoHeight = 150.0;
+        double volcanoHeight = 200.0;
         visited.add(polyIdx);
         deque.add(polyIdx);
         double visual = 5;
@@ -533,9 +580,9 @@ public class IslandGen extends IslandSeed {
                 }
             }
             visual -= 0.01;
-            volcanoHeight -= 10;
+            if (volcanoHeight >0)
+                volcanoHeight = Double.parseDouble(precision.format(volcanoHeight-1.0));
         }
-
     }
     private void colorHeight(Polygon poly, double value){
         // Island is "253,255,208,255"

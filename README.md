@@ -95,11 +95,11 @@ When you develop features and enrich the product, remember that you have first t
 | F26 | Abstract Soil Absorption Calculator                                                                |                               |        |        | Pending |
 | F27 | Abstract whittaker diagram builder                                                                 |                               |        |        | Pending |
 | F28 | Assign seeds to attributes of randomly generated islands that can be inputted through command line | Raymond Ma + Gayan Athukorala | Mar 22 |        | Started |
-| F30 | Tundra Biome                                                                                       |                               |        |        | Pending |
-| F31 | Forest Biome                                                                                       |                               |        |        | Pending |
-| F32 | Field Biome                                                                                        |                               |        |        | Pending |
-| F33 | Mangrove Biome                                                                                     |                               |        |        | Pending |
-| F34 | Beach Biome                                                                                        |                               |        |        | Pending |
+| F29 | Tundra Biome                                                                                       |                               |        |        | Pending |
+| F30 | Forest Biome                                                                                       |                               |        |        | Pending |
+| F31 | Field Biome                                                                                        |                               |        |        | Pending |
+| F32 | Mangrove Biome                                                                                     |                               |        |        | Pending |
+| F32 | Beach Biome                                                                                        |                               |        |        | Pending |
 
 
 

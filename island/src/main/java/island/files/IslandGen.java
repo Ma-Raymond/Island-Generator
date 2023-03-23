@@ -164,15 +164,15 @@ public class IslandGen extends IslandSeed {
 
     }
 
-    private void createLakes(Mesh aMesh, int maxLakes, int startIndexL){
+    private void createLakes(int maxLakes, int startIndexL){
         Random randNum = new Random();
         //int startIndexL = randNum.nextInt(heightPoints.size()); //put this in the generator in an if statement
         int numLakes = randNum.nextInt(maxLakes);
         for (int i = 0; i < numLakes; i ++){
             int polyIndex = (startIndexL + i) % heightPoints.size();
             int validPolyId  = heightPoints.get(polyIndex);
-            Polygon poly = polygonList.get(validPolyId);
             colorPolygon(102, 178,255,255, validPolyId);
+            addLakeHumidity(validPolyId);
 
        }
         lakeStartIdx = startIndexL;
@@ -182,8 +182,9 @@ public class IslandGen extends IslandSeed {
     private void addLakeHumidity(int lakePoly){
         Polygon poly = polygonList.get(lakePoly);
         double humidityValLake = Double.parseDouble(precision.format(humidity.get(lakePoly)+150));
-
+        humidity.set(lakePoly, humidityValLake);
         for (Integer n : poly.getNeighborIdxsList()){
+            //may be used for colouring later
             Polygon neighbourPoly = polygonList.get(n);
             //colorHeight(neighbourPoly,1.2);
             double humidityValNeigbours = Double.parseDouble(precision.format(humidity.get(n)+100));
@@ -193,11 +194,25 @@ public class IslandGen extends IslandSeed {
 
     }
 
-    private void createAquifers(Mesh aMesh, int numAqua){
+    private void createAquifers(int aquaNum, int startIndexA){
+        //int startIndexL = randNum.nextInt(heightPoints.size()); //put this in the generator in an if statement
+        for (int i = 0; i < aquaNum; i ++){
+            int polyIndex = (startIndexA + i) % heightPoints.size();
+            int validPolyId = heightPoints.get(polyIndex);
+            colorPolygon(102, 178,255,255, validPolyId);
+            addAquaHumidity(validPolyId);
+        }
+        aquaStartIdx = startIndexA;
 
     }
-    private void addAquaHumidity(){
-
+    private void addAquaHumidity(int aquaPoly){
+        Polygon poly = polygonList.get(aquaPoly);
+        double humidityValAqua = Double.parseDouble(precision.format(humidity.get(aquaPoly)+150));
+        humidity.set(aquaPoly, humidityValAqua);
+        for (Integer n : poly.getNeighborIdxsList()){
+            double humidityValNeigbours = Double.parseDouble(precision.format(humidity.get(n)+100));
+            humidity.set(n,humidityValNeigbours);
+        }
     }
     private void addLakeHumidity(){
         
@@ -305,7 +320,7 @@ public class IslandGen extends IslandSeed {
         // Generate Elevation
         volcano(5);
         //
-        createLakes(aMesh, 100, 6);
+        createLakes( 100, 6);
 
         // Assigning Biomes and Types
         return Mesh.newBuilder().addAllVertices(vertexList).addAllSegments(segmentList).addAllPolygons(polygonList).build();

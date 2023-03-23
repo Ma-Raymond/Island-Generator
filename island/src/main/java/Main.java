@@ -8,6 +8,7 @@ import java.util.Random;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+
         Random rand = new Random();
         CommandLineParser parser = new DefaultParser();
         Options options = new Options();
@@ -23,7 +24,6 @@ public class Main {
         options.addOption("biomes", true, "Biome");
         options.addOption("seed", true, "Island Seed");
         options.addOption("H", "help", false, "Command information");
-
         String input = null;
         String output = null;
 
@@ -48,11 +48,12 @@ public class Main {
         try {
             CommandLine commandline = parser.parse(options, args);
 
-            if (commandline.hasOption("H")){
+            if (commandline.hasOption("H")) {
                 System.out.println("----------------------------------------------HELP MENU----------------------------------------------\n");
-                System.out.println("Enter these commands to personalize the Island you would like to create! \n" );
+                System.out.println("Enter these commands to personalize the Island you would like to create! \n");
 
             }
+
             if (commandline.hasOption("I")) {
                 input = commandline.getOptionValue("I");
             }
@@ -60,14 +61,13 @@ public class Main {
                 output = commandline.getOptionValue("O");
             }
 
-            if (commandline.hasOption("seed")){
+            if (commandline.hasOption("seed")) {
                 seed = commandline.getOptionValue("seed");
 
             }
 
             if (commandline.hasOption("shape")) {
                 shape = commandline.getOptionValue("shape");
-
             }
             if (commandline.hasOption("altitude")){
                 elevType = commandline.getOptionValue("altitude");
@@ -88,19 +88,20 @@ public class Main {
             }
             if (commandline.hasOption("biomes")){
                 biome = commandline.getOptionValue("biomes");
+
+
             }
-
-
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
+
 
         // Old Mesh to write on
         Mesh aMesh = new MeshFactory().read(input);
 
         // Island Generation
         IslandGen gen = new IslandGen();
-        Mesh myMesh = gen.generate(aMesh, seed,shape, elevType, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome);
+        Mesh myMesh = gen.generate(aMesh, seed, shape, elevType, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome);
 
         // Outputing to new Mesh object
         MeshFactory factory = new MeshFactory();

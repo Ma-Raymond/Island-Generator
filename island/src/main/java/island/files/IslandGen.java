@@ -57,6 +57,7 @@ public class IslandGen extends IslandSeed {
             crossIsland(aMesh);
         }
 
+        getIslandBlocks();
     }
 
     private void circleIsland(Mesh aMesh){
@@ -220,14 +221,69 @@ public class IslandGen extends IslandSeed {
         biome = Integer.parseInt(seedDetails[10]);
     }
 
+    private void getIslandShape(String shape){
+        HashMap<String, Integer> islandShapes = new HashMap<String, Integer>();
+        islandShapes.put("Circle", 0);
+        islandShapes.put("Oval", 1);
+        islandShapes.put("Moon", 2);
+        islandShapes.put("Cross", 3);
+        islandShape = islandShapes.get(shape);
+
+    }
+
+    private void getElevationType(String elevType){
+        HashMap<String, Integer> elevationTypes = new HashMap<String, Integer>();
+        elevationTypes.put("Volcano", 0);
+        elevationTypes.put("Flat", 1);
+        elevationTypes.put("Hill", 2);
+        altType = elevationTypes.get(elevType);
+
+    }
+
+    private void getLakeNum(String maxNumLakes){
+        Random rand = new Random();
+        int maxLand = islandBlocks.size();
+        if (maxNumLakes.equals("")){
+            lakeNum = rand.nextInt(0, maxLand/20);
+        }
+        else{
+            int maxLakes = Integer.parseInt(maxNumLakes);
+            if (maxLakes>maxLand/20){
+                lakeNum = maxLand/20;
+            }
+            else{
+                lakeNum = maxLakes;
+            }
+
+        }
+
+    }
+
+
+
+    private void seedCreator(String shape, String elevType, String maxNumLakes, String lakeStartIdx, String rivers, String riverStartIdx, String aquifers, String aquiferStartIdx, String soil, String biomeSelect, Mesh aMesh){
+
+
+    }
+
     /**
      * Generate the new Islands
      * @param aMesh
      * @return
      */
-    public Mesh generate(Mesh aMesh,String seed){
-        if (!seed.equals("None")){
+
+    public Mesh generate(Mesh aMesh,String seed, String shape, String elevType, String maxNumLakes, String lakeStartIdx, String rivers, String riverStartIdx, String aquifers, String aquiferStartIdx, String soil, String biomeSelect){
+        if (!seed.equals("")){
             seedDecoder(seed);
+        }
+
+        else{
+            getIslandShape(shape);
+            islandSelector(islandShape, aMesh);
+            getElevationType(elevType);
+            getLakeNum(maxNumLakes);
+
+
         }
 
         // Get old mesh details
@@ -242,7 +298,6 @@ public class IslandGen extends IslandSeed {
 
         // New Island Meshes -- Will need to change to option
         crossIsland(aMesh);
-        // islandSelector(islandShape, aMesh);
 
         // Get Island Blocks
         getIslandBlocks();

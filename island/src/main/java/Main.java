@@ -33,14 +33,16 @@ public class Main {
         String biome = String.valueOf(rand.nextInt(0, 7));
 
         //These can all be randomized after island generation
-        String maxNumLakes = "0";
-        String lakeStartIdx = "0";
-        String aquifers = "0";
-        String aquiferStartIdx = "0";
-        String rivers = "0";
-        String riverStartIdx = "0";
-        String soil = "0";
+        String maxNumLakes = "";
+        String lakeStartIdx = "";
+        String aquifers = "";
+        String aquiferStartIdx = "";
+        String rivers = "";
+        String riverStartIdx = "";
+        String soil = "";
 
+        //Seed will be either inputted or created from the above parameters
+        String seed = "";
 
 
         try {
@@ -51,15 +53,21 @@ public class Main {
                 System.out.println("Enter these commands to personalize the Island you would like to create! \n" );
 
             }
-            
             if (commandline.hasOption("I")) {
                 input = commandline.getOptionValue("I");
             }
             if (commandline.hasOption("O")) {
                 output = commandline.getOptionValue("O");
             }
+
+            if (commandline.hasOption("seed")){
+                seed = commandline.getOptionValue("seed");
+
+            }
+
             if (commandline.hasOption("shape")) {
                 shape = commandline.getOptionValue("shape");
+
             }
             if (commandline.hasOption("altitude")){
                 elevType = commandline.getOptionValue("altitude");
@@ -83,8 +91,6 @@ public class Main {
             }
 
 
-
-
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
@@ -94,7 +100,7 @@ public class Main {
 
         // Island Generation
         IslandGen gen = new IslandGen();
-        Mesh myMesh = gen.generate(aMesh, shape);
+        Mesh myMesh = gen.generate(aMesh, seed,shape, elevType, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome);
 
         // Outputing to new Mesh object
         MeshFactory factory = new MeshFactory();

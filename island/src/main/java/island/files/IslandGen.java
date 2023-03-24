@@ -75,10 +75,10 @@ public class IslandGen extends IslandSeed {
     }
     private void addAquaHumidity(int aquaPoly){
         Polygon poly = polygonList.get(aquaPoly);
-        double humidityValAqua = Double.parseDouble(precision.format(humidity.get(aquaPoly)+150));
+        double humidityValAqua = Double.parseDouble(precision.format(humidity.get(aquaPoly)+150*soilPercent));
         humidity.set(aquaPoly, humidityValAqua);
         for (Integer n : poly.getNeighborIdxsList()){
-            double humidityValNeigbours = Double.parseDouble(precision.format(humidity.get(n)+100));
+            double humidityValNeigbours = Double.parseDouble(precision.format(humidity.get(n)+100*soilPercent));
             humidity.set(n,humidityValNeigbours);
         }
     }

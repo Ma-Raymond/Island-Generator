@@ -37,6 +37,8 @@ public class IslandGen extends IslandSeed {
     List<Double> humidity;
     List<Double> vertexHeights;
 
+    List <Integer> lakeIdxs = new ArrayList<>();
+
     String islandColor = "253,255,208,255";
     List<Integer> islandBlocks = new ArrayList<>();
     List<Integer> heightPoints = new ArrayList<>();
@@ -175,6 +177,7 @@ public class IslandGen extends IslandSeed {
                 int polyIndex = (startIndexL + i) % heightPoints.size();
                 int validPolyId  = heightPoints.get(polyIndex);
                 colorPolygon(102, 178,255,255, validPolyId);
+                lakeIdxs.add(validPolyId);
                 addLakeHumidity(validPolyId);
             }
         }
@@ -344,6 +347,7 @@ public class IslandGen extends IslandSeed {
         }
 
     }
+
     private void getRiverStartIdx(String riverIdx) {
         Random rand = new Random();
         int maxIdx = islandVertices.size();
@@ -466,6 +470,11 @@ public class IslandGen extends IslandSeed {
         river.generate(riverNum,riverStartIdx,polygonList,segmentList,vertexList,elevations,vertexHeights,islandVertices,islandBlocks);
         segmentList = river.segmentList;
         vertexList = river.vertexList;
+
+        Biomes biome = new Biomes();
+        biome.generate(elevations, islandBlocks, lakeIdxs, humidity, polygonList);
+        polygonList = biome.polygonList;
+
 
         //Aquifers
 

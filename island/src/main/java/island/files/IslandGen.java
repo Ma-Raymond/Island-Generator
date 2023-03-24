@@ -145,9 +145,8 @@ public class IslandGen extends IslandSeed {
         }
     }
     private void ovalIsland(Mesh aMesh){
-        Random bag = new Random();
-        int a = bag.nextInt(100, 200);
-        int b = bag.nextInt(50, 150);
+        int a = 200;
+        int b = 100;
         for (int i =0; i< aMesh.getPolygonsCount(); i++){
             Polygon poly = polygonList.get(i);
             Vertex centroid = vertexList.get(poly.getCentroidIdx());
@@ -169,15 +168,16 @@ public class IslandGen extends IslandSeed {
 
     private void createLakes(int maxLakes, int startIndexL){
         Random randNum = new Random();
-        //int startIndexL = randNum.nextInt(heightPoints.size()); //put this in the generator in an if statement
-        int numLakes = randNum.nextInt(maxLakes);
-        for (int i = 0; i < numLakes; i ++){
-            int polyIndex = (startIndexL + i) % heightPoints.size();
-            int validPolyId  = heightPoints.get(polyIndex);
-            colorPolygon(102, 178,255,255, validPolyId);
-            addLakeHumidity(validPolyId);
-
-       }
+        if(maxLakes!= 0){
+            //int startIndexL = randNum.nextInt(heightPoints.size()); //put this in the generator in an if statement
+            int numLakes = randNum.nextInt(maxLakes);
+            for (int i = 0; i < numLakes; i ++){
+                int polyIndex = (startIndexL + i) % heightPoints.size();
+                int validPolyId  = heightPoints.get(polyIndex);
+                colorPolygon(102, 178,255,255, validPolyId);
+                addLakeHumidity(validPolyId);
+            }
+        }
 
     }
 
@@ -215,19 +215,27 @@ public class IslandGen extends IslandSeed {
         }
     }
     private void seedDecoder(String seed){
+        //adjust seed if it is not correct
+        if (seed.length() < 18){
+            seed += "0".repeat(18-seed.length());
+        }
+        if (seed.length() > 18) {
+            seed = seed.substring(0,18);
+        }
         //Get island details from seed
-        String[] seedDetails = seed.split("-");
+        String[] seedDetails = seed.split("");
         islandShape = Integer.parseInt(seedDetails[0]);
+        System.out.println(islandShape);
         altType = Integer.parseInt(seedDetails[1]);
-        altStartIdx = Integer.parseInt(seedDetails[2]);
-        lakeNum = Integer.parseInt(seedDetails[3]);
-        lakeStartIdx = Integer.parseInt(seedDetails[4]);
-        riverNum = Integer.parseInt(seedDetails[5]);
-        riverStartIdx = Integer.parseInt(seedDetails[6]);
-        aquaNum = Integer.parseInt(seedDetails[7]);
-        aquaStartIdx = Integer.parseInt(seedDetails[8]);
-        soilMoisture = Integer.parseInt(seedDetails[9]);
-        biome = Integer.parseInt(seedDetails[10]);
+        altStartIdx = Integer.parseInt(seedDetails[2]+seedDetails[3]);
+        lakeNum = Integer.parseInt(seedDetails[4] + seedDetails[5]);
+        lakeStartIdx = Integer.parseInt(seedDetails[6]+seedDetails[7]);
+        riverNum = Integer.parseInt(seedDetails[8]+seedDetails[9]);
+        riverStartIdx = Integer.parseInt(seedDetails[10]+seedDetails[11]);
+        aquaNum = Integer.parseInt(seedDetails[12]+seedDetails[13]);
+        aquaStartIdx = Integer.parseInt(seedDetails[14]+seedDetails[15]);
+        soilMoisture = Integer.parseInt(seedDetails[16]);
+        biome = Integer.parseInt(seedDetails[17]);
     }
 
     private void getIslandShape(String shape){
@@ -418,6 +426,29 @@ public class IslandGen extends IslandSeed {
             getAquiferNum(aquifers);
             getAquiferStartIdx(aquiferStartingIdx);
         }
+        //Testing the island attribute values
+        System.out.println("island shape");
+        System.out.println(islandShape);
+        System.out.println("alt type");
+        System.out.println(altType);
+        System.out.println("alrt start idx");
+        System.out.println(altStartIdx);
+        System.out.println("lake num");
+        System.out.println(lakeNum);
+        System.out.println("lake start idx");
+        System.out.println(lakeStartIdx);
+        System.out.println("river num");
+        System.out.println(riverNum);
+        System.out.println("river start idx");
+        System.out.println(riverStartIdx);
+        System.out.println("aqua num");
+        System.out.println(aquaNum);
+        System.out.println("aqua start idx");
+        System.out.println(aquaStartIdx);
+        System.out.println("soil moisture");
+        System.out.println(soilMoisture);
+        System.out.println("biome");
+        System.out.println(biome);
 
         // Generate Elevation
         selectElevation(altType);

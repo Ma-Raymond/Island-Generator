@@ -38,6 +38,7 @@ public class IslandGen extends IslandSeed {
     List<Double> elevations;
     List<Double> humidity;
     List<Double> vertexHeights;
+    List<Double> soil;
 
     String islandColor = "253,255,208,255";
     List<Integer> islandBlocks = new ArrayList<>();
@@ -46,7 +47,10 @@ public class IslandGen extends IslandSeed {
 
     DecimalFormat precision  = new DecimalFormat("0.00");
 
+    private void soilProfile(){
 
+
+    }
     private void createLakes(int maximumLakes, int startIndexL){
 
         Random randNum = new Random();

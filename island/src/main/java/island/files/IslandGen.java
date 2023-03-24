@@ -28,6 +28,7 @@ abstract class IslandSeed{
     int soilMoisture;
     int biome;
     double defaultBlockElev;
+    double defaultHumidity;
 
 }
 
@@ -60,9 +61,11 @@ public class IslandGen extends IslandSeed {
         if(maximumLakes!= 0){
             //int startIndexL = randNum.nextInt(heightPoints.size()); //put this in the generator in an if statement
             if (isSeed){
+                lakeNum = maxLakes;
                 for (int i = 0; i < maxLakes; i ++){
                     int polyIndex = (startIndexL + i) % heightPoints.size();
                     int validPolyId  = heightPoints.get(polyIndex);
+                    lakeIdxs.add(validPolyId);
                     colorPolygon(102, 178,255,255, validPolyId);
                     addLakeHumidity(validPolyId);
                 }
@@ -72,6 +75,7 @@ public class IslandGen extends IslandSeed {
                 for (int i = 0; i < lakeNum; i ++){
                     int polyIndex = (startIndexL + i) % heightPoints.size();
                     int validPolyId  = heightPoints.get(polyIndex);
+                    lakeIdxs.add(validPolyId);
                     colorPolygon(102, 178,255,255, validPolyId);
                     addLakeHumidity(validPolyId);
                 }
@@ -303,7 +307,8 @@ public class IslandGen extends IslandSeed {
         int nPolygons = polygonList.size();
         int nVertices = vertexList.size();
         elevations = new ArrayList<Double>(Collections.nCopies(nPolygons, defaultBlockElev));
-        humidity = new ArrayList<Double>(Collections.nCopies(nPolygons, 100.0));
+        humidity = new ArrayList<Double>(Collections.nCopies(nPolygons, defaultHumidity));
+
         vertexHeights = new ArrayList<>(Collections.nCopies(nVertices, 0.0));
     }
 
@@ -350,7 +355,7 @@ public class IslandGen extends IslandSeed {
         selectElevation(altType);
 
         //Lakes
-        createLakes(lakeNum, lakeStartIdx);
+        createLakes(maxLakes, lakeStartIdx);
         createAquifers(aquaNum, aquaStartIdx);
 
         //Rivers
@@ -360,10 +365,12 @@ public class IslandGen extends IslandSeed {
         vertexList = river.vertexList;
         humidity = river.humidity;
 
-        Biomes biome = new Biomes();
-        defaultBlockElev = biome.BiomeElevation(biomeSelect);
-        biome.generate(elevations, islandBlocks, lakeIdxs, humidity, polygonList);
-        polygonList = biome.polygonList;
+
+        Biomes biomeGen = new Biomes();
+        defaultBlockElev = biomeGen.BiomeElevation(biomeSelect);
+        defaultHumidity = biomeGen.BiomeHumidity(biomeSelect);
+        biomeGen.generate(elevations, islandBlocks, lakeIdxs, humidity, polygonList);
+        polygonList = biomeGen.polygonList;
 
         //Aquifers
 
@@ -377,6 +384,8 @@ public class IslandGen extends IslandSeed {
         System.out.println(altStartIdx);
         System.out.println("lake num");
         System.out.println(lakeNum);
+        System.out.println(maxLakes);
+        System.out.println(maxNumLakes);
         System.out.println("lake start idx");
         System.out.println(lakeStartIdx);
         System.out.println("river num");

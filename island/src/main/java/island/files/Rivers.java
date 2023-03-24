@@ -15,9 +15,10 @@ public class Rivers {
     List<Structs.Polygon> polygonList;
     List<Structs.Segment> segmentList;
     List<Structs.Vertex> vertexList;
+    List<Double> humidity;
     int riverNum;
     int riverStartIdx;
-    public void generate(int rM, int rSI, List<Structs.Polygon> pList ,List<Structs.Segment> sList,List<Structs.Vertex> vList, List<Double> e,List<Double> vH, List<Integer> iV, List<Integer> iB){
+    public void generate(int rM, int rSI, List<Structs.Polygon> pList ,List<Structs.Segment> sList,List<Structs.Vertex> vList, List<Double> e,List<Double> vH, List<Integer> iV, List<Integer> iB,List<Double> humid){
         islandBlocks = iB;
         elevations = e;
         vertexHeights = vH;
@@ -27,6 +28,7 @@ public class Rivers {
         polygonList = pList;
         riverNum = rM;
         riverStartIdx = rSI;
+        humidity = humid;
 
         generateVTPRelation();
         getVTVRelation();
@@ -112,6 +114,11 @@ public class Rivers {
                 else
                     colorSegment(seg,0,0,255,255);
 
+                // Increasing humidity to surrounding soils
+                List<Integer> surroundingPolys = VTPRelations.get(id);
+                for (Integer polyIdx : surroundingPolys){
+                    humidity.set(polyIdx,humidity.get(polyIdx)+100);
+                }
                 id = nextVert;
             }
         }

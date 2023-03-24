@@ -463,10 +463,10 @@ public class IslandGen extends IslandSeed {
 
         //Rivers
         Rivers river = new Rivers();
-        river.generate(riverNum,riverStartIdx,polygonList,segmentList,vertexList,elevations,vertexHeights,islandVertices,islandBlocks);
+        river.generate(riverNum,riverStartIdx,polygonList,segmentList,vertexList,elevations,vertexHeights,islandVertices,islandBlocks,humidity);
         segmentList = river.segmentList;
         vertexList = river.vertexList;
-
+        humidity = river.humidity;
 
         //Aquifers
 

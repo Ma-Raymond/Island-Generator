@@ -2,6 +2,7 @@ package island.files;
 
 import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,46 +38,50 @@ public class Biomes {
             if (!LakeBlocks.contains(i)){
                 double height = elev.get(i);
                 double temp = humidity.get(i);
-                if (0 <= temp && temp <= 50 && 0 <= height && height < 150){
+                if (0 <= temp && temp <= 50 && 0 <= height && height < 175){
                     //BiomeTypes.add("Desert");
-                    colorPolygon(255,128,0,255, i);
+                    colorPolygon(206,112,44,255, i);
+                    new Color(206,112,44,255);
                 }
-                else if (50 < temp && temp < 275 && 0 < height && height < 50) {
+                else if (50 < temp && temp < 275 && 0 <= height && height < 50) {
                     //BiomeTypes.add("Savana");
-                    colorPolygon(102,204,0,255, i);
+                    colorPolygon(255,255,221,255, i);
+                    new Color(255,255,221,255);
 
                 }
-                else if (275 < temp && 0 < height && height < 50) {
+                else if (275 <= temp && 0 <= height && height < 50) {
                     //BiomeTypes.add("Tropic Rain Forest");
-                    colorPolygon(51,255,51,255, i);
-
+                    colorPolygon(181,220,178,255, i);
+                    new Color(181,220,178,255);
                 }
-                else if (50 < temp && temp < 110 && 50 < height && height < 175) {
+                else if (50 < temp && temp < 110 && 50 <= height && height < 175) {
                     //BiomeTypes.add("Grassland");
-                    colorPolygon(255,204,0,255, i);
-
+                    colorPolygon(240,167,74,255, i);
+                    new Color(240,167,74,255);
                 }
-                else if (110 < temp && temp < 225 && 50 < height && height < 125) {
+                else if (110 < temp && temp < 225 && 50 <= height && height < 125) {
                     //BiomeTypes.add("Deciduous");
-                    colorPolygon(0,182,85,255, i);
+                    colorPolygon(49,113,79,255, i);
+                    new Color(49,113,79,255);
 
                 }
-                else if (225 < temp && 50 < height && height < 125) {
+                else if (225 < temp && 50 <= height && height <= 125) {
                     //BiomeTypes.add("Temperate Rain Forest");
                     colorPolygon(0,255,179,255, i);
-
+                    new Color(0,255,179,255);
                 }
-                else if (50 < temp && 125 < height && height < 175) {
+                else if (50 <= temp && 125 <= height && height < 175) {
                     //BiomeTypes.add("Taiga");
                     colorPolygon(0,127,0,255, i);
-
+                    new Color(0,127,0,255);
                 }
-                else if (0 < temp && 175 < height) {
+                else if (0 <= temp && 175 <= height) {
                     //BiomeTypes.add("Tundra");
-                    colorPolygon(0,230,255,255, i);
-
+                    colorPolygon(206,221,237,255, i);
+                    new Color(206,221,237,255);
                 }
                 else{
+                    System.out.println("Humidity:"+temp+" Height:"+height);
                     colorPolygon(255,255,255,255,i);
                 }
 

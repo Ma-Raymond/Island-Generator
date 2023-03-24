@@ -15,7 +15,9 @@ public class Rivers {
     List<Structs.Polygon> polygonList;
     List<Structs.Segment> segmentList;
     List<Structs.Vertex> vertexList;
-    public void generate(List<Structs.Polygon> pList ,List<Structs.Segment> sList,List<Structs.Vertex> vList, List<Double> e,List<Double> vH, List<Integer> iV, List<Integer> iB){
+    int riverNum;
+    int riverStartIdx;
+    public void generate(int rM, int rSI, List<Structs.Polygon> pList ,List<Structs.Segment> sList,List<Structs.Vertex> vList, List<Double> e,List<Double> vH, List<Integer> iV, List<Integer> iB){
         islandBlocks = iB;
         elevations = e;
         vertexHeights = vH;
@@ -23,6 +25,8 @@ public class Rivers {
         vertexList = vList;
         segmentList = sList;
         polygonList = pList;
+        riverNum = rM;
+        riverStartIdx = rSI;
 
         generateVTPRelation();
         getVTVRelation();
@@ -79,9 +83,9 @@ public class Rivers {
 
     private void riverFlow(){
         Random rand = new Random();
-        for (int i = 0; i < 5; i++){
+        for (int i = 0; i < riverNum; i++){
             boolean notEnd = true;
-            int randIslandVert = rand.nextInt(islandVertices.size());
+            int randIslandVert = riverStartIdx+i;
             int id = islandVertices.get(randIslandVert);
             while (notEnd) {
                 List<Integer> vertNeighbours = VTVRelations.get(id);

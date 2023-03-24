@@ -458,14 +458,11 @@ public class IslandGen extends IslandSeed {
 
         //Rivers
         Rivers river = new Rivers();
-        river.generate(polygonList,segmentList,vertexList,elevations,vertexHeights,islandVertices,islandBlocks);
+        river.generate(riverNum,riverStartIdx,polygonList,segmentList,vertexList,elevations,vertexHeights,islandVertices,islandBlocks);
         segmentList = river.segmentList;
         vertexList = river.vertexList;
 
         //Aquifers
-        //
-
-
 
         // Assigning Biomes and Types
         return Mesh.newBuilder().addAllVertices(vertexList).addAllSegments(segmentList).addAllPolygons(polygonList).build();

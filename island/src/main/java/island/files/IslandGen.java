@@ -51,9 +51,14 @@ public class IslandGen extends IslandSeed {
 
     DecimalFormat precision  = new DecimalFormat("0.00");
 
+    double soilPercent;
     private void soilProfile(){
-
-
+        if (soilMoisture == 0)
+            soilPercent = 1.5;
+        else if (soilMoisture == 1)
+            soilPercent = 1.0;
+        else if (soilMoisture == 2)
+            soilPercent = 0.5;
     }
 
 
@@ -318,9 +323,10 @@ public class IslandGen extends IslandSeed {
         // Generate Elevation
         selectElevation(altType);
 
+        soilProfile();
         //Lakes
         Lake lakes = new Lake();
-        lakes.generateLakes(islandBlocks,isSeed,maxLakes,lakeStartIdx,lakeNum,maxLakes,humidity,heightPoints,polygonList);
+        lakes.generateLakes(soilPercent,islandBlocks,isSeed,maxLakes,lakeStartIdx,lakeNum,maxLakes,humidity,heightPoints,polygonList);
         humidity = lakes.humidity;
         lakeIdxs = lakes.lakeIdxs;
         lakeNum = lakes.lakeNum;
@@ -330,7 +336,7 @@ public class IslandGen extends IslandSeed {
 
         //Rivers
         Rivers river = new Rivers();
-        river.generate(riverNum,riverStartIdx,polygonList,segmentList,vertexList,elevations,vertexHeights,islandVertices,islandBlocks,humidity);
+        river.generate(soilPercent,riverNum,riverStartIdx,polygonList,segmentList,vertexList,elevations,vertexHeights,islandVertices,islandBlocks,humidity);
         segmentList = river.segmentList;
         vertexList = river.vertexList;
         humidity = river.humidity;

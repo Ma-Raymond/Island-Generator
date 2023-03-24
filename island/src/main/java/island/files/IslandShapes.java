@@ -130,9 +130,7 @@ public class IslandShapes {
             else{
                 colorPolygon(35, 85,138,255, i);
             }
-
         }
-
     }
 
     private void colorPolygon(int red, int green, int blue, int alpha, int index){

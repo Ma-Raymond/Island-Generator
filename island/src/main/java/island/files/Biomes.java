@@ -37,28 +37,28 @@ public class Biomes {
     public double BiomeElevation(String Biome){
         double elevation = 0;
         if (Biome.equals("Desert")){
-            elevation = 0;
+            elevation = 10;
         }
         else if (Biome.equals("Savana")){
-            elevation = 0;
+            elevation = 25;
         }
         else if (Biome.equals("Tropical Rain Forest")){
-            elevation = 0;
+            elevation = 25;
         }
         else if (Biome.equals("Grassland")){
-            elevation = 50;
+            elevation = 100;
         }
         else if (Biome.equals("Deciduous")){
-            elevation = 50;
+            elevation = 100;
         }
         else if (Biome.equals("Temperate Rain Forest")){
-            elevation = 50;
+            elevation = 100;
         }
         else if (Biome.equals("Taiga")){
-            elevation = 100;
+            elevation = 150;
         }
         else if (Biome.equals("Tundra")){
-            elevation = 100;
+            elevation = 200;
         }
     return elevation;
 
@@ -71,25 +71,25 @@ public class Biomes {
             humidity = 0;
         }
         else if (Biome.equals("Savana")){
-            humidity = 250;
+            humidity = 175;
         }
         else if (Biome.equals("Tropical Rain Forest")){
-            humidity = 250;
+            humidity = 330;
         }
         else if (Biome.equals("Grassland")){
-            humidity = 50;
+            humidity = 70;
         }
         else if (Biome.equals("Deciduous")){
-            humidity = 100;
+            humidity = 140;
         }
         else if (Biome.equals("Temperate Rain Forest")){
-            humidity = 200;
+            humidity = 240;
         }
         else if (Biome.equals("Taiga")){
-            humidity = 40;
+            humidity = 100;
         }
         else if (Biome.equals("Tundra")){
-            humidity = 0;
+            humidity = 10;
         }
         return humidity;
 

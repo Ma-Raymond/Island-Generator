@@ -86,12 +86,12 @@ When you develop features and enrich the product, remember that you have first t
 | F17 | Increase humidity to nearby land                                                                   | Rhea Gokhale                  |        |        | Pending |
 | F18 | Influence vegetation that grows near the lake                                                      |                               |        |        | Pending |
 | F19 | Control Island attributes through command line                                                     | Gayan Athukorala              | Mar 22 | Mar 22 | Done    |
-| F20 | Implement river segments in the island                                                             |                               |        |        | Pending |
-| F21 | Increase humidity to nearby land                                                                   |                               |        |        | Pending |
-| F22 | Increase discharge level and thickness of rivers that merge                                        |                               |        |        | Pending |
-| F23 | Increase moisture to soils surrounding merged rivers                                               |                               |        |        | Pending |
-| F24 | Create aquifer water body generator                                                                |                               |        |        | Pending |
-| F25 | Increase moisture to tiles surrounding the aquifer                                                 |                               |        |        | Pending |
+| F20 | Implement river segments in the island                                                             | Raymond Ma                    | Mar 23 | Mar 23 | Done    |
+| F21 | Increase humidity to nearby land                                                                   | Rhea & Raymond                | Mar 22 | Mar 22 | Done    |
+| F22 | Increase discharge level and thickness of rivers that merge                                        | Raymond                       | Mar 23 |        | Started |
+| F23 | Increase moisture to soils surrounding merged rivers                                               | Raymond                       | Mar 23 |        | Started |
+| F24 | Create aquifer water body generator                                                                | Rhea                          | Mar 22 | Mar 22 | Done    |
+| F25 | Increase moisture to tiles surrounding the aquifer                                                 | Rhea                          | Mar 22 | Mar 22 | Done    |
 | F26 | Abstract Soil Absorption Calculator                                                                |                               |        |        | Pending |
 | F27 | Abstract whittaker diagram builder                                                                 |                               |        |        | Pending |
 | F28 | Assign seeds to attributes of randomly generated islands that can be inputted through command line | Raymond Ma + Gayan Athukorala | Mar 22 |        | Started |

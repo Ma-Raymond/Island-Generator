@@ -93,11 +93,15 @@ public class GraphicRenderer {
             double centre_x = v.getX() - (THICKNESS/2.0d);
             double centre_y = v.getY() - (THICKNESS/2.0d);
             boolean isCentroid = false;
+            boolean isWater = false;
             for (Property p : v.getPropertiesList()) {
                 // TRY TO FIND THE RGB COLOR
                 if (p.getKey().equals("rgb_color")) {
                     if (p.getValue().equals("255,0,0,255")){    // If a vertex is red, it is a centroid
                         isCentroid = true;
+                    }
+                    if (p.getValue().equals("0,0,255,255")){    // If a vertex is red, it is a centroid
+                        isWater = true;
                     }
                 }
             }
@@ -115,10 +119,16 @@ public class GraphicRenderer {
                 if (debug.equals("debugOff") && !isCentroid) {
                     // Debug Mode should not show centroids for Grid Mode
                     Color old = canvas.getColor();
-                    canvas.setColor(extractColor(v.getPropertiesList()));
+                    if (isWater){
+                        canvas.setColor(Color.BLUE);
+                    }
+                    else{
+                        canvas.setColor(extractColor(v.getPropertiesList()));
+                    }
                     Ellipse2D point = new Ellipse2D.Double(centre_x, centre_y, THICKNESS, THICKNESS);
                     canvas.fill(point);
                     canvas.setColor(old);
+
                 }
                 if (debug.equals("debugOn")) {
                     // DEBUG MODE ON

@@ -422,12 +422,14 @@ public class IslandGen extends IslandSeed {
         // Generate Elevation
         selectElevation(altType);
         // Rivers lol
-        generateVTPRelation();
-        generateVertexHeights();
         //Lakes
         createLakes(lakeNum, lakeStartIdx);
 
         //Rivers
+        Rivers river = new Rivers();
+        river.generate(polygonList,segmentList,vertexList,elevations,vertexHeights,islandVertices,islandBlocks);
+        segmentList = river.segmentList;
+        vertexList = river.vertexList;
 
         //Aquifers
         //
@@ -444,12 +446,12 @@ public class IslandGen extends IslandSeed {
             if (extractColorString(poly.getPropertiesList()).equals(islandColor)){
                 islandBlocks.add(i);
                 elevations.set(i,1.0);
-
             }
         }
         Collections.shuffle(islandBlocks,new Random(2));
         generateInnerIsland();
     }
+
     private List<Integer> extractVertices(List<Structs.Property> properties){
         String val = null;
         for(Structs.Property p: properties) {
@@ -496,40 +498,8 @@ public class IslandGen extends IslandSeed {
         }
         Collections.shuffle(islandVertices,new Random(2));
     }
-    private void generateVertexHeights(){
-        for (Integer vertIdx : islandVertices){
-            List<Integer> polysAssociated = VTPRelations.get(vertIdx);
-            Double lowestValue = null;
-            for (Integer polyIdx : polysAssociated){
-                Double height = elevations.get(polyIdx);
-                if (lowestValue == null){
-                    lowestValue = height;
-                    continue;
-                }
-                if (height < lowestValue){
-                    lowestValue = height;
-                }
-            }
-            vertexHeights.set(vertIdx,lowestValue);
-        }
-    }
 
-    List<List<Integer>> VTPRelations;
-    private void generateVTPRelation(){
-        VTPRelations = new ArrayList<>(Collections.nCopies(vertexList.size(),new ArrayList<>()));
-        for (Integer polyIdx : islandBlocks){
-            Polygon poly = polygonList.get(polyIdx);
-            List<Integer> vertice = extractVertices(poly.getPropertiesList());
-            for (Integer v : vertice){
-                List<Integer> vList = VTPRelations.get(v);
-                if (!vList.contains(polyIdx)){
-                    List<Integer> vList2 = new ArrayList<>(vList);
-                    vList2.add(polyIdx);
-                    VTPRelations.set(v,vList2);
-                }
-            }
-        }
-    }
+
     private void selectElevation(int elevationNum){
         if (elevationNum == 0){
             volcano(altStartIdx);

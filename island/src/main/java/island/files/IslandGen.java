@@ -108,7 +108,7 @@ public class IslandGen extends IslandSeed {
         riverStartIdx = Integer.parseInt(seedDetails[10]+seedDetails[11]);
         aquaNum = Integer.parseInt(seedDetails[12]+seedDetails[13]);
         aquaStartIdx = Integer.parseInt(seedDetails[14]+seedDetails[15]);
-        soilMoisture = Integer.parseInt(seedDetails[16]);
+        soilMoisture = (Integer.parseInt(seedDetails[16]))%3;
         biome = Integer.parseInt(seedDetails[17]);
     }
 
@@ -258,6 +258,21 @@ public class IslandGen extends IslandSeed {
         }
     }
 
+    private void getSoil( String soilType){
+        Random rand = new Random();
+        if (soilType.equals("")){
+            soilMoisture = (rand.nextInt(0, 3));
+        }
+
+        else{
+            HashMap<String, Integer> soilTypes = new HashMap<String, Integer>();
+            soilTypes.put("Dry", 0);
+            soilTypes.put("Average", 1);
+            soilTypes.put("Wet", 2);
+            soilMoisture = soilTypes.get(soilType);
+        }
+    }
+
 
     public void defaultValues(Mesh aMesh){
         // Get old mesh details
@@ -274,7 +289,7 @@ public class IslandGen extends IslandSeed {
         vertexHeights = new ArrayList<>(Collections.nCopies(nVertices, 0.0));
     }
 
-    public Mesh generate(Mesh aMesh,String seedInput, String shape, String elevType, String elevationStartIdx,String maxNumLakes, String lakeStartingIdx, String rivers, String riverStartingIdx, String aquifers, String aquiferStartingIdx, String soil, String biomeSelect){
+    public Mesh generate(Mesh aMesh,String seedInput, String shape, String elevType, String elevationStartIdx,String maxNumLakes, String lakeStartingIdx, String rivers, String riverStartingIdx, String aquifers, String aquiferStartingIdx, String soilSelect, String biomeSelect){
         //Create new island
         Biomes biomeGen = new Biomes();
         //If user input a seed
@@ -318,6 +333,7 @@ public class IslandGen extends IslandSeed {
             getRiverStartIdx(riverStartingIdx);
             getAquiferNum(aquifers);
             getAquiferStartIdx(aquiferStartingIdx);
+            getSoil(soilSelect);
         }
 
         // Generate Elevation

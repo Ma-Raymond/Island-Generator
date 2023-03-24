@@ -17,6 +17,8 @@ abstract class IslandSeed{
     int islandShape;
     int altType;
     int altStartIdx;
+    boolean isSeed = false;
+    int maxLakes;
     int lakeNum;
     int lakeStartIdx;
     int riverNum;
@@ -36,6 +38,7 @@ public class IslandGen extends IslandSeed {
     List<Double> elevations;
     List<Double> humidity;
     List<Double> vertexHeights;
+    List<Double> soil;
 
     List <Integer> lakeIdxs = new ArrayList<>();
 
@@ -46,140 +49,33 @@ public class IslandGen extends IslandSeed {
 
     DecimalFormat precision  = new DecimalFormat("0.00");
 
-    private void islandSelector(int shapeSeed, Mesh aMesh){
+    private void soilProfile(){
 
-        if (shapeSeed == 0){
-            circleIsland(aMesh);
-        }
-        else if (shapeSeed == 1){
-            ovalIsland(aMesh);
-        }
-
-        else if (shapeSeed ==2){
-            moonIsland(aMesh);
-        }
-        else{
-            crossIsland(aMesh);
-        }
-
-        getIslandBlocks();
-    }
-
-    private void circleIsland(Mesh aMesh){
-        for (int i =0; i< aMesh.getPolygonsCount(); i++){
-            Polygon poly = polygonList.get(i);
-            Vertex centroid = vertexList.get(poly.getCentroidIdx());
-            double x = centroid.getX();
-            double y = centroid.getY();
-            double distance = Math.sqrt(Math.pow(x-255,2)+Math.pow(y-255,2));
-            //lake
-//            if (distance < 100){
-//                colorPolygon(poly, 102, 178,255,255);
-//            }
-            //island
-            if (distance < 200){
-                colorPolygon(253, 255,208,255, i);
-            }
-            else{
-                colorPolygon( 35, 85,138,255, i);
-            }
-        }
-    }
-    private void crossIsland(Mesh aMesh){
-        Random bag = new Random();
-        for (int i =0; i< aMesh.getPolygonsCount(); i++){
-            Polygon poly = polygonList.get(i);
-            Vertex centroid = vertexList.get(poly.getCentroidIdx());
-            double x = centroid.getX();
-            double y = centroid.getY();
-            double distance = Math.sqrt(Math.pow(x-250,2)+Math.pow(y-250,2));
-
-            if (distance < 200){
-                colorPolygon(253, 255,208,255, i);
-            }
-            else{
-                colorPolygon( 35, 85,138,255, i);
-            }
-
-            for (int j = 100; j<= 400; j+=150) {
-                if (inOval(50, 100, j, 50, x, y) < 0) {
-                    colorPolygon( 35, 85, 138, 255, i);
-                }
-                if (inOval(50, 100, j, 450, x, y) < 0) {
-                    colorPolygon(35, 85, 138, 255, i);
-                }
-                if (inOval(100, 50, 50, j, x, y) < 0) {
-                    colorPolygon( 35, 85, 138, 255, i);
-                }
-
-                if (inOval(100, 50, 450, j, x, y) < 0) {
-                    colorPolygon(35, 85, 138, 255, i);
-                }
-
-            }
-
-        }
-    }
-
-    private double inOval(int a,int b,int offsetX, int offsetY, double x, double y){
-        double result = Math.pow(((x-offsetX)/a),2) + Math.pow(((y-offsetY)/b),2) -1;
-        return result;
 
     }
+    private void createLakes(int maximumLakes, int startIndexL){
 
-    private void moonIsland(Mesh aMesh){
-        Random bag = new Random();
-        for (int i =0; i< aMesh.getPolygonsCount(); i++){
-            Polygon poly = polygonList.get(i);
-            Vertex centroid = vertexList.get(poly.getCentroidIdx());
-            double x = centroid.getX();
-            double y = centroid.getY();
-            double distance = Math.sqrt(Math.pow(x-250,2)+Math.pow(y-250,2));
-
-            double distance1 = Math.sqrt(Math.pow(x-450,2)+Math.pow(y-250,2));
-
-            if (distance < 200 && distance1 > 100){
-                colorPolygon(253, 255,208,255, i);
-            }
-            else{
-                colorPolygon(35, 85,138,255, i);
-            }
-        }
-    }
-    private void ovalIsland(Mesh aMesh){
-        int a = 200;
-        int b = 100;
-        for (int i =0; i< aMesh.getPolygonsCount(); i++){
-            Polygon poly = polygonList.get(i);
-            Vertex centroid = vertexList.get(poly.getCentroidIdx());
-            double x = centroid.getX();
-            double y = centroid.getY();
-            double result = Math.pow(((x-250)/a),2) + Math.pow(((y-250)/b),2) -1;
-
-            if (result < 0) {
-                colorPolygon(253, 255, 208, 255, i);
-            }
-
-            else{
-                colorPolygon(35, 85,138,255, i);
-            }
-
-        }
-
-    }
-
-    private void createLakes(int maxLakes, int startIndexL){
         Random randNum = new Random();
-        if(maxLakes!= 0){
+        if(maximumLakes!= 0){
             //int startIndexL = randNum.nextInt(heightPoints.size()); //put this in the generator in an if statement
-            int numLakes = randNum.nextInt(maxLakes);
-            for (int i = 0; i < numLakes; i ++){
-                int polyIndex = (startIndexL + i) % heightPoints.size();
-                int validPolyId  = heightPoints.get(polyIndex);
-                colorPolygon(102, 178,255,255, validPolyId);
-                lakeIdxs.add(validPolyId);
-                addLakeHumidity(validPolyId);
+            if (isSeed){
+                for (int i = 0; i < maxLakes; i ++){
+                    int polyIndex = (startIndexL + i) % heightPoints.size();
+                    int validPolyId  = heightPoints.get(polyIndex);
+                    colorPolygon(102, 178,255,255, validPolyId);
+                    addLakeHumidity(validPolyId);
+                }
             }
+            else{
+                lakeNum = randNum.nextInt(maxLakes);
+                for (int i = 0; i < lakeNum; i ++){
+                    int polyIndex = (startIndexL + i) % heightPoints.size();
+                    int validPolyId  = heightPoints.get(polyIndex);
+                    colorPolygon(102, 178,255,255, validPolyId);
+                    addLakeHumidity(validPolyId);
+                }
+            }
+
         }
 
     }
@@ -222,6 +118,7 @@ public class IslandGen extends IslandSeed {
 
 
     private void seedDecoder(String seed){
+        isSeed = true;
         //adjust seed if it is not correct
         if (seed.length() < 18){
             seed += "0".repeat(18-seed.length());
@@ -231,10 +128,11 @@ public class IslandGen extends IslandSeed {
         }
         //Get island details from seed
         String[] seedDetails = seed.split("");
-        islandShape = Integer.parseInt(seedDetails[0]);
+        islandShape = (Integer.parseInt(seedDetails[0]))%4;
         System.out.println(islandShape);
-        altType = Integer.parseInt(seedDetails[1]);
+        altType = (Integer.parseInt(seedDetails[1]))%3;
         altStartIdx = Integer.parseInt(seedDetails[2]+seedDetails[3]);
+        maxLakes = Integer.parseInt(seedDetails[4] + seedDetails[5]);
         lakeNum = Integer.parseInt(seedDetails[4] + seedDetails[5]);
         lakeStartIdx = Integer.parseInt(seedDetails[6]+seedDetails[7]);
         riverNum = Integer.parseInt(seedDetails[8]+seedDetails[9]);
@@ -279,14 +177,14 @@ public class IslandGen extends IslandSeed {
 
     private void getElevationStartIdx(String elevationStartIdx){
         Random rand = new Random();
-        int maxIdx = heightPoints.size();
+        int maxIdx = heightPoints.size()-1;
         if (elevationStartIdx.equals("")){
             altStartIdx = rand.nextInt(0, maxIdx);
         }
         else{
             int startIdx = Integer.parseInt(elevationStartIdx);
             if (startIdx>maxIdx){
-                altStartIdx = maxIdx - 1;
+                altStartIdx = maxIdx;
             }
             else{
                 altStartIdx = startIdx;
@@ -300,15 +198,12 @@ public class IslandGen extends IslandSeed {
         Random rand = new Random();
         int maxLand = islandBlocks.size();
         if (maxNumLakes.equals("")){
-            lakeNum = rand.nextInt(0, maxLand/20);
+             maxLakes = rand.nextInt(0, maxLand/20);
         }
         else{
-            int maxLakes = Integer.parseInt(maxNumLakes);
-            if (maxLakes>maxLand/20){
-                lakeNum = maxLand/20;
-            }
-            else{
-                lakeNum = maxLakes - 1;
+            maxLakes = Integer.parseInt(maxNumLakes);
+            if (maxLakes>=maxLand){
+                maxLakes = maxLand;
             }
 
         }
@@ -331,14 +226,14 @@ public class IslandGen extends IslandSeed {
 
     private void getRiverNum(String numRivers){
         Random rand = new Random();
-        int maxLand = islandVertices.size();
+        int maxRivers = islandVertices.size();
         if (numRivers.equals("")){
-            riverNum = rand.nextInt(0, maxLand/20);
+            riverNum = rand.nextInt(0, maxRivers/50);
         }
         else{
             int rivers = Integer.parseInt(numRivers);
-            if (rivers>maxLand/100){
-                riverNum = maxLand/100;
+            if (rivers>maxRivers){
+                riverNum = maxRivers;
             }
             else{
                 riverNum = rivers;
@@ -411,29 +306,66 @@ public class IslandGen extends IslandSeed {
         vertexHeights = new ArrayList<>(Collections.nCopies(nVertices, 0.0));
     }
 
-    public Mesh generate(Mesh aMesh,String seed, String shape, String elevType, String elevationStartIdx,String maxNumLakes, String lakeStartingIdx, String rivers, String riverStartingIdx, String aquifers, String aquiferStartingIdx, String soil, String biomeSelect){
+    public Mesh generate(Mesh aMesh,String seedInput, String shape, String elevType, String elevationStartIdx,String maxNumLakes, String lakeStartingIdx, String rivers, String riverStartingIdx, String aquifers, String aquiferStartingIdx, String soil, String biomeSelect){
         //Create new island
         defaultValues(aMesh);
 
         //If user input a seed
-        if (!seed.equals("")){
-            seedDecoder(seed);
-            islandSelector(islandShape, aMesh);
+        if (!seedInput.equals("")){
+            seedDecoder(seedInput);
+            IslandShapes island = new IslandShapes();
+            island.islandSelector(islandShape, aMesh, vertexList, polygonList);
+            polygonList = island.polygonList;
+            vertexList = island.vertexList;
+            getIslandBlocks();
+            getElevationStartIdx(String.valueOf(altStartIdx));
+            getLakeStartIdx(String.valueOf(lakeStartIdx));
+            getLakeNum(String.valueOf(maxLakes));
+            getRiverNum(String.valueOf(riverNum));
+            getRiverStartIdx(String.valueOf(riverStartIdx));
+            getAquiferNum(String.valueOf(aquaNum));
+            getAquiferStartIdx(String.valueOf(aquaStartIdx));
         }
+
         //If user did not input seed
         else{
             getIslandShape(shape);
-            islandSelector(islandShape, aMesh);
+            IslandShapes island = new IslandShapes();
+            island.islandSelector(islandShape, aMesh, vertexList, polygonList);
+            polygonList = island.polygonList;
+            vertexList = island.vertexList;
+            getIslandBlocks();
             getElevationStartIdx(elevationStartIdx);
             getElevationType(elevType);
             getLakeStartIdx(lakeStartingIdx);
             getLakeNum(maxNumLakes);
-            //Un Comment these when u add rivers bc they being baka rn without a real river list
-//            getRiverNum(rivers);
-//            getRiverStartIdx(riverStartingIdx);
+            getRiverNum(rivers);
+            getRiverStartIdx(riverStartingIdx);
             getAquiferNum(aquifers);
             getAquiferStartIdx(aquiferStartingIdx);
         }
+
+        // Generate Elevation
+        selectElevation(altType);
+
+        //Lakes
+        createLakes(lakeNum, lakeStartIdx);
+        createAquifers(aquaNum, aquaStartIdx);
+
+        //Rivers
+        Rivers river = new Rivers();
+        river.generate(riverNum,riverStartIdx,polygonList,segmentList,vertexList,elevations,vertexHeights,islandVertices,islandBlocks,humidity);
+        segmentList = river.segmentList;
+        vertexList = river.vertexList;
+        humidity = river.humidity;
+
+        Biomes biome = new Biomes();
+        biome.generate(elevations, islandBlocks, lakeIdxs, humidity, polygonList);
+        polygonList = biome.polygonList;
+
+        //Aquifers
+
+
         //Testing the island attribute values
         System.out.println("island shape");
         System.out.println(islandShape);
@@ -458,25 +390,34 @@ public class IslandGen extends IslandSeed {
         System.out.println("biome");
         System.out.println(biome);
 
-        // Generate Elevation
-        selectElevation(altType);
-        // Rivers lol
-        //Lakes
-        createLakes(lakeNum, lakeStartIdx);
-        createAquifers(aquaNum, aquaStartIdx);
+        //Seed generator
+        ArrayList<Integer> attributes = new ArrayList<Integer>();
+        ArrayList<String> attributesStr = new ArrayList<String >();
+        attributes.add(altStartIdx);
+        attributes.add(lakeNum);
+        attributes.add(lakeStartIdx);
+        attributes.add(riverNum);
+        attributes.add(riverStartIdx);
+        attributes.add(aquaNum);
+        attributes.add(aquaStartIdx);
 
-        //Rivers
-        Rivers river = new Rivers();
-        river.generate(riverNum,riverStartIdx,polygonList,segmentList,vertexList,elevations,vertexHeights,islandVertices,islandBlocks);
-        segmentList = river.segmentList;
-        vertexList = river.vertexList;
+        if (isSeed){
+            System.out.println(seedInput);
+        }
 
-        Biomes biome = new Biomes();
-        biome.generate(elevations, islandBlocks, lakeIdxs, humidity, polygonList);
-        polygonList = biome.polygonList;
+        else{
+            for (int i = 0; i < attributes.size(); i++){
+                if (attributes.get(i) == 0){
+                    attributesStr.add(String.valueOf((attributes.get(i)+ "0")));
+                }
+                else{
+                    attributesStr.add(String.valueOf(attributes.get(i)));
+                }
+            }
 
-
-        //Aquifers
+            String seed = (String.valueOf(islandShape) + String.valueOf(altType) + attributesStr.get(0) + attributesStr.get(1) + attributesStr.get(2) + attributesStr.get(3)+ attributesStr.get(4) + attributesStr.get(5) + attributesStr.get(6) + String.valueOf(soilMoisture) + String.valueOf(biome));
+            System.out.println(seed);
+        }
 
         // Assigning Biomes and Types
         return Mesh.newBuilder().addAllVertices(vertexList).addAllSegments(segmentList).addAllPolygons(polygonList).build();

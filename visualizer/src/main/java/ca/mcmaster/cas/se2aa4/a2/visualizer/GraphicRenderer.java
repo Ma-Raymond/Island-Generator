@@ -48,13 +48,14 @@ public class GraphicRenderer {
                     }
                 }
             }
+            double val = extractThickness(s.getPropertiesList());
             // If the debugMode is Off and the segment is not a neighbour relation
             if (debug.equals("debugOff") && !isNeighbour) {
                 Color old = canvas.getColor();
                 Stroke oldStroke = canvas.getStroke();
                 canvas.setColor(extractColor(s.getPropertiesList()));
                 Line2D seg = new Line2D.Double(x1, y1, x2, y2);
-                Stroke stroke1 = new BasicStroke(1);
+                Stroke stroke1 = new BasicStroke((float)val);
                 canvas.setStroke(stroke1);
                 canvas.draw(seg);
                 canvas.setStroke(oldStroke);
@@ -167,6 +168,20 @@ public class GraphicRenderer {
             canvas.fillPolygon(polyFill);
             canvas.setColor(old);
         }
+    }
+    private Double extractThickness(List<Structs.Property> properties){
+        String val = null;
+        for(Structs.Property p: properties) {
+            // TRY TO FIND THE RGB COLOR
+            if (p.getKey().equals("riverThickness")) {
+                val = p.getValue();
+            }
+        }
+        if (val == null){       // IF no thickness, add thinkness lol
+            return 1.0;
+        }
+        double valInt = Double.parseDouble(val);
+        return valInt;
     }
     private List<Integer> extractVertices(List<Property> properties){
         String val = null;

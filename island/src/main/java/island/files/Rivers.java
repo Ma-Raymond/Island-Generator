@@ -15,9 +15,10 @@ public class Rivers {
     List<Structs.Polygon> polygonList;
     List<Structs.Segment> segmentList;
     List<Structs.Vertex> vertexList;
+    List<Double> humidity;
     int riverNum;
     int riverStartIdx;
-    public void generate(int rM, int rSI, List<Structs.Polygon> pList ,List<Structs.Segment> sList,List<Structs.Vertex> vList, List<Double> e,List<Double> vH, List<Integer> iV, List<Integer> iB){
+    public void generate(int rM, int rSI, List<Structs.Polygon> pList ,List<Structs.Segment> sList,List<Structs.Vertex> vList, List<Double> e,List<Double> vH, List<Integer> iV, List<Integer> iB,List<Double> humid){
         islandBlocks = iB;
         elevations = e;
         vertexHeights = vH;
@@ -27,6 +28,7 @@ public class Rivers {
         polygonList = pList;
         riverNum = rM;
         riverStartIdx = rSI;
+        humidity = humid;
 
         generateVTPRelation();
         getVTVRelation();
@@ -105,11 +107,45 @@ public class Rivers {
                     colorVertex(vertexList.get(id),0,0,255,255);
                     break;
                 }
-                colorSegment(segmentList.get(nextSeg),0,0,255,255);
+                Structs.Segment seg = segmentList.get(nextSeg);
+                if (extractColorString(seg.getPropertiesList()).equals("0,0,255,255")){
+                    increaseThickness(seg);
+                }
+                else
+                    colorSegment(seg,0,0,255,255);
+
+                // Increasing humidity to surrounding soils
+                List<Integer> surroundingPolys = VTPRelations.get(id);
+                for (Integer polyIdx : surroundingPolys){
+                    humidity.set(polyIdx,humidity.get(polyIdx)+100);
+                }
                 id = nextVert;
             }
         }
     }
+
+    private void increaseThickness(Structs.Segment segment){
+        double previousThickness = extractThickness(segment,segment.getPropertiesList());
+        double val = previousThickness*1.5;
+        Structs.Property thickness = Structs.Property.newBuilder().setKey("riverThickness").setValue(String.valueOf(val)).build();
+        Structs.Segment thickened = Structs.Segment.newBuilder(segment).addProperties(thickness).build();
+        segmentList.set(segmentList.indexOf(segment), thickened);
+    }
+    private Double extractThickness(Structs.Segment segment, List<Structs.Property> properties){
+        String val = null;
+        for(Structs.Property p: properties) {
+            // TRY TO FIND THE RGB COLOR
+            if (p.getKey().equals("riverThickness")) {
+                val = p.getValue();
+            }
+        }
+        if (val == null){       // IF no thickness, add thinkness lol
+            return 1.0;
+        }
+        double valInt = Double.parseDouble(val);
+        return valInt;
+    }
+
 
     private void colorSegment(Structs.Segment seg, int red, int green, int blue, int alpha){
         // Create new Property with "rgb_color" key and the rgb value as the value
@@ -169,5 +205,18 @@ public class Rivers {
         Structs.Vertex colored = Structs.Vertex.newBuilder(vertex).addProperties(color).build();
         // Set the old vertex in the list as the new one with color property
         vertexList.set(vertexList.indexOf(vertex), colored);
+    }
+    private String extractColorString(List<Structs.Property> properties){
+        String val = null;
+        for(Structs.Property p: properties) {
+            // TRY TO FIND THE RGB COLOR
+            if (p.getKey().equals("rgb_color")) {
+                val = p.getValue();
+            }
+        }
+        if (val == null){       // IF THE RGB COLOR PROPERTY DOESNT EXIST, COVER THAT CASE BY MAKING IT BLACK
+            return "0,0,0,0"; // COVERING CASE IF KEY RGB_COLOR DOESN'T EXIST
+        }
+        return val;
     }
 }

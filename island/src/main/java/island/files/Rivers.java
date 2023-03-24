@@ -2,6 +2,7 @@ package island.files;
 
 import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -87,7 +88,7 @@ public class Rivers {
         Random rand = new Random();
         for (int i = 0; i < riverNum; i++){
             boolean notEnd = true;
-            int randIslandVert = riverStartIdx+i;
+            int randIslandVert = (riverStartIdx + i) % islandVertices.size();
             int id = islandVertices.get(randIslandVert);
             while (notEnd) {
                 List<Integer> vertNeighbours = VTVRelations.get(id);
@@ -113,6 +114,7 @@ public class Rivers {
                 }
                 else
                     colorSegment(seg,0,0,255,255);
+                new Color(0, 0, 255);
 
                 // Increasing humidity to surrounding soils
                 List<Integer> surroundingPolys = VTPRelations.get(id);

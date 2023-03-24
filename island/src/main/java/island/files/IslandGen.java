@@ -55,48 +55,7 @@ public class IslandGen extends IslandSeed {
 
 
     }
-    private void createLakes(int maximumLakes, int startIndexL){
 
-        Random randNum = new Random();
-        if(maximumLakes!= 0){
-            //int startIndexL = randNum.nextInt(heightPoints.size()); //put this in the generator in an if statement
-            if (isSeed){
-                lakeNum = maxLakes;
-                for (int i = 0; i < maxLakes; i ++){
-                    int polyIndex = (startIndexL + i) % heightPoints.size();
-                    int validPolyId  = heightPoints.get(polyIndex);
-                    lakeIdxs.add(validPolyId);
-                    colorPolygon(102, 178,255,255, validPolyId);
-                    addLakeHumidity(validPolyId);
-                }
-            }
-            else{
-                lakeNum = randNum.nextInt(maxLakes);
-                for (int i = 0; i < lakeNum; i ++){
-                    int polyIndex = (startIndexL + i) % heightPoints.size();
-                    int validPolyId  = heightPoints.get(polyIndex);
-                    lakeIdxs.add(validPolyId);
-                    colorPolygon(102, 178,255,255, validPolyId);
-                    addLakeHumidity(validPolyId);
-                }
-            }
-
-        }
-
-    }
-
-    private void addLakeHumidity(int lakePoly){
-        Polygon poly = polygonList.get(lakePoly);
-        double humidityValLake = Double.parseDouble(precision.format(humidity.get(lakePoly)+150));
-        humidity.set(lakePoly, humidityValLake);
-        for (Integer n : poly.getNeighborIdxsList()){
-            //may be used for colouring later
-            Polygon neighbourPoly = polygonList.get(n);
-            //colorHeight(neighbourPoly,1.2);
-            double humidityValNeigbours = Double.parseDouble(precision.format(humidity.get(n)+100));
-            humidity.set(n,humidityValNeigbours);
-        }
-    }
 
     private void createAquifers(int aquaNum, int startIndexA){
         //int startIndexL = randNum.nextInt(heightPoints.size()); //put this in the generator in an if statement
@@ -184,7 +143,7 @@ public class IslandGen extends IslandSeed {
         Random rand = new Random();
         int maxIdx = heightPoints.size()-1;
         if (elevationStartIdx.equals("")){
-            altStartIdx = rand.nextInt(0, maxIdx);
+            altStartIdx = rand.nextInt(0, maxIdx%100);
         }
         else{
             int startIdx = Integer.parseInt(elevationStartIdx);
@@ -195,8 +154,6 @@ public class IslandGen extends IslandSeed {
                 altStartIdx = startIdx;
             }
         }
-
-
     }
 
     private void getLakeNum(String maxNumLakes){
@@ -218,7 +175,7 @@ public class IslandGen extends IslandSeed {
         Random rand = new Random();
         int maxIdx = islandBlocks.size();
         if (lakeStartingIdx.equals("")) {
-            lakeStartIdx = rand.nextInt(0, maxIdx);
+            lakeStartIdx = rand.nextInt(0, maxIdx%100);
         } else {
             int startIdx = Integer.parseInt(lakeStartingIdx);
             if (startIdx > maxIdx) {
@@ -233,7 +190,7 @@ public class IslandGen extends IslandSeed {
         Random rand = new Random();
         int maxRivers = islandVertices.size();
         if (numRivers.equals("")){
-            riverNum = rand.nextInt(0, maxRivers/50);
+            riverNum = rand.nextInt(0, maxRivers%100);
         }
         else{
             int rivers = Integer.parseInt(numRivers);
@@ -252,7 +209,7 @@ public class IslandGen extends IslandSeed {
         Random rand = new Random();
         int maxIdx = islandVertices.size();
         if (riverIdx.equals("")) {
-            riverStartIdx = rand.nextInt(0, maxIdx);
+            riverStartIdx = rand.nextInt(0, maxIdx%100);
         } else {
             int startIdx = Integer.parseInt(riverIdx);
             if (startIdx > maxIdx) {
@@ -268,7 +225,7 @@ public class IslandGen extends IslandSeed {
         Random rand = new Random();
         int maxLand = islandBlocks.size();
         if (maxNumAquifer.equals("")){
-            aquaNum = rand.nextInt(0, maxLand/20);
+            aquaNum = rand.nextInt(0, maxLand%100);
         }
         else{
             int maxAqua = Integer.parseInt(maxNumAquifer);
@@ -285,7 +242,7 @@ public class IslandGen extends IslandSeed {
         Random rand = new Random();
         int maxIdx = islandBlocks.size();
         if (aquiferStartingIdx.equals("")) {
-            aquaStartIdx = rand.nextInt(0, maxIdx);
+            aquaStartIdx = rand.nextInt(0, maxIdx%100);
         } else {
             int startIdx = Integer.parseInt(aquiferStartingIdx);
             if (startIdx > maxIdx) {
@@ -315,12 +272,13 @@ public class IslandGen extends IslandSeed {
     public Mesh generate(Mesh aMesh,String seedInput, String shape, String elevType, String elevationStartIdx,String maxNumLakes, String lakeStartingIdx, String rivers, String riverStartingIdx, String aquifers, String aquiferStartingIdx, String soil, String biomeSelect){
         //Create new island
         Biomes biomeGen = new Biomes();
-        defaultBlockElev = biomeGen.BiomeElevation(biomeSelect);
-        defaultHumidity = biomeGen.BiomeHumidity(biomeSelect);
-        defaultValues(aMesh);
         //If user input a seed
         if (!seedInput.equals("")){
             seedDecoder(seedInput);
+            String val = biomeGen.numToBiome(biome);
+            defaultBlockElev = biomeGen.BiomeElevation(val);
+            defaultHumidity = biomeGen.BiomeHumidity(val);
+            defaultValues(aMesh);
             IslandShapes island = new IslandShapes();
             island.islandSelector(islandShape, aMesh, vertexList, polygonList);
             polygonList = island.polygonList;
@@ -333,10 +291,14 @@ public class IslandGen extends IslandSeed {
             getRiverStartIdx(String.valueOf(riverStartIdx));
             getAquiferNum(String.valueOf(aquaNum));
             getAquiferStartIdx(String.valueOf(aquaStartIdx));
+            System.out.println("IM BIOME FROM SEED "+biome);
         }
-
         //If user did not input seed
         else{
+            defaultBlockElev = biomeGen.BiomeElevation(biomeSelect);
+            defaultHumidity = biomeGen.BiomeHumidity(biomeSelect);
+            defaultValues(aMesh);
+            biome = biomeGen.biome;
             getIslandShape(shape);
             IslandShapes island = new IslandShapes();
             island.islandSelector(islandShape, aMesh, vertexList, polygonList);
@@ -357,7 +319,13 @@ public class IslandGen extends IslandSeed {
         selectElevation(altType);
 
         //Lakes
-        createLakes(maxLakes, lakeStartIdx);
+        Lake lakes = new Lake();
+        lakes.generateLakes(islandBlocks,isSeed,maxLakes,lakeStartIdx,lakeNum,maxLakes,humidity,heightPoints,polygonList);
+        humidity = lakes.humidity;
+        lakeIdxs = lakes.lakeIdxs;
+        lakeNum = lakes.lakeNum;
+        polygonList = lakes.polygonList;
+
         createAquifers(aquaNum, aquaStartIdx);
 
         //Rivers
@@ -417,8 +385,8 @@ public class IslandGen extends IslandSeed {
 
         else{
             for (int i = 0; i < attributes.size(); i++){
-                if (attributes.get(i) == 0){
-                    attributesStr.add(String.valueOf((attributes.get(i)+ "0")));
+                if (attributes.get(i) < 10){
+                    attributesStr.add("0"+(attributes.get(i)));
                 }
                 else{
                     attributesStr.add(String.valueOf(attributes.get(i)));
@@ -544,7 +512,7 @@ public class IslandGen extends IslandSeed {
             }
             visual -= 0.01;
             if (volcanoHeight >0)
-                volcanoHeight = Double.parseDouble(precision.format(volcanoHeight-0.3));
+                volcanoHeight = Double.parseDouble(precision.format(volcanoHeight-0.2));
         }
     }
     private void colorHeight(Polygon poly, double value){

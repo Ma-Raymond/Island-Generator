@@ -306,9 +306,9 @@ public class IslandGen extends IslandSeed {
         // Set new Stats
         int nPolygons = polygonList.size();
         int nVertices = vertexList.size();
+
         elevations = new ArrayList<Double>(Collections.nCopies(nPolygons, defaultBlockElev));
         humidity = new ArrayList<Double>(Collections.nCopies(nPolygons, defaultHumidity));
-
         vertexHeights = new ArrayList<>(Collections.nCopies(nVertices, 0.0));
     }
 

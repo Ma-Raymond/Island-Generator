@@ -317,8 +317,8 @@ public class IslandGen extends IslandSeed {
         }
         else{
             maxLakes = Integer.parseInt(maxNumLakes);
-            if (maxLakes>=maxLand/20){
-                maxLakes = maxLand/20;
+            if (maxLakes>=maxLand){
+                maxLakes = maxLand;
             }
 
         }
@@ -341,14 +341,14 @@ public class IslandGen extends IslandSeed {
 
     private void getRiverNum(String numRivers){
         Random rand = new Random();
-        int maxLand = islandVertices.size();
+        int maxRivers = islandVertices.size();
         if (numRivers.equals("")){
-            riverNum = rand.nextInt(0, maxLand/20);
+            riverNum = rand.nextInt(0, maxRivers/50);
         }
         else{
             int rivers = Integer.parseInt(numRivers);
-            if (rivers>maxLand/100){
-                riverNum = maxLand/100;
+            if (rivers>maxRivers){
+                riverNum = maxRivers;
             }
             else{
                 riverNum = rivers;
@@ -431,8 +431,8 @@ public class IslandGen extends IslandSeed {
             getElevationStartIdx(String.valueOf(altStartIdx));
             getLakeStartIdx(String.valueOf(lakeStartIdx));
             getLakeNum(String.valueOf(maxLakes));
-//            getRiverNum(String.valueOf(riverNum));
-//            getRiverStartIdx(String.valueOf(riverStartIdx));
+            getRiverNum(String.valueOf(riverNum));
+            getRiverStartIdx(String.valueOf(riverStartIdx));
             getAquiferNum(String.valueOf(aquaNum));
             getAquiferStartIdx(String.valueOf(aquaStartIdx));
         }
@@ -445,9 +445,8 @@ public class IslandGen extends IslandSeed {
             getElevationType(elevType);
             getLakeStartIdx(lakeStartingIdx);
             getLakeNum(maxNumLakes);
-            //Un Comment these when u add rivers bc they being baka rn without a real river list
-//            getRiverNum(rivers);
-//            getRiverStartIdx(riverStartingIdx);
+            getRiverNum(rivers);
+            getRiverStartIdx(riverStartingIdx);
             getAquiferNum(aquifers);
             getAquiferStartIdx(aquiferStartingIdx);
         }
@@ -464,7 +463,7 @@ public class IslandGen extends IslandSeed {
         river.generate(riverNum,riverStartIdx,polygonList,segmentList,vertexList,elevations,vertexHeights,islandVertices,islandBlocks);
         segmentList = river.segmentList;
         vertexList = river.vertexList;
-        
+
         //Aquifers
 
 

@@ -100,6 +100,7 @@ When you develop features and enrich the product, remember that you have first t
 | F31 | Field Biome                                                                                        |                               |        |        | Pending |
 | F32 | Mangrove Biome                                                                                     |                               |        |        | Pending |
 | F32 | Beach Biome                                                                                        |                               |        |        | Pending |
+| F32 | user can enter any combination of integers and it will generate a reproducable seed                | Gayan Athukorala              | Mar 23 |        | Started |
 
 
 

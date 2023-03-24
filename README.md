@@ -78,13 +78,13 @@ When you develop features and enrich the product, remember that you have first t
 | F9  | Compute neighbourhood relationships using Delaunay’s triangulation                                 | Gayan Athukorala              | Feb 27 | Feb 27 | Done    |
 | F10 | Help Center with -H implementation CLI visualizer and generator                                    | Rhea + Raymond                | Feb 27 | Feb 27 | Done    |
 | F11 | MVP Sandbox                                                                                        | Raymond Ma                    | Mar 20 | Mar 20 | Done    |
-| F12 | Implement different Island Shapes                                                                  | Gayan Athukorala              | Mar 21 |        | Started |
-| F13 | Select correct island shape Generator based on command line args                                   | Gayan Athukorala              | Mar 22 |        | Started |
+| F12 | Implement different Island Shapes                                                                  | Gayan Athukorala              | Mar 21 | Mar 22 | Done    |
+| F13 | Select correct island shape Generator based on command line args                                   | Gayan Athukorala              | Mar 22 | Mar 22 | Done    |
 | F14 | Create a generic altimetric profile builder                                                        | Raymond Ma                    | Mar 21 | Mar 21 | Done    |
-| F15 | Implement Volcanos                                                                                 | Raymond Ma                    | Mar 22 |        | Started |
-| F16 | Implement lakes inside of the island                                                               | Rhea Gokhale                  |        |        | Pending |
-| F17 | Increase humidity to nearby land                                                                   | Rhea Gokhale                  |        |        | Pending |
-| F18 | Influence vegetation that grows near the lake                                                      |                               |        |        | Pending |
+| F15 | Implement Volcanos                                                                                 | Raymond Ma                    | Mar 22 | Mar 22 | Done    |
+| F16 | Implement lakes inside of the island                                                               | Rhea Gokhale                  | Mar 22 | Mar 22 | Done    |
+| F17 | Increase humidity to nearby land                                                                   | Rhea Gokhale                  | Mar 22 | Mar 22 | Done    |
+| F18 | Influence vegetation that grows near the lake                                                      | Rhea Gokhale                  | Mar 23 | Mar 23 | Done    |
 | F19 | Control Island attributes through command line                                                     | Gayan Athukorala              | Mar 22 | Mar 22 | Done    |
 | F20 | Implement river segments in the island                                                             | Raymond Ma                    | Mar 23 | Mar 23 | Done    |
 | F21 | Increase humidity to nearby land                                                                   | Rhea & Raymond                | Mar 22 | Mar 22 | Done    |

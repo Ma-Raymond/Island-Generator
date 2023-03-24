@@ -214,6 +214,10 @@ public class IslandGen extends IslandSeed {
             humidity.set(n,humidityValNeigbours);
         }
     }
+
+
+
+
     private void seedDecoder(String seed){
         //Get island details from seed
         String[] seedDetails = seed.split("-");
@@ -426,6 +430,7 @@ public class IslandGen extends IslandSeed {
         generateVertexHeights();
         //Lakes
         createLakes(lakeNum, lakeStartIdx);
+        createAquifers(aquaNum, aquaStartIdx);
 
         //Rivers
 

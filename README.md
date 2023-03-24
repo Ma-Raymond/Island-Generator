@@ -98,9 +98,9 @@ When you develop features and enrich the product, remember that you have first t
 | F29 | Tundra Biome                                                                                       |                               |        |        | Pending |
 | F30 | Forest Biome                                                                                       |                               |        |        | Pending |
 | F31 | Field Biome                                                                                        |                               |        |        | Pending |
-| F32 | Mangrove Biome                                                                                     |                               |        |        | Pending |
-| F32 | Beach Biome                                                                                        |                               |        |        | Pending |
-| F32 | user can enter any combination of integers and it will generate a reproducable seed                | Gayan Athukorala              | Mar 23 |        | Started |
+| F32 | User can enter any combination of integers and it will generate a reproducable seed                | Gayan Athukorala              | Mar 23 |        | Started |
+| F33 | Mangrove Biome                                                                                     |                               |        |        | Pending |
+| F34 | Beach Biome                                                                                        |                               |        |        | Pending |
 
 
 

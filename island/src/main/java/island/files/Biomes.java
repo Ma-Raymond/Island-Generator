@@ -28,7 +28,38 @@ public class Biomes {
         LakeIdxs = LakeBlocks;
         humidities = humidity;
         polygonList = polyList;
+
         BiomeType(elevations, humidities, IslandBlocks, LakeIdxs);
+
+    }
+
+    public double BiomeElevation(String Biome){
+        double elevation = 0;
+        if (Biome.equals("Desert")){
+            elevation = 0;
+        }
+        else if (Biome.equals("Savana")){
+            elevation = 0;
+        }
+        else if (Biome.equals("Tropical Rain Forest")){
+            elevation = 0;
+        }
+        else if (Biome.equals("Grassland")){
+            elevation = 50;
+        }
+        else if (Biome.equals("Deciduous")){
+            elevation = 50;
+        }
+        else if (Biome.equals("Temperate Rain Forest")){
+            elevation = 50;
+        }
+        else if (Biome.equals("Taiga")){
+            elevation = 100;
+        }
+        else if (Biome.equals("Tundra")){
+            elevation = 100;
+        }
+    return elevation;
 
     }
 

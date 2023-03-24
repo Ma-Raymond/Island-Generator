@@ -21,7 +21,7 @@ public class Main {
         options.addOption("lakes", true, "Max Number of Lakes");
         options.addOption("rivers", true, "Number of Rivers");
         options.addOption("soil", true, "Soil Profile");
-        options.addOption("biomes", true, "Biome");
+        options.addOption("biome", true, "Biome");
         options.addOption("seed", true, "Island Seed");
         options.addOption("H", "help", false, "Command information");
         String input = null;

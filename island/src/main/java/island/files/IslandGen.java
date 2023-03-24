@@ -27,6 +27,7 @@ abstract class IslandSeed{
     int aquaStartIdx;
     int soilMoisture;
     int biome;
+    double defaultBlockElev;
 
 }
 
@@ -301,7 +302,7 @@ public class IslandGen extends IslandSeed {
         // Set new Stats
         int nPolygons = polygonList.size();
         int nVertices = vertexList.size();
-        elevations = new ArrayList<Double>(Collections.nCopies(nPolygons, 0.0));
+        elevations = new ArrayList<Double>(Collections.nCopies(nPolygons, defaultBlockElev));
         humidity = new ArrayList<Double>(Collections.nCopies(nPolygons, 100.0));
         vertexHeights = new ArrayList<>(Collections.nCopies(nVertices, 0.0));
     }
@@ -360,6 +361,7 @@ public class IslandGen extends IslandSeed {
         humidity = river.humidity;
 
         Biomes biome = new Biomes();
+        defaultBlockElev = biome.BiomeElevation(biomeSelect);
         biome.generate(elevations, islandBlocks, lakeIdxs, humidity, polygonList);
         polygonList = biome.polygonList;
 

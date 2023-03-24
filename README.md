@@ -86,7 +86,7 @@ When you develop features and enrich the product, remember that you have first t
 | F17 | Increase humidity to nearby land                                                                   | Rhea Gokhale                  |        |        | Pending |
 | F18 | Influence vegetation that grows near the lake                                                      |                               |        |        | Pending |
 | F19 | Control Island attributes through command line                                                     | Gayan Athukorala              | Mar 22 | Mar 22 | Done    |
-| F10 | Implement river segments in the island                                                             |                               |        |        | Pending |
+| F20 | Implement river segments in the island                                                             |                               |        |        | Pending |
 | F21 | Increase humidity to nearby land                                                                   |                               |        |        | Pending |
 | F22 | Increase discharge level and thickness of rivers that merge                                        |                               |        |        | Pending |
 | F23 | Increase moisture to soils surrounding merged rivers                                               |                               |        |        | Pending |

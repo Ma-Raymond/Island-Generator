@@ -502,16 +502,24 @@ public class IslandGen extends IslandSeed {
         attributes.add(riverStartIdx);
         attributes.add(aquaNum);
         attributes.add(aquaStartIdx);
-        for (int i = 0; i < attributes.size(); i++){
-            if (attributes.get(i) == 0){
-                attributesStr.add(String.valueOf((attributes.get(i)+ "0")));
-            }
-            else{
-                attributesStr.add(String.valueOf(attributes.get(i)));
-            }
+
+        if (isSeed){
+            System.out.println(seedInput);
         }
-        String seed = (String.valueOf(islandShape) + String.valueOf(altType) + attributesStr.get(0) + attributesStr.get(1) + attributesStr.get(2) + attributesStr.get(3)+ attributesStr.get(4) + attributesStr.get(5) + attributesStr.get(6) + String.valueOf(soilMoisture) + String.valueOf(biome));
-        System.out.println(seed);
+
+        else{
+            for (int i = 0; i < attributes.size(); i++){
+                if (attributes.get(i) == 0){
+                    attributesStr.add(String.valueOf((attributes.get(i)+ "0")));
+                }
+                else{
+                    attributesStr.add(String.valueOf(attributes.get(i)));
+                }
+            }
+
+            String seed = (String.valueOf(islandShape) + String.valueOf(altType) + attributesStr.get(0) + attributesStr.get(1) + attributesStr.get(2) + attributesStr.get(3)+ attributesStr.get(4) + attributesStr.get(5) + attributesStr.get(6) + String.valueOf(soilMoisture) + String.valueOf(biome));
+            System.out.println(seed);
+        }
 
         // Assigning Biomes and Types
         return Mesh.newBuilder().addAllVertices(vertexList).addAllSegments(segmentList).addAllPolygons(polygonList).build();

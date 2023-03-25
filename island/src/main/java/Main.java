@@ -148,7 +148,7 @@ public class Main {
                         "Savana \n" +
                         "Desert \n");
             }
-            
+
         }
         catch (ParseException e) {
             throw new RuntimeException(e);

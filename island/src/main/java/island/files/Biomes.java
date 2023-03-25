@@ -6,7 +6,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-public class Biomes {
+public class Biomes implements IslandColour{
 
     List<Double> elevations;
     List<Double> humidities;
@@ -185,7 +185,8 @@ public class Biomes {
     }
 
 
-    private void colorPolygon(int red, int green, int blue, int alpha, int index){
+    @Override
+    public void colorPolygon(int red, int green, int blue, int alpha, int index){
         Structs.Polygon poly = polygonList.get(index);
         Structs.Property color = Structs.Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue+ "," + alpha).build();
         Structs.Polygon colored = Structs.Polygon.newBuilder(poly).addProperties(color).build();

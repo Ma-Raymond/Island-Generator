@@ -45,6 +45,10 @@ public class Main {
         //Seed will be either inputted or created from the above parameters
         String seed = "";
 
+        int numLakes;
+        int numAquifers;
+        int numRivers;
+
 
         try {
             CommandLine commandline = parser.parse(options, args);
@@ -108,9 +112,48 @@ public class Main {
             if (commandline.hasOption("biomes")){
                 biome = commandline.getOptionValue("biomes");
 
-
             }
-        } catch (ParseException e) {
+
+
+            try{
+                numLakes = Integer.parseInt(maxNumLakes);
+                numAquifers = Integer.parseInt(aquifers);
+                numRivers = Integer.parseInt(rivers);
+                if (numLakes < 0){
+                    numLakes = 0;
+                }
+                if (numLakes < 0){
+                    numLakes = 5;
+                }
+                if (numAquifers < 0){
+                    numLakes = 5;
+                }
+                if (numRivers < 0){
+                    numLakes = 5;
+                }
+
+            }catch(Exception e){
+                throw new ParseException("Values for max Lakes, Aquifers, and Rivers must be integers!");
+            }
+            try{
+                if (!biome.equals("Desert")||!biome.equals("Savana")||!biome.equals("Trpoical")||!biome.equals("Grassland")||!biome.equals("Deciduous")||!biome.equals("TemperateRain")||!biome.equals("Taiga")||!biome.equals("Tundra")){
+                    biome = "Deciduous"; //random default if input incorrectly
+                }
+            }catch(Exception e){
+                throw new RuntimeException("Biome type must be inputted as a valid string. Any one of the following will be accepted: \n" +
+                        "Tundra \n" +
+                        "Taiga \n" +
+                        "TemperateRain \n" +
+                        "Deciduous \n" +
+                        "Grassland \n" +
+                        "Tropical \n" +
+                        "Savana \n" +
+                        "Desert \n");
+            }
+
+
+        }
+        catch (ParseException e) {
             throw new RuntimeException(e);
         }
 

@@ -150,11 +150,10 @@ public class Biomes {
                     colorPolygon(240,167,74,255, i);
                     new Color(240,167,74,255);
                 }
-                else if (110 < humid && humid < 225 && 50 <= height && height < 125) {
+                else if (100 <= humid && humid <= 225 && 50 <= height && height < 125) {
                     //BiomeTypes.add("Deciduous");
                     colorPolygon(49,113,79,255, i);
                     new Color(49,113,79,255);
-
                 }
                 else if (225 < humid && 50 <= height && height <= 125) {
                     //BiomeTypes.add("Temperate Rain Forest");

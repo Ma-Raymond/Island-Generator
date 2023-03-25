@@ -143,7 +143,7 @@ public class Main {
                         "Savana \n" +
                         "Desert \n");
             }
-            if (!(soil.equals("Wet")||biome.equals("Normal")||biome.equals("Dry")||biome.equals(""))){
+            if (!(soil.equals("Wet")||soil.equals("Normal")||soil.equals("Dry")||soil.equals(""))){
                 soil = ""; //random default if input incorrectly
                 throw new ParseException("Incorrect Soil Input");
             }

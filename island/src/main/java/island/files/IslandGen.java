@@ -284,8 +284,8 @@ public class IslandGen extends IslandSeed {
         int nPolygons = polygonList.size();
         int nVertices = vertexList.size();
 
-        elevations = new ArrayList<Double>(Collections.nCopies(nPolygons, 150.0));
-        humidity = new ArrayList<Double>(Collections.nCopies(nPolygons, 50.0));
+        elevations = new ArrayList<Double>(Collections.nCopies(nPolygons, 0.0));
+        humidity = new ArrayList<Double>(Collections.nCopies(nPolygons, defaultHumidity));
         vertexHeights = new ArrayList<>(Collections.nCopies(nVertices, 0.0));
     }
 
@@ -336,8 +336,15 @@ public class IslandGen extends IslandSeed {
             getSoil(soilSelect);
         }
 
+        System.out.println(defaultBlockElev);
+        System.out.println(defaultHumidity);
+
         // Generate Elevation
-        selectElevation(altType);
+        Elevation elevate = new Elevation();
+        elevate.generate(altType,elevations,altStartIdx,heightPoints,polygonList,islandBlocks);
+        elevations = elevate.elevations;
+        altStartIdx = elevate.altStartIdx;
+
 
         soilProfile();
         //Lakes
@@ -358,8 +365,11 @@ public class IslandGen extends IslandSeed {
         humidity = river.humidity;
 
 
+        System.out.println(elevations.toString());
+        System.out.println(humidity.toString());
         biomeGen.generate(elevations, islandBlocks, lakeIdxs, humidity, polygonList);
         polygonList = biomeGen.polygonList;
+
 
         //Aquifers
 
@@ -483,71 +493,6 @@ public class IslandGen extends IslandSeed {
     }
 
 
-    private void selectElevation(int elevationNum){
-        if (elevationNum == 0){
-            volcano(altStartIdx);
-        }
-        else if (elevationNum == 2){
-            generateHills(altStartIdx);
-        }
-
-    }
-    private void generateHills(int startIdx){
-        // Have it incrementally do it with the seed
-        altStartIdx = startIdx % heightPoints.size();
-        for (int i = 0; i < heightPoints.size()/2; i++){
-            int Idx = (startIdx + i) % heightPoints.size();
-            int polyIdx = heightPoints.get(Idx);
-            Polygon poly = polygonList.get(polyIdx);
-            List<Integer> neighbourList = poly.getNeighborIdxsList();
-            colorHeight(poly,1.5);
-            double elevationVal = Double.parseDouble(precision.format(elevations.get(polyIdx)+1.5));
-            elevations.set(polyIdx,elevationVal);
-            for (Integer j : neighbourList){
-                Polygon neighbourPoly = polygonList.get(j);
-                colorHeight(neighbourPoly,1.2);
-                double elevationVal2 = Double.parseDouble(precision.format(elevations.get(polyIdx)+1.2));
-                elevations.set(j,elevationVal2);
-            }
-        }
-    }
-    private void volcano(int startIdx){
-        altStartIdx = startIdx % heightPoints.size();
-        Deque<Integer> deque = new ArrayDeque<>();
-        Set<Integer> visited = new HashSet<>();
-        int polyIdx = heightPoints.get(startIdx);
-        double volcanoHeight = 100.0;
-        visited.add(polyIdx);
-        deque.add(polyIdx);
-        double visual = 5;
-        while (!deque.isEmpty()){
-            int idxVal = deque.removeFirst();
-            Polygon poly = polygonList.get(idxVal);
-            elevations.set(idxVal,elevations.get(idxVal)+volcanoHeight);
-            List<Integer> neighbourList = poly.getNeighborIdxsList();
-            colorHeight(poly,visual);
-            for (Integer idx : neighbourList){
-                if (!visited.contains(idx) && islandBlocks.contains(idx)){
-                    visited.add(idx);
-                    deque.add(idx);
-                }
-            }
-            visual -= 0.01;
-            if (volcanoHeight >0)
-                volcanoHeight = Double.parseDouble(precision.format(volcanoHeight-0.2));
-        }
-    }
-    private void colorHeight(Polygon poly, double value){
-        // Island is "253,255,208,255"
-        if (value < 1){
-            value = 1;
-        }
-        double red = 253/value;
-        double green = 255/value;
-        double blue = 208/value;
-        int index = polygonList.indexOf(poly);
-        colorPolygon((int)red,(int)green,(int)blue,255, index);
-    }
     private void colorPolygon(int red, int green, int blue, int alpha, int index){
         Polygon poly = polygonList.get(index);
         Structs.Property color = Structs.Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue+ "," + alpha).build();
@@ -558,19 +503,6 @@ public class IslandGen extends IslandSeed {
         Structs.Property typeProperty = Structs.Property.newBuilder().setKey("Type").setValue(type).build();
         Polygon typed = Polygon.newBuilder(poly).addProperties(typeProperty).build();
         polygonList.set(polygonList.indexOf(poly), typed);
-    }
-    private String extractType(List<Structs.Property> properties){
-        String val = null;
-        for(Structs.Property p: properties) {
-            // TRY TO FIND THE RGB COLOR
-            if (p.getKey().equals("Type")) {
-                val = p.getValue();
-            }
-        }
-        if (val == null){       // IF THE RGB COLOR PROPERTY DOESNT EXIST, COVER THAT CASE BY MAKING IT BLACK
-            return "None"; // COVERING CASE IF KEY RGB_COLOR DOESN'T EXIST
-        }
-        return val;
     }
     private String extractColorString(List<Structs.Property> properties){
         String val = null;

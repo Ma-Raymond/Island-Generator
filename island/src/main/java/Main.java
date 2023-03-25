@@ -110,29 +110,67 @@ public class Main {
             if (commandline.hasOption("biomes")){
                 biome = commandline.getOptionValue("biomes");
             }
+            //negative seed value
+            //incorrect shape
+            //incorrect altitude
+            //neg aquifers
+            //neg lakes
+            //neg rivers
+            //too many rivers
+            //too many lakes
+            //too many aquifers
+            //incorrect soil input
+            //incorrect biome
+            if (!maxNumLakes.equals("")){
+                try{
+                    numLakes = Integer.parseInt(maxNumLakes);
+                    if (numLakes < 0){
+                        maxNumLakes = "";
+                    }
+                    if (numLakes > 400){
+                        maxNumLakes = "200";
+                    }
+                }catch(Exception e){
+                    maxNumLakes = "";
+                    throw new ParseException("The input you've provided is not an integer, try again!");
+                }
+            }
+            if (!aquifers.equals("")){
+                try{
+                    numAquifers = Integer.parseInt(aquifers);
+                    if (numAquifers < 0){
+                        aquifers = "";
+                    }
+                    if (numAquifers > 400){
+                        aquifers = "200";
+                    }
+                }catch(Exception e){
+                    aquifers = "";
+                    throw new ParseException("The input you've provided is not an integer, try again!");
+                }
+            }
+
+            if (!rivers.equals("")){
+                try{
+                    numRivers = Integer.parseInt(rivers);
+                    if (numRivers < 0){
+                        rivers = "";
+                    }
+                    if (numRivers > 400){
+                        rivers = "200";
+                    }
+                }catch(Exception e){
+                    rivers = "";
+                    throw new ParseException("The input you've provided is not an integer, try again!");
+                }
+            }
 
             try{
-                numLakes = Integer.parseInt(maxNumLakes);
-                numAquifers = Integer.parseInt(aquifers);
-                numRivers = Integer.parseInt(rivers);
-                if (numLakes < 0){
-                    maxNumLakes = "";
-                }
-                if (numAquifers < 0){
-                    aquifers = "";
-                }
-                if (numRivers < 0){
-                    rivers = "";
-                }
-            }catch(Exception e){
-                throw new ParseException("Values for max Lakes, Aquifers, and Rivers must be integers!");
-            }
-            try{
-                if (!(biome.equals("Desert")||biome.equals("Savana")||biome.equals("Tropical")||biome.equals("Grassland")||biome.equals("Deciduous")||biome.equals("TemperateRain")||biome.equals("Taiga")||biome.equals("Tundra"))){
+                if (!(biome.equals("Desert")||biome.equals("Savana")||biome.equals("Tropical")||biome.equals("Grassland")||biome.equals("Deciduous")||biome.equals("TemperateRain")||biome.equals("Taiga")||biome.equals("Tundra")||biome.equals(""))){
                     biome = "Deciduous"; //random default if input incorrectly
                     throw new ParseException("Incorrect Biome Input");
                 }
-            }catch(Exception e){
+            }catch(Exception e) {
                 System.out.println("Biome type must be inputted as a valid string. Any one of the following will be accepted: \n" +
                         "Tundra \n" +
                         "Taiga \n" +
@@ -155,10 +193,12 @@ public class Main {
                 shape = ""; //random default if input incorrectly
                 throw new ParseException("Incorrect Shape Input");
             }
-            try{
-                Integer val = Integer.parseInt(seed);
-            }catch (Exception e){
-                throw new ParseException("Only Integer Inputs Allowed for Seeds");
+            if (!seed.equals("")){
+                try{
+                    Integer val = Integer.parseInt(seed);
+                }catch (Exception e){
+                    throw new ParseException("Only Integer Inputs Allowed for Seeds");
+                }
             }
         }
         catch (ParseException e) {

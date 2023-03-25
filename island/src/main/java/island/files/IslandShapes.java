@@ -5,7 +5,7 @@ import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 import java.util.List;
 import java.util.Random;
 
-public class IslandShapes {
+public class IslandShapes implements IslandColour{
     Structs.Mesh aMesh;
     List<Structs.Polygon> polygonList;
     List<Structs.Vertex> vertexList;
@@ -39,10 +39,7 @@ public class IslandShapes {
             double x = centroid.getX();
             double y = centroid.getY();
             double distance = Math.sqrt(Math.pow(x-255,2)+Math.pow(y-255,2));
-            //lake
-//            if (distance < 100){
-//                colorPolygon(poly, 102, 178,255,255);
-//            }
+
             //island
             if (distance < 200){
                 colorPolygon(253, 255,208,255, i);
@@ -53,7 +50,6 @@ public class IslandShapes {
         }
     }
     private void crossIsland(Structs.Mesh aMesh){
-        Random bag = new Random();
         for (int i =0; i< aMesh.getPolygonsCount(); i++){
             Structs.Polygon poly = polygonList.get(i);
             Structs.Vertex centroid = vertexList.get(poly.getCentroidIdx());
@@ -133,16 +129,19 @@ public class IslandShapes {
         }
     }
 
+
+    @Override
+    public void colorPolygon(int red, int green, int blue, int alpha, int index) {
+        Structs.Polygon poly = polygonList.get(index);
+        Structs.Property color = Structs.Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue+ "," + alpha).build();
+        Structs.Polygon colored = Structs.Polygon.newBuilder(poly).addProperties(color).build();
+        polygonList.set(index, colored);
+    }
+
     private void HeartIsland(){
 
 
     }
 
 
-    private void colorPolygon(int red, int green, int blue, int alpha, int index){
-        Structs.Polygon poly = polygonList.get(index);
-        Structs.Property color = Structs.Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue+ "," + alpha).build();
-        Structs.Polygon colored = Structs.Polygon.newBuilder(poly).addProperties(color).build();
-        polygonList.set(index, colored);
-    }
 }

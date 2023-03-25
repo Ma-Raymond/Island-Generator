@@ -20,7 +20,8 @@ public class Lake {
     List<Integer> islandBlocks = new ArrayList<>();
     DecimalFormat precision  = new DecimalFormat("0.00");
 
-    public void generateLakes(List<Integer> iBlocks,boolean seed, int maximumLakes, int startIndexL, int lN, int mL, List<Double> humid,List<Integer> hPoints, List<Structs.Polygon> pList){
+    double soil;
+    public void generateLakes(double soilPercent, List<Integer> iBlocks,boolean seed, int maximumLakes, int startIndexL, int lN, int mL, List<Double> humid,List<Integer> hPoints, List<Structs.Polygon> pList){
         lakeNum = lN;
         maxLakes = mL;
         humidity = humid;
@@ -28,6 +29,7 @@ public class Lake {
         polygonList = pList;
         isSeed = seed;
         islandBlocks = iBlocks;
+        soil = soilPercent;
 
         createLakes(maximumLakes,startIndexL);
     }
@@ -97,10 +99,10 @@ public class Lake {
             //may be used for colouring later
             Structs.Polygon neighbourPoly = polygonList.get(n);
             //colorHeight(neighbourPoly,1.2);
-            double humidityValNeigbours = Double.parseDouble(precision.format(humidity.get(n)+100));
+            double humidityValNeigbours = Double.parseDouble(precision.format(humidity.get(n)+100*soil));
             humidity.set(n,humidityValNeigbours);
             for (Integer i : neighbourPoly.getNeighborIdxsList()){
-                double doubleNeighbours = Double.parseDouble(precision.format(humidity.get(i)+50));
+                double doubleNeighbours = Double.parseDouble(precision.format(humidity.get(i)+50*soil));
                 humidity.set(i,doubleNeighbours);
             }
         }

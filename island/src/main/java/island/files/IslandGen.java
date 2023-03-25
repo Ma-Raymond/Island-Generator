@@ -51,9 +51,14 @@ public class IslandGen extends IslandSeed {
 
     DecimalFormat precision  = new DecimalFormat("0.00");
 
+    double soilPercent;
     private void soilProfile(){
-
-
+        if (soilMoisture == 0)
+            soilPercent = 1.5;
+        else if (soilMoisture == 1)
+            soilPercent = 1.0;
+        else if (soilMoisture == 2)
+            soilPercent = 0.5;
     }
 
 
@@ -70,10 +75,10 @@ public class IslandGen extends IslandSeed {
     }
     private void addAquaHumidity(int aquaPoly){
         Polygon poly = polygonList.get(aquaPoly);
-        double humidityValAqua = Double.parseDouble(precision.format(humidity.get(aquaPoly)+150));
+        double humidityValAqua = Double.parseDouble(precision.format(humidity.get(aquaPoly)+150*soilPercent));
         humidity.set(aquaPoly, humidityValAqua);
         for (Integer n : poly.getNeighborIdxsList()){
-            double humidityValNeigbours = Double.parseDouble(precision.format(humidity.get(n)+100));
+            double humidityValNeigbours = Double.parseDouble(precision.format(humidity.get(n)+100*soilPercent));
             humidity.set(n,humidityValNeigbours);
         }
     }
@@ -103,7 +108,7 @@ public class IslandGen extends IslandSeed {
         riverStartIdx = Integer.parseInt(seedDetails[10]+seedDetails[11]);
         aquaNum = Integer.parseInt(seedDetails[12]+seedDetails[13]);
         aquaStartIdx = Integer.parseInt(seedDetails[14]+seedDetails[15]);
-        soilMoisture = Integer.parseInt(seedDetails[16]);
+        soilMoisture = (Integer.parseInt(seedDetails[16]))%3;
         biome = Integer.parseInt(seedDetails[17]);
     }
 
@@ -253,6 +258,21 @@ public class IslandGen extends IslandSeed {
         }
     }
 
+    private void getSoil( String soilType){
+        Random rand = new Random();
+        if (soilType.equals("")){
+            soilMoisture = (rand.nextInt(0, 3));
+        }
+
+        else{
+            HashMap<String, Integer> soilTypes = new HashMap<String, Integer>();
+            soilTypes.put("Dry", 0);
+            soilTypes.put("Average", 1);
+            soilTypes.put("Wet", 2);
+            soilMoisture = soilTypes.get(soilType);
+        }
+    }
+
 
     public void defaultValues(Mesh aMesh){
         // Get old mesh details
@@ -269,7 +289,7 @@ public class IslandGen extends IslandSeed {
         vertexHeights = new ArrayList<>(Collections.nCopies(nVertices, 0.0));
     }
 
-    public Mesh generate(Mesh aMesh,String seedInput, String shape, String elevType, String elevationStartIdx,String maxNumLakes, String lakeStartingIdx, String rivers, String riverStartingIdx, String aquifers, String aquiferStartingIdx, String soil, String biomeSelect){
+    public Mesh generate(Mesh aMesh,String seedInput, String shape, String elevType, String elevationStartIdx,String maxNumLakes, String lakeStartingIdx, String rivers, String riverStartingIdx, String aquifers, String aquiferStartingIdx, String soilSelect, String biomeSelect){
         //Create new island
         Biomes biomeGen = new Biomes();
         //If user input a seed
@@ -313,14 +333,16 @@ public class IslandGen extends IslandSeed {
             getRiverStartIdx(riverStartingIdx);
             getAquiferNum(aquifers);
             getAquiferStartIdx(aquiferStartingIdx);
+            getSoil(soilSelect);
         }
 
         // Generate Elevation
         selectElevation(altType);
 
+        soilProfile();
         //Lakes
         Lake lakes = new Lake();
-        lakes.generateLakes(islandBlocks,isSeed,maxLakes,lakeStartIdx,lakeNum,maxLakes,humidity,heightPoints,polygonList);
+        lakes.generateLakes(soilPercent,islandBlocks,isSeed,maxLakes,lakeStartIdx,lakeNum,maxLakes,humidity,heightPoints,polygonList);
         humidity = lakes.humidity;
         lakeIdxs = lakes.lakeIdxs;
         lakeNum = lakes.lakeNum;
@@ -330,7 +352,7 @@ public class IslandGen extends IslandSeed {
 
         //Rivers
         Rivers river = new Rivers();
-        river.generate(riverNum,riverStartIdx,polygonList,segmentList,vertexList,elevations,vertexHeights,islandVertices,islandBlocks,humidity);
+        river.generate(soilPercent,riverNum,riverStartIdx,polygonList,segmentList,vertexList,elevations,vertexHeights,islandVertices,islandBlocks,humidity);
         segmentList = river.segmentList;
         vertexList = river.vertexList;
         humidity = river.humidity;

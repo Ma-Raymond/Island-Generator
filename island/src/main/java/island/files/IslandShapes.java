@@ -130,9 +130,7 @@ public class IslandShapes {
             else{
                 colorPolygon(35, 85,138,255, i);
             }
-
         }
-
     }
 
     private void HeartIsland(){

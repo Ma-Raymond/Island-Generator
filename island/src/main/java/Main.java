@@ -150,6 +150,11 @@ public class Main {
                         "Savana \n" +
                         "Desert \n");
             }
+            try{
+
+            }catch(Exception e){
+
+            }
 
 
         }

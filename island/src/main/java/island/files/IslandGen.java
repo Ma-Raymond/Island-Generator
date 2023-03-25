@@ -61,31 +61,6 @@ public class IslandGen extends IslandSeed {
             soilPercent = 0.5;
     }
 
-
-    private void createAquifers(int aquaNum, int startIndexA){
-        //int startIndexL = randNum.nextInt(heightPoints.size()); //put this in the generator in an if statement
-        for (int i = 0; i < aquaNum; i ++){
-            int polyIndex = (startIndexA + i) % heightPoints.size();
-            int validPolyId = heightPoints.get(polyIndex);
-            colorPolygon(102, 178,255,255, validPolyId);
-            addAquaHumidity(validPolyId);
-        }
-        aquaStartIdx = startIndexA;
-
-    }
-    private void addAquaHumidity(int aquaPoly){
-        Polygon poly = polygonList.get(aquaPoly);
-        double humidityValAqua = Double.parseDouble(precision.format(humidity.get(aquaPoly)+150*soilPercent));
-        humidity.set(aquaPoly, humidityValAqua);
-        for (Integer n : poly.getNeighborIdxsList()){
-            double humidityValNeigbours = Double.parseDouble(precision.format(humidity.get(n)+100*soilPercent));
-            humidity.set(n,humidityValNeigbours);
-        }
-    }
-
-
-
-
     private void seedDecoder(String seed){
         isSeed = true;
         //adjust seed if it is not correct
@@ -109,7 +84,7 @@ public class IslandGen extends IslandSeed {
         aquaNum = Integer.parseInt(seedDetails[12]+seedDetails[13]);
         aquaStartIdx = Integer.parseInt(seedDetails[14]+seedDetails[15]);
         soilMoisture = (Integer.parseInt(seedDetails[16]))%3;
-        biome = Integer.parseInt(seedDetails[17]);
+        biome = (Integer.parseInt(seedDetails[17]))%8;
     }
 
     private void getIslandShape(String shape){
@@ -348,8 +323,6 @@ public class IslandGen extends IslandSeed {
         lakeNum = lakes.lakeNum;
         polygonList = lakes.polygonList;
 
-        createAquifers(aquaNum, aquaStartIdx);
-
         //Rivers
         Rivers river = new Rivers();
         river.generate(soilPercent,riverNum,riverStartIdx,polygonList,segmentList,vertexList,elevations,vertexHeights,islandVertices,islandBlocks,humidity);
@@ -357,12 +330,14 @@ public class IslandGen extends IslandSeed {
         vertexList = river.vertexList;
         humidity = river.humidity;
 
-
+        //Biomes
         biomeGen.generate(elevations, islandBlocks, lakeIdxs, humidity, polygonList);
         polygonList = biomeGen.polygonList;
 
         //Aquifers
-
+        Aquifers aquifer = new Aquifers();
+        aquifer.generate(heightPoints, aquaStartIdx, polygonList, humidity, soilPercent, aquaNum);
+        humidity = aquifer.humidity;
 
         //Testing the island attribute values
         System.out.println("island shape");

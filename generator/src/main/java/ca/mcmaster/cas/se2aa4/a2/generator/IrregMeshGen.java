@@ -303,7 +303,7 @@ public class IrregMeshGen extends GeneralMesh {
             int red = 0;
             int green = 0;
             int blue = 0;
-            int alpha = 255;
+            int alpha = 0; // FOR ISLANDS TAKE AWAY SEGMENT COLOURS
             // IF THE SEGMENT IS A NEIGHBOUR, MAKE IT GREY COLOR
             if (neighbourConnectionList.contains(s)){
                 red = 169;

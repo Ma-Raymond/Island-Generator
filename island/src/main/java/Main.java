@@ -45,6 +45,10 @@ public class Main {
         //Seed will be either inputted or created from the above parameters
         String seed = "";
 
+        int numLakes;
+        int numAquifers;
+        int numRivers;
+
 
         try {
             CommandLine commandline = parser.parse(options, args);
@@ -54,22 +58,22 @@ public class Main {
                 System.out.println("Enter these commands to personalize the Island you would like to create! \n");
                 System.out.println("------------------------------------");
                 System.out.println("Shape \"-shape xx\"");
-                System.out.println("Options: Moon\tCross\tCircle\tOval");
+                System.out.println("Options: Moon\nCross\nCircle\nOval");
                 System.out.println("------------------------------------");
                 System.out.println("Altitude \"-altitude xx\"");
-                System.out.println("Options: Volcano\tHills\tFlat");
+                System.out.println("Options: Volcano\nHill\nFlat");
                 System.out.println("------------------------------------");
                 System.out.println("Maximum # Lakes \"-lakes xx\"");
-                System.out.println("Options: Integer");
+                System.out.println("Options: Integer Value");
                 System.out.println("------------------------------------");
                 System.out.println("# of Aquifers \"-aquifers xx\"");
-                System.out.println("Options: Integer");
+                System.out.println("Options: Integer Value");
                 System.out.println("------------------------------------");
                 System.out.println("Type of Island Soil \"-soil xx\"");
-                System.out.println("Options: Wet\tDry\tNormal");
+                System.out.println("Options: Wet\nDry\nNormal");
                 System.out.println("------------------------------------");
                 System.out.println("Type of Biomes \"-biomes xx\"");
-                System.out.println("Options: Desert\tGrassland\tTaiga\tForest\tRainForest\tTropical\tSavana");
+                System.out.println("Options: Desert\nGrassland\nDeciduous\nTaiga\nTundra\nForest\nTemperateRain\nTropical\nSavana");
                 System.out.println("------------------------------------");
             }
 
@@ -82,9 +86,7 @@ public class Main {
 
             if (commandline.hasOption("seed")) {
                 seed = commandline.getOptionValue("seed");
-
             }
-
             if (commandline.hasOption("shape")) {
                 shape = commandline.getOptionValue("shape");
             }
@@ -107,13 +109,63 @@ public class Main {
             }
             if (commandline.hasOption("biomes")){
                 biome = commandline.getOptionValue("biomes");
-
-
             }
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
 
+            try{
+                numLakes = Integer.parseInt(maxNumLakes);
+                numAquifers = Integer.parseInt(aquifers);
+                numRivers = Integer.parseInt(rivers);
+                if (numLakes < 0){
+                    maxNumLakes = "";
+                }
+                if (numAquifers < 0){
+                    aquifers = "";
+                }
+                if (numRivers < 0){
+                    rivers = "";
+                }
+            }catch(Exception e){
+                throw new ParseException("Values for max Lakes, Aquifers, and Rivers must be integers!");
+            }
+            try{
+                if (!(biome.equals("Desert")||biome.equals("Savana")||biome.equals("Tropical")||biome.equals("Grassland")||biome.equals("Deciduous")||biome.equals("TemperateRain")||biome.equals("Taiga")||biome.equals("Tundra"))){
+                    biome = "Deciduous"; //random default if input incorrectly
+                    throw new ParseException("Incorrect Biome Input");
+                }
+            }catch(Exception e){
+                System.out.println("Biome type must be inputted as a valid string. Any one of the following will be accepted: \n" +
+                        "Tundra \n" +
+                        "Taiga \n" +
+                        "TemperateRain \n" +
+                        "Deciduous \n" +
+                        "Grassland \n" +
+                        "Tropical \n" +
+                        "Savana \n" +
+                        "Desert \n");
+            }
+            if (!(soil.equals("Wet")||biome.equals("Normal")||biome.equals("Dry")||biome.equals(""))){
+                soil = ""; //random default if input incorrectly
+                throw new ParseException("Incorrect Soil Input");
+            }
+            if (!(elevType.equals("Volcano")||elevType.equals("Hill")||elevType.equals("Flat")||elevType.equals(""))){
+                elevType = ""; //random default if input incorrectly
+                throw new ParseException("Incorrect Elevation Input");
+            }
+            if (!(shape.equals("Circle")||shape.equals("Oval")||shape.equals("Moon")||shape.equals("Cross")||shape.equals(""))){
+                shape = ""; //random default if input incorrectly
+                throw new ParseException("Incorrect Shape Input");
+            }
+            try{
+                Integer val = Integer.parseInt(seed);
+            }catch (Exception e){
+                throw new ParseException("Only Integer Inputs Allowed for Seeds");
+            }
+        }
+        catch (ParseException e) {
+            System.out.println("----------------------------------------------ERROR MESSAGE----------------------------------------------\n");
+            System.out.println("Please Re-Enter. An ERROR occured with your user input \""+e.getMessage()+"\". Use --help/-h");
+            System.out.println("----------------------------------------------ERROR MESSAGE----------------------------------------------\n");
+        }
 
         // Old Mesh to write on
         Mesh aMesh = new MeshFactory().read(input);

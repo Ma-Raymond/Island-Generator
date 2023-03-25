@@ -120,27 +120,25 @@ public class Main {
                 numAquifers = Integer.parseInt(aquifers);
                 numRivers = Integer.parseInt(rivers);
                 if (numLakes < 0){
-                    numLakes = 0;
-                }
-                if (numLakes < 0){
-                    numLakes = 5;
+                    maxNumLakes = "";
                 }
                 if (numAquifers < 0){
-                    numLakes = 5;
+                    aquifers = "";
                 }
                 if (numRivers < 0){
-                    numLakes = 5;
+                    rivers = "";
                 }
 
             }catch(Exception e){
                 throw new ParseException("Values for max Lakes, Aquifers, and Rivers must be integers!");
             }
             try{
-                if (!biome.equals("Desert")||!biome.equals("Savana")||!biome.equals("Trpoical")||!biome.equals("Grassland")||!biome.equals("Deciduous")||!biome.equals("TemperateRain")||!biome.equals("Taiga")||!biome.equals("Tundra")){
+                if (!(biome.equals("Desert")||biome.equals("Savana")||biome.equals("Trpoical")||biome.equals("Grassland")||biome.equals("Deciduous")||biome.equals("TemperateRain")||biome.equals("Taiga")||biome.equals("Tundra"))){
                     biome = "Deciduous"; //random default if input incorrectly
+                    throw new Exception("");
                 }
             }catch(Exception e){
-                throw new RuntimeException("Biome type must be inputted as a valid string. Any one of the following will be accepted: \n" +
+                System.out.println("Biome type must be inputted as a valid string. Any one of the following will be accepted: \n" +
                         "Tundra \n" +
                         "Taiga \n" +
                         "TemperateRain \n" +
@@ -150,13 +148,10 @@ public class Main {
                         "Savana \n" +
                         "Desert \n");
             }
-
-
         }
         catch (ParseException e) {
             throw new RuntimeException(e);
         }
-
 
         // Old Mesh to write on
         Mesh aMesh = new MeshFactory().read(input);

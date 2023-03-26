@@ -24,7 +24,7 @@ public class Main {
         options.addOption("soil", true, "Soil Profile");
         options.addOption("biomes", true, "Biomes");
         options.addOption("seed", true, "Island Seed");
-        options.addOption("map", true, "Type of Map to Display");
+        options.addOption("heatmap", true, "Type of HeatMap to Display");
         options.addOption("H", "help", false, "Command information");
         String input = null;
         String output = null;
@@ -43,7 +43,7 @@ public class Main {
         String rivers = "";
         String riverStartIdx = "";
         String soil = "";
-        String map = "";
+        String heatmap = "";
 
         //Seed will be either inputted or created from the above parameters
         String seed = "";
@@ -61,10 +61,10 @@ public class Main {
                 System.out.println("Enter these commands to personalize the Island you would like to create! \n");
                 System.out.println("------------------------------------");
                 System.out.println("Shape \"-shape xx\"");
-                System.out.println("Options: Moon\nCross\nCircle\nOval\nHeart");
+                System.out.println("Options: \nMoon\nCross\nCircle\nOval\nHeart");
                 System.out.println("------------------------------------");
                 System.out.println("Altitude \"-altitude xx\"");
-                System.out.println("Options: Mountain\nHill\nFlat");
+                System.out.println("Options: \nMountain\nHill\nFlat");
                 System.out.println("------------------------------------");
                 System.out.println("Maximum # Lakes \"-lakes xx\"");
                 System.out.println("Options: Integer Value");
@@ -73,13 +73,13 @@ public class Main {
                 System.out.println("Options: Integer Value");
                 System.out.println("------------------------------------");
                 System.out.println("Type of Island Soil \"-soil xx\"");
-                System.out.println("Options: Wet\nDry\nNormal");
+                System.out.println("Options: \nWet\nDry\nNormal");
                 System.out.println("------------------------------------");
                 System.out.println("Type of Biomes \"-biomes xx\"");
-                System.out.println("Options: Desert\nGrassland\nDeciduous\nTaiga\nTundra\nForest\nTemperateRain\nTropical\nSavana");
+                System.out.println("Options: \nDesert\nGrassland\nDeciduous\nTaiga\nTundra\nForest\nTemperateRain\nTropical\nSavana");
                 System.out.println("------------------------------------");
                 System.out.println("Type of Heatmap to display as \"-biomes xx\"");
-                System.out.println("Options: Elevation\nMoisture");
+                System.out.println("Options: \nElevation\nMoisture");
                 System.out.println("------------------------------------");
             }
 
@@ -116,8 +116,8 @@ public class Main {
             if (commandline.hasOption("biomes")){
                 biome = commandline.getOptionValue("biomes");
             }
-            if (commandline.hasOption("map")){
-                map = commandline.getOptionValue("map");
+            if (commandline.hasOption("heatmap")){
+                heatmap = commandline.getOptionValue("heatmap");
             }
 
             String errorMessage = "";
@@ -199,8 +199,8 @@ public class Main {
                 shape = ""; //random default if input incorrectly
                 errorMessage = errorMessage + "Incorrect Shape Input, ";
             }
-            if (!(map.equals("Moisture")|map.equals("Elevation"))){
-                map = ""; //random default if input incorrectly
+            if (!(heatmap.equals("Moisture")|heatmap.equals("Elevation"))){
+                heatmap = ""; //random default if input incorrectly
                 errorMessage = errorMessage + "Incorrect Map Input, ";
             }
             if (!seed.equals("")){
@@ -227,7 +227,7 @@ public class Main {
 
         // Island Generation
         IslandGen gen = new IslandGen();
-        Mesh myMesh = gen.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map);
+        Mesh myMesh = gen.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, heatmap);
 
         // Outputing to new Mesh object
         MeshFactory factory = new MeshFactory();

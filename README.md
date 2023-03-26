@@ -81,6 +81,11 @@ TemperateRain
 Tropical
 Savana
 ------------------------------------
+Type of Heatmap "-heatmap xx"
+- Options Here: 
+Elevation
+Mositure
+------------------------------------
 ```
 
 ### Visualizer

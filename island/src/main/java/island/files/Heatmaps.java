@@ -35,7 +35,6 @@ public class Heatmaps implements IslandColour{
             if (greenBlue>25){
                 greenBlue=25;
             }
-            System.out.println(greenBlue);
             colorPolygon(255, 255-(10*greenBlue), 255-(10*greenBlue), 255, j);
         }
     }

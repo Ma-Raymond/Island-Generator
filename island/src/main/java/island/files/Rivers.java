@@ -8,6 +8,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * This class is responsible for all the river generation processes
+ */
 public class Rivers {
     List<Integer> islandBlocks = new ArrayList<>();
     List<Integer> islandVertices = new ArrayList<>();
@@ -26,17 +29,8 @@ public class Rivers {
 
     /**
      *
-     * @param soilPercent
-     * @param rM
-     * @param rSI
-     * @param pList
-     * @param sList
-     * @param vList
-     * @param e
-     * @param vH
-     * @param iV
-     * @param iB
-     * @param humid
+     * This generate method is the main parent where it is the only public class to access the generation portion.
+     * This generates the vertex relations since polygons are assigned heights, vertexes are needed to be assigned relative to those polygon who share the vertex
      */
     public void generate(double soilPercent,int rM, int rSI, List<Structs.Polygon> pList ,List<Structs.Segment> sList,List<Structs.Vertex> vList, List<Double> e,List<Double> vH, List<Integer> iV, List<Integer> iB,List<Double> humid){
         islandBlocks = iB;
@@ -51,50 +45,62 @@ public class Rivers {
         humidity = humid;
         soil = soilPercent;
 
-        generateVTPRelation();
-        getVTVRelation();
-        generateVertexHeights();
-        riverFlow();
+        generateVTPRelation();      // Vertex to Polygon Relationship where it the vertex identifier holds the polygons IDs in a array that its attached to
+        getVTVRelation();           // Vertex to Vertex, Meaning the nearby vertexes around it and what their IDs are.
+        generateVertexHeights();    // Now since we have all the relations, Generate the heights to each vertex
+        riverFlow();                // After we have all the heights, we generate the flow of rivers with riverflow()
     }
+
+    /**
+     * generate of vertexHeights will assign a value to each vertex in the island mesh, based on the polygons that share the vertex.
+     */
     private void generateVertexHeights(){
-        for (Integer vertIdx : islandVertices){
-            List<Integer> polysAssociated = VTPRelations.get(vertIdx);
-            Double lowestValue = null;
-            for (Integer polyIdx : polysAssociated){
+        for (Integer vertIdx : islandVertices){     // Each vertexID
+            List<Integer> polysAssociated = VTPRelations.get(vertIdx);      // Polygons for the vertex
+            Double highestValue = null;
+            for (Integer polyIdx : polysAssociated){        // For all the polygons in the list
                 Double height = elevations.get(polyIdx);
-                if (lowestValue == null){
-                    lowestValue = height;
+                if (highestValue == null){                  // Getting the highest value of all the polygons.
+                    highestValue = height;
                     continue;
                 }
-                if (height > lowestValue){
-                    lowestValue = height;
+                if (height > highestValue){                 // If there is a higher value, use that one instead.
+                    highestValue = height;
                 }
             }
-            vertexHeights.set(vertIdx,lowestValue);
+            vertexHeights.set(vertIdx,highestValue);        // Setting the values with vertex Heights
         }
     }
 
+    /**
+     * This method generate Vertex to Vertex relations, based on the vertexes connected with a segment.
+     */
     private void getVTVRelation(){
         VTVRelations = new ArrayList<>(Collections.nCopies(vertexList.size(),new ArrayList<>()));
         VTSRelations = new ArrayList<>(Collections.nCopies(vertexList.size(),new ArrayList<>()));
-        for (Structs.Segment s : segmentList){
+        for (Structs.Segment s : segmentList){      // For each segment in the list
             int v1Idx = s.getV1Idx();
             int v2Idx = s.getV2Idx();
             int segID = segmentList.indexOf(s);
+            // Check if they have been already been connected
             if (!VTVRelations.get(v1Idx).contains(v2Idx) && !VTSRelations.get(v1Idx).contains(segID)){
+                // Vertex to Vertex Relations
                 List<Integer> sList = new ArrayList<>(VTVRelations.get(v1Idx));
                 sList.add(v2Idx);
                 VTVRelations.set(v1Idx,sList);
 
+                // Vertex to Segment Relations, With the same ID as the Vertex to match.
                 List<Integer> vList = new ArrayList<>(VTSRelations.get(v1Idx));
                 vList.add(segID);
                 VTSRelations.set(v1Idx,vList);
             }
             if (!VTVRelations.get(v2Idx).contains(v1Idx) && !VTSRelations.get(v2Idx).contains(segID)){
+                // Vertex to Vertex Relations
                 List<Integer> sList = new ArrayList<>(VTVRelations.get(v2Idx));
                 sList.add(v1Idx);
                 VTVRelations.set(v2Idx,sList);
 
+                // Vertex to Segment Relations, With the same ID as the Vertex to match.
                 List<Integer> vList = new ArrayList<>(VTSRelations.get(v2Idx));
                 vList.add(segID);
                 VTSRelations.set(v2Idx,vList);
@@ -102,65 +108,76 @@ public class Rivers {
         }
     }
 
+    /**
+     * Riverflow is the method that mainly prcoesses the river flow movement, utilzing searches of relations betwen Polygons, Segments and neighbour vertices
+     */
     private void riverFlow(){
         Random rand = new Random();
-        int minimumLengthRiver = 2;
-        for (int i = 0; i < riverNum; i++){
+        int minimumLengthRiver = 2; // This is the minimum length of a river, this will be the case of rivers being the same height, to visualize better
+        for (int i = 0; i < riverNum; i++){     // Loop through how many rivers there are
             boolean notEnd = true;
-            int randIslandVert = (riverStartIdx + i) % islandVertices.size();
-            int id = islandVertices.get(randIslandVert);
+            int randIslandVert = (riverStartIdx + i) % islandVertices.size();       // This the core of our unique seed, having the startIdx as the seed
+            int id = islandVertices.get(randIslandVert);                // This ID is used to get the vertex in the island.
             int lengthOfRiver = 0;
-            while (notEnd) {
+            while (notEnd) {            // White the river is still flowing!
                 List<Integer> vertNeighbours = VTVRelations.get(id);
-                Integer nextSeg = null;
-                Integer nextVert = null;
+                Integer nextSeg = null;         // Calculating the Segment to color, if still null that means we are the lowest point.
+                Integer nextVert = null;        // Calculating the Vertex we are going to next, if still null that means we are the lowest point.
                 double height = vertexHeights.get(id);
                 for (int j = 0; j < vertNeighbours.size(); j++) {
                     double compare = vertexHeights.get(vertNeighbours.get(j));
+                    // Searching to find if there is a vertex nearby that is lower than the one we are currently looking at.
                     if (vertexHeights.get(vertNeighbours.get(j)) < height) {
                         height = compare;
+                        // If it is lower, set the next vertex and segment as the identifier respectfully
                         nextSeg = VTSRelations.get(id).get(j);
                         nextVert = vertNeighbours.get(j);
                     }
                 }
+                // We are at the lowest point and the minimum length of river is met.
                 if (nextSeg == null && lengthOfRiver > minimumLengthRiver) {
-                    notEnd = false;
                     colorVertex(vertexList.get(id),0,0,255,255);
                     break;
                 }
+                // Each is to check if we are flowing alongside a ocean tile, if we are we should stop since we are in the ocean already.
                 boolean oceanEdge = false;
                 List<Integer> polygonsAtVertex = VTPRelations.get(id);
                 if (lengthOfRiver <= minimumLengthRiver){
                     int valueToChange = 0;
+                    // Checking if nearby is a islandBlock, if its not, mark that it is a ocean Edge.
                     for (int k = 0; k < polygonsAtVertex.size();k++){
                         if (islandVertices.contains(id)){
                             valueToChange = VTSRelations.get(id).get(k);
                             nextVert = VTVRelations.get(id).get(k);
                         }
                         else{
-                            oceanEdge = true;
+                            oceanEdge = true;       // Found an ocean edge.
                             break;
                         }
                     }
+                    // Chosen a segment to go to next.
                     nextSeg = valueToChange;
                 }
                 if (oceanEdge)
-                    break;
+                    break;      // If current vertex is in the ocean, just stop flowing.
+                // Get the segment object to start to change its colour
                 Structs.Segment seg = segmentList.get(nextSeg);
+
+                // If the segment is ALREADY a river, increase its thickness.
                 if (extractColorString(seg.getPropertiesList()).equals("0,0,255,255")){
                     increaseThickness(seg);
                 }
                 else
-                    colorSegment(seg,0,0,255,255);
-                new Color(0, 0, 255);
+                    colorSegment(seg,0,0,255,255);  // Color the segment blue
+                new Color(0, 0, 255);       // This Colour here is to just visualize for us.
 
                 // Increasing humidity to surrounding soils
                 List<Integer> surroundingPolys = VTPRelations.get(id);
                 for (Integer polyIdx : surroundingPolys){
-                    humidity.set(polyIdx,humidity.get(polyIdx)+100*soil);
+                    humidity.set(polyIdx,humidity.get(polyIdx)+100*soil);       // Based on soil value, increase the humidity around it
                 }
-                id = nextVert;
-                lengthOfRiver += 1;
+                id = nextVert;  // Change the id to the nextVertex ID
+                lengthOfRiver += 1;     // Increase the length.
             }
         }
     }
@@ -211,6 +228,12 @@ public class Rivers {
             }
         }
     }
+
+    /**
+     * This returns a List of the vertices relationed to a polygon.
+     * @param properties
+     * @return
+     */
     private List<Integer> extractVertices(List<Structs.Property> properties){
         String val = null;
         for(Structs.Property p: properties) {
@@ -219,17 +242,18 @@ public class Rivers {
                 val = p.getValue();
             }
         }
-        if (val == null){       // IF THE RGB COLOR PROPERTY DOESNT EXIST, COVER THAT CASE BY MAKING IT BLACK
+        if (val == null){       //
             System.out.println("NO VERTEX PROPERTY");
             return null;
         }
+        // Returned in a Integer List, from a value of "0,1,2,3" in a string.
         String[] raw = val.split(",");
         List<Integer> rawInts = new ArrayList<>();
         for (int i =0; i< raw.length;i++){
             Integer value = Integer.parseInt(raw[i]);
             rawInts.add(value);
         }
-        return rawInts;
+        return rawInts;     // Return the Integer List
     }
     /**
      * This function replaces the vertex given as a parameter and adds a rgb color property to it based on rgb value params
@@ -247,6 +271,12 @@ public class Rivers {
         // Set the old vertex in the list as the new one with color property
         vertexList.set(vertexList.indexOf(vertex), colored);
     }
+
+    /**
+     * Get the Color value of a property in a String form to compare to another String.
+     * @param properties
+     * @return
+     */
     private String extractColorString(List<Structs.Property> properties){
         String val = null;
         for(Structs.Property p: properties) {

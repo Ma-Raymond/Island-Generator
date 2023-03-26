@@ -1,8 +1,9 @@
-# Assignment A2: Mesh Generator
+# Assignment A3: Mesh Generator
 
   - Raymond Ma [mar47@mcmaster.ca]
   - Gayan Athukorala [athukorg@mcmaster.ca]
   - Rhea Gokhale [gokhaler@mcmaster.ca]
+![Assignment 3 - Legend](https://user-images.githubusercontent.com/107081345/227812407-daba7a00-31b3-466c-8712-f39bd007e5a2.png)
 
 ## How to run the product
 
@@ -87,7 +88,6 @@ Elevation
 Mositure
 ------------------------------------
 ```
-![Assignment 3 - Legend](https://user-images.githubusercontent.com/107081345/227812407-daba7a00-31b3-466c-8712-f39bd007e5a2.png)
 
 ### Visualizer
 

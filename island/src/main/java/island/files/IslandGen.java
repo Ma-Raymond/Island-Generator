@@ -404,9 +404,6 @@ public class IslandGen extends IslandSeed {
 
         // Assigning Biomes and Types
 
-        System.out.println(humidity);
-        System.out.println(elevations);
-
         return Mesh.newBuilder().addAllVertices(vertexList).addAllSegments(segmentList).addAllPolygons(polygonList).build();
     }
 

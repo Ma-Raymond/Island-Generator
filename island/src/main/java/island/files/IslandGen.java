@@ -139,7 +139,7 @@ public class IslandGen extends IslandSeed {
         Random rand = new Random();
         int maxIdx = heightPoints.size()-1;
         if (elevationStartIdx.equals("")){
-            altStartIdx = rand.nextInt(0, maxIdx%100);
+            altStartIdx = rand.nextInt(0, maxIdx%100+1);
         }
         else{
             int startIdx = Integer.parseInt(elevationStartIdx);
@@ -156,7 +156,7 @@ public class IslandGen extends IslandSeed {
         Random rand = new Random();
         int maxLand = islandBlocks.size();
         if (maxNumLakes.equals("")){
-             maxLakes = rand.nextInt(0, maxLand%20);
+             maxLakes = rand.nextInt(1, maxLand%20+2);
         }
         else{
             maxLakes = Integer.parseInt(maxNumLakes);
@@ -171,7 +171,7 @@ public class IslandGen extends IslandSeed {
         Random rand = new Random();
         int maxIdx = islandBlocks.size();
         if (lakeStartingIdx.equals("")) {
-            lakeStartIdx = rand.nextInt(0, maxIdx%100);
+            lakeStartIdx = rand.nextInt(0, maxIdx%100+1);
         } else {
             int startIdx = Integer.parseInt(lakeStartingIdx);
             if (startIdx > maxIdx) {
@@ -186,7 +186,7 @@ public class IslandGen extends IslandSeed {
         Random rand = new Random();
         int maxRivers = islandVertices.size();
         if (numRivers.equals("")){
-            riverNum = rand.nextInt(0, maxRivers%20);
+            riverNum = rand.nextInt(0, maxRivers%20+1);
         }
         else{
             int rivers = Integer.parseInt(numRivers);
@@ -205,7 +205,7 @@ public class IslandGen extends IslandSeed {
         Random rand = new Random();
         int maxIdx = islandVertices.size();
         if (riverIdx.equals("")) {
-            riverStartIdx = rand.nextInt(0, maxIdx%100);
+            riverStartIdx = rand.nextInt(0, maxIdx%100+1);
         } else {
             int startIdx = Integer.parseInt(riverIdx);
             if (startIdx > maxIdx) {
@@ -221,7 +221,7 @@ public class IslandGen extends IslandSeed {
         Random rand = new Random();
         int maxLand = islandBlocks.size();
         if (maxNumAquifer.equals("")){
-            aquaNum = rand.nextInt(0, maxLand%20);
+            aquaNum = rand.nextInt(0, maxLand%20+1);
         }
         else{
             int maxAqua = Integer.parseInt(maxNumAquifer);
@@ -238,7 +238,7 @@ public class IslandGen extends IslandSeed {
         Random rand = new Random();
         int maxIdx = islandBlocks.size();
         if (aquiferStartingIdx.equals("")) {
-            aquaStartIdx = rand.nextInt(0, maxIdx%100);
+            aquaStartIdx = rand.nextInt(0, maxIdx%100+1);
         } else {
             int startIdx = Integer.parseInt(aquiferStartingIdx);
             if (startIdx > maxIdx) {
@@ -281,7 +281,7 @@ public class IslandGen extends IslandSeed {
         initalMaps();
     }
 
-    public Mesh generate(Mesh aMesh,String seedInput, String shape, String elevType, String elevationStartIdx,String maxNumLakes, String lakeStartingIdx, String rivers, String riverStartingIdx, String aquifers, String aquiferStartingIdx, String soilSelect, String biomeSelect){
+    public Mesh generate(Mesh aMesh,String seedInput, String shape, String elevType, String elevationStartIdx,String maxNumLakes, String lakeStartingIdx, String rivers, String riverStartingIdx, String aquifers, String aquiferStartingIdx, String soilSelect, String biomeSelect, String map){
         //Create new island
         Biomes biomeGen = new Biomes();
         //If user input a seed
@@ -367,29 +367,30 @@ public class IslandGen extends IslandSeed {
 
 
 
-//        Testing the island attribute values
-        System.out.println("island shape");
-        System.out.println(islandShape);
-        System.out.println("alt type");
-        System.out.println(altType);
-        System.out.println("alrt start idx");
-        System.out.println(altStartIdx);
-        System.out.println("lake num");
-        System.out.println(lakeNum);
-        System.out.println("lake start idx");
-        System.out.println(lakeStartIdx);
-        System.out.println("river num");
-        System.out.println(riverNum);
-        System.out.println("river start idx");
-        System.out.println(riverStartIdx);
-        System.out.println("aqua num");
-        System.out.println(aquaNum);
-        System.out.println("aqua start idx");
-        System.out.println(aquaStartIdx);
-        System.out.println("soil moisture");
-        System.out.println(soilMoisture);
-        System.out.println("biome");
-        System.out.println(biome);
+
+       // Testing the island attribute values
+//        System.out.println("island shape");
+//        System.out.println(islandShape);
+//        System.out.println("alt type");
+//        System.out.println(altType);
+//        System.out.println("alrt start idx");
+//        System.out.println(altStartIdx);
+//        System.out.println("lake num");
+//        System.out.println(lakeNum);
+//        System.out.println("lake start idx");
+//        System.out.println(lakeStartIdx);
+//        System.out.println("river num");
+//        System.out.println(riverNum);
+//        System.out.println("river start idx");
+//        System.out.println(riverStartIdx);
+//        System.out.println("aqua num");
+//        System.out.println(aquaNum);
+//        System.out.println("aqua start idx");
+//        System.out.println(aquaStartIdx);
+//        System.out.println("soil moisture");
+//        System.out.println(soilMoisture);
+//        System.out.println("biome");
+//        System.out.println(biome);
 
         //Seed generator
         ArrayList<Integer> attributes = new ArrayList<Integer>();
@@ -423,8 +424,10 @@ public class IslandGen extends IslandSeed {
             System.out.println("----------------------------------------------");
         }
 
-        // Assigning Biomes and Types
-
+        // Creating Heatmap
+        Heatmaps heatMap = new Heatmaps();
+        heatMap.selectMap(polygonList,humidity,elevations,islandBlocks,map);
+        polygonList = heatMap.polygonList;
         return Mesh.newBuilder().addAllVertices(vertexList).addAllSegments(segmentList).addAllPolygons(polygonList).build();
     }
 

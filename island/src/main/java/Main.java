@@ -24,6 +24,7 @@ public class Main {
         options.addOption("soil", true, "Soil Profile");
         options.addOption("biomes", true, "Biomes");
         options.addOption("seed", true, "Island Seed");
+        options.addOption("map", true, "Type of Map to Display");
         options.addOption("H", "help", false, "Command information");
         String input = null;
         String output = null;
@@ -42,6 +43,7 @@ public class Main {
         String rivers = "";
         String riverStartIdx = "";
         String soil = "";
+        String map = "";
 
         //Seed will be either inputted or created from the above parameters
         String seed = "";
@@ -75,6 +77,9 @@ public class Main {
                 System.out.println("------------------------------------");
                 System.out.println("Type of Biomes \"-biomes xx\"");
                 System.out.println("Options: Desert\nGrassland\nDeciduous\nTaiga\nTundra\nForest\nTemperateRain\nTropical\nSavana");
+                System.out.println("------------------------------------");
+                System.out.println("Type of Heatmap to display as \"-biomes xx\"");
+                System.out.println("Options: Elevation\nMoisture");
                 System.out.println("------------------------------------");
             }
 
@@ -111,6 +116,10 @@ public class Main {
             if (commandline.hasOption("biomes")){
                 biome = commandline.getOptionValue("biomes");
             }
+            if (commandline.hasOption("map")){
+                map = commandline.getOptionValue("map");
+            }
+
             String errorMessage = "";
             if (!maxNumLakes.equals("")){
                 try{
@@ -190,6 +199,10 @@ public class Main {
                 shape = ""; //random default if input incorrectly
                 errorMessage = errorMessage + "Incorrect Shape Input, ";
             }
+            if (!(map.equals("Moisture")|map.equals("Elevation"))){
+                map = ""; //random default if input incorrectly
+                errorMessage = errorMessage + "Incorrect Map Input, ";
+            }
             if (!seed.equals("")){
                 try{
                     Double val = Double.parseDouble(seed);
@@ -214,7 +227,7 @@ public class Main {
 
         // Island Generation
         IslandGen gen = new IslandGen();
-        Mesh myMesh = gen.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome);
+        Mesh myMesh = gen.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map);
 
         // Outputing to new Mesh object
         MeshFactory factory = new MeshFactory();

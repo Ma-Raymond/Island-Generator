@@ -148,10 +148,10 @@ When you develop features and enrich the product, remember that you have first t
 | F29 | Tundra Biome                                                                                       | Rhea Gokhale & Raymond     | Mar 23 | Mar 24 | Done    |
 | F30 | Forest Biome                                                                                       | Rhea Gokhale & Raymond     | Mar 23 | Mar 24 | Done    |
 | F31 | Field Biome                                                                                        | Rhea Gokhale & Raymond     | Mar 23 | Mar 24 | Done    |
-| F32 | User can enter any combination of integers and it will generate a reproducable seed                | Gayan Athukorala           | Mar 23 |        | Started |
+| F32 | User can enter any combination of integers and it will generate a reproducable seed                | Gayan Athukorala           | Mar 23 | Mar 26 | Done    |
 | F33 | Mangrove Biome                                                                                     | Rhea Gokhale   & Raymond   | Mar 23 | Mar 24 | Done    |
 | F34 | Beach Biome                                                                                        | Rhea Gokhale  & Raymond    | Mar 23 | Mar 24 | Done    |
-| F35 | Resource Production                                                                                | Gayan Athukorala           | Mar 24 |        | Started |
+| F35 | HeatMaps                                                                                           | Gayan Athukorala           | Mar 25 | Mar 25 | Done    |
 
 
 

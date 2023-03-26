@@ -321,7 +321,7 @@ public class IslandGen extends IslandSeed {
         soilProfile();
         //Lakes
         Lake lakes = new Lake();
-        lakes.generateLakes(soilPercent,islandBlocks,isSeed,maxLakes,lakeStartIdx,lakeNum,maxLakes,humidity,heightPoints,polygonList);
+        lakes.generateLakes(soilPercent,islandBlocks,isSeed,maxLakes,lakeStartIdx,lakeNum,humidity,heightPoints,polygonList);
         humidity = lakes.humidity;
         lakeIdxs = lakes.lakeIdxs;
         lakeNum = lakes.lakeNum;

@@ -21,9 +21,9 @@ public class Lake implements IslandColour {
     DecimalFormat precision  = new DecimalFormat("0.00");
     double soil;
 
-    public void generateLakes(double soilPercent, List<Integer> iBlocks,boolean seed, int maximumLakes, int startIndexL, int lN, int mL, List<Double> humid,List<Integer> hPoints, List<Structs.Polygon> pList){
+    public void generateLakes(double soilPercent, List<Integer> iBlocks,boolean seed, int maximumLakes, int startIndexL, int lN, List<Double> humid,List<Integer> hPoints, List<Structs.Polygon> pList){
         lakeNum = lN;
-        maxLakes = mL;
+        maxLakes = maximumLakes;
         humidity = humid;
         heightPoints = hPoints;
         polygonList = pList;

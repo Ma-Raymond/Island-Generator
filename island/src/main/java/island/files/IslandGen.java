@@ -14,6 +14,7 @@ import java.util.List;
 
 
 abstract class IslandSeed{
+    //instantiate abstract class variables
     int islandShape;
     int altType;
     int altStartIdx;
@@ -29,8 +30,6 @@ abstract class IslandSeed{
     int biome;
     double defaultBlockElev;
     double defaultHumidity;
-
-
 }
 
 public class IslandGen extends IslandSeed {
@@ -51,29 +50,26 @@ public class IslandGen extends IslandSeed {
     DecimalFormat precision  = new DecimalFormat("0.00");
 
     double soilPercent;
-    private void soilProfile(){
-        if (soilMoisture == 0)
-            soilPercent = 1.5;
-        else if (soilMoisture == 1)
-            soilPercent = 1.0;
-        else if (soilMoisture == 2)
-            soilPercent = 0.5;
-    }
 
+
+    //If the user inputs a seed then the island attributes are extracted from it
     private void seedDecoder(String seed){
         isSeed = true;
-        //adjust seed if it is not correct
+        //adjust seed length if it is not correct
         if (seed.length() < 18){
+            //if seed is too short then add 0's to the end
             seed += "0".repeat(18-seed.length());
         }
         if (seed.length() > 18) {
+            //if seed is too long, cut it off at 18 digits
             seed = seed.substring(0,18);
         }
+
         //Get island details from seed
         String[] seedDetails = seed.split("");
-        islandShape = (Integer.parseInt(seedDetails[0]))%5;
+        islandShape = (Integer.parseInt(seedDetails[0]))%5; //modulo 5 as there are only 5 island shapes
         System.out.println(islandShape);
-        altType = (Integer.parseInt(seedDetails[1]))%3;
+        altType = (Integer.parseInt(seedDetails[1]))%3;//modulo 3 as there are only elevation types
         altStartIdx = Integer.parseInt(seedDetails[2]+seedDetails[3]);
         maxLakes = Integer.parseInt(seedDetails[4] + seedDetails[5]);
         lakeNum = Integer.parseInt(seedDetails[4] + seedDetails[5]);
@@ -82,15 +78,18 @@ public class IslandGen extends IslandSeed {
         riverStartIdx = Integer.parseInt(seedDetails[10]+seedDetails[11]);
         aquaNum = Integer.parseInt(seedDetails[12]+seedDetails[13]);
         aquaStartIdx = Integer.parseInt(seedDetails[14]+seedDetails[15]);
-        soilMoisture = (Integer.parseInt(seedDetails[16]))%3;
-        biome = (Integer.parseInt(seedDetails[17]))%8;
+        soilMoisture = (Integer.parseInt(seedDetails[16]))%3;//modulo 3 as there are only 3 soil profiles
+        biome = (Integer.parseInt(seedDetails[17]))%8;//modulo 8 as there are only 8 biomes
     }
 
+    //If the user did not input a seed then get a
     private void getIslandShape(String shape){
         Random rand = new Random();
+        //If the user did not input an Island shape in the cmd line then randomize one
         if (shape.equals("")){
             islandShape = (rand.nextInt(0, 5));
         }
+        //if the user did input an island shape, find the corresponding integer
         else{
             HashMap<String, Integer> islandShapes = new HashMap<String, Integer>();
             islandShapes.put("Circle", 0);
@@ -119,12 +118,15 @@ public class IslandGen extends IslandSeed {
         numToElevate.put(2,"Hill");
     }
 
+    //If user did not input a seed, get the elevation type attribute
     private void getElevationType(String elevType){
         Random rand = new Random();
+        //if the user did not input an elevation type in the cmd line randomize one
         if (elevType.equals("")){
             altType = (rand.nextInt(0, 3));
         }
 
+        //if the user did input an elevation type then get the corresponding integer value
         else{
             HashMap<String, Integer> elevationTypes = new HashMap<String, Integer>();
             elevationTypes.put("Mountain", 0);
@@ -135,13 +137,20 @@ public class IslandGen extends IslandSeed {
 
     }
 
+    //get the polygon start index for elevation formations
     private void getElevationStartIdx(String elevationStartIdx){
         Random rand = new Random();
         int maxIdx = heightPoints.size()-1;
+
+        //if the user did not input a seed and the starting index is empty
         if (elevationStartIdx.equals("")){
-            altStartIdx = rand.nextInt(0, maxIdx%100+1);
+            //randomize the starting index, upperbound for the starting index is 100
+            altStartIdx = rand.nextInt(0, maxIdx%100+1);//add one in case maxIdx is 0, preventing any bound errors
         }
+
+        //If the user did input a seed
         else{
+            //Ensuring that the starting index is not greater than the max possible index, if it is then set it to the max index
             int startIdx = Integer.parseInt(elevationStartIdx);
             if (startIdx>maxIdx){
                 altStartIdx = maxIdx;
@@ -152,27 +161,38 @@ public class IslandGen extends IslandSeed {
         }
     }
 
+    //getting the max number of lakes
     private void getLakeNum(String maxNumLakes){
         Random rand = new Random();
         int maxLand = islandBlocks.size();
+        //If user did provide a value for the number of lakes(seed) or max number of lakes (cmd line args)
         if (maxNumLakes.equals("")){
-             maxLakes = rand.nextInt(1, maxLand%20+2);
+            //Randomize the maxLakes value, with an upperbound of 21
+             maxLakes = rand.nextInt(1, maxLand%20+2);//min value of 1 so that there isn't an issue with randomizing the number of lakes, as this will be the upper bounds
         }
+
+        //if the number of lakes (seed) or max number of lakes (cmd line args) was provided then ensure it is not greater than the number of land polygons
         else{
             maxLakes = Integer.parseInt(maxNumLakes);
             if (maxLakes>=maxLand){
                 maxLakes = maxLand;
             }
-
         }
-
     }
+
+    //Get starting index for the lake
     private void getLakeStartIdx(String lakeStartingIdx) {
         Random rand = new Random();
         int maxIdx = islandBlocks.size();
+
+        //if the user did not input a value for the lakes starting index in the polygon list
         if (lakeStartingIdx.equals("")) {
-            lakeStartIdx = rand.nextInt(0, maxIdx%100+1);
-        } else {
+            //randomize the starting index, with an upperbound of 100
+            lakeStartIdx = rand.nextInt(0, maxIdx%100+1);//add one in case maxIdx is 0, preventing any bound errors
+        }
+
+        //if the user did provide a starting index for the lakes ensure that it is not greater than the max index of the list containing all the island polygons
+        else {
             int startIdx = Integer.parseInt(lakeStartingIdx);
             if (startIdx > maxIdx) {
                 lakeStartIdx = maxIdx -1;
@@ -182,12 +202,19 @@ public class IslandGen extends IslandSeed {
         }
     }
 
+
+    //Get the number of rivers
     private void getRiverNum(String numRivers){
         Random rand = new Random();
         int maxRivers = islandVertices.size();
+
+        //if the user did not input a value for the number of rivers
         if (numRivers.equals("")){
-            riverNum = rand.nextInt(0, maxRivers%20+1);
+            //randomize the number of rivers, with an upperbound of 20
+            riverNum = rand.nextInt(0, maxRivers%20+1);//add one in case maxRivers is 0, preventing any bound errors
         }
+
+        //if the user did input a value for the number of rivers then ensure that it is not greater than the number of island vertices
         else{
             int rivers = Integer.parseInt(numRivers);
             if (rivers>maxRivers){
@@ -196,33 +223,45 @@ public class IslandGen extends IslandSeed {
             else{
                 riverNum = rivers;
             }
-
         }
-
     }
 
+    //get the starting index for the rivers
     private void getRiverStartIdx(String riverIdx) {
         Random rand = new Random();
         int maxIdx = islandVertices.size();
+
+        //if the user did not provide a starting index for the rivers
         if (riverIdx.equals("")) {
-            riverStartIdx = rand.nextInt(0, maxIdx%100+1);
-        } else {
+            //randomize the starting index, with an upperbound of 100
+            riverStartIdx = rand.nextInt(0, maxIdx%100+1);//add one in case maxIdx is 0, preventing any bound errors
+        }
+
+        //if the user did provide a starting index for the rivers (through the seed) then ensure that it is not greater than the number of island vertices
+        else {
             int startIdx = Integer.parseInt(riverIdx);
             if (startIdx > maxIdx) {
                 riverStartIdx = maxIdx -1;
-            } else {
+            }
+
+            else {
                 riverStartIdx = startIdx;
             }
         }
     }
 
-
+    //get the number of aquifers
     private void getAquiferNum(String maxNumAquifer){
         Random rand = new Random();
         int maxLand = islandBlocks.size();
+
+        //if the user did not provide a value for the number of aquifers
         if (maxNumAquifer.equals("")){
+            //randomize the number of aquifers, with an upperbound of 20
             aquaNum = rand.nextInt(0, maxLand%20+1);
         }
+
+        //If the user did provide a value, ensure that it is not greater than the total amount of land
         else{
             int maxAqua = Integer.parseInt(maxNumAquifer);
             if (maxAqua>maxLand/20){
@@ -234,12 +273,20 @@ public class IslandGen extends IslandSeed {
 
         }
     }
+
+
+    //get starting index for aquifer locations
     private void getAquiferStartIdx(String aquiferStartingIdx) {
         Random rand = new Random();
         int maxIdx = islandBlocks.size();
+
+        //If the user did not provide a starting index then randomize it
         if (aquiferStartingIdx.equals("")) {
             aquaStartIdx = rand.nextInt(0, maxIdx%100+1);
-        } else {
+        }
+
+        //If the user did provide a starting index then ensure that it is not greater than the number of island polygons
+        else {
             int startIdx = Integer.parseInt(aquiferStartingIdx);
             if (startIdx > maxIdx) {
                 aquaStartIdx = maxIdx;
@@ -249,12 +296,16 @@ public class IslandGen extends IslandSeed {
         }
     }
 
+    //get the soil type
     private void getSoil( String soilType){
         Random rand = new Random();
+
+        //if the user did not provide a soil type then randomize it
         if (soilType.equals("")){
             soilMoisture = (rand.nextInt(0, 3));
         }
 
+        //if the user did provide a soil type then find the corresponding integer value
         else{
             HashMap<String, Integer> soilTypes = new HashMap<String, Integer>();
             soilTypes.put("Dry", 0);
@@ -263,6 +314,19 @@ public class IslandGen extends IslandSeed {
             soilMoisture = soilTypes.get(soilType);
         }
     }
+
+    //Get the soil profile based on the soil type
+    private void soilProfile(){
+        //Soil will absorb different amounts of moisture depending on the soil type
+        //Soil percent is the percent that the moisture will increase by
+        if (soilMoisture == 0)
+            soilPercent = 1.5;
+        else if (soilMoisture == 1)
+            soilPercent = 1.0;
+        else if (soilMoisture == 2)
+            soilPercent = 0.5;
+    }
+
 
 
     public void defaultValues(Mesh aMesh){
@@ -286,6 +350,7 @@ public class IslandGen extends IslandSeed {
         Biomes biomeGen = new Biomes();
         //If user input a seed
         if (!seedInput.equals("")){
+            //Get the island attributes from the seed and then pass them through the methods to ensure that they are all in bounds
             seedDecoder(seedInput);
             String val = biomeGen.numToBiome(biome);
             defaultBlockElev = biomeGen.BiomeElevation(val);
@@ -306,6 +371,11 @@ public class IslandGen extends IslandSeed {
         }
         //If user did not input seed
         else{
+            //Get all the details for the island attributes
+            //If the user has provided some then ensure that they are all in bounds
+            //Island attribute details not provided by the user will be randomized
+
+            //Get the biome to get the default elevation and humidity for the island
             biomeSelect = biomeGen.biomeCheck(biomeSelect);
             defaultBlockElev = biomeGen.BiomeElevation(biomeSelect);
             defaultHumidity = biomeGen.BiomeHumidity(biomeSelect);
@@ -327,6 +397,8 @@ public class IslandGen extends IslandSeed {
             getAquiferStartIdx(aquiferStartingIdx);
             getSoil(soilSelect);
         }
+
+        //Display General Island Info
         System.out.println("-----------------ISLAND INFO------------------");
         System.out.println("Biome: "+biomeGen.numToBiome(biome));
         System.out.println("Elevation: "+ numToElevate.get(altType));
@@ -365,34 +437,9 @@ public class IslandGen extends IslandSeed {
         biomeGen.generate(elevations, islandBlocks, lakeIdxs, humidity, polygonList);
         polygonList = biomeGen.polygonList;
 
-
-
-
-       // Testing the island attribute values
-//        System.out.println("island shape");
-//        System.out.println(islandShape);
-//        System.out.println("alt type");
-//        System.out.println(altType);
-//        System.out.println("alrt start idx");
-//        System.out.println(altStartIdx);
-//        System.out.println("lake num");
-//        System.out.println(lakeNum);
-//        System.out.println("lake start idx");
-//        System.out.println(lakeStartIdx);
-//        System.out.println("river num");
-//        System.out.println(riverNum);
-//        System.out.println("river start idx");
-//        System.out.println(riverStartIdx);
-//        System.out.println("aqua num");
-//        System.out.println(aquaNum);
-//        System.out.println("aqua start idx");
-//        System.out.println(aquaStartIdx);
-//        System.out.println("soil moisture");
-//        System.out.println(soilMoisture);
-//        System.out.println("biome");
-//        System.out.println(biome);
-
         //Seed generator
+
+        //Create Lists for all the attribute values that can be double digits
         ArrayList<Integer> attributes = new ArrayList<Integer>();
         ArrayList<String> attributesStr = new ArrayList<String >();
         attributes.add(altStartIdx);
@@ -402,13 +449,18 @@ public class IslandGen extends IslandSeed {
         attributes.add(riverStartIdx);
         attributes.add(aquaNum);
         attributes.add(aquaStartIdx);
+
+        //if the seed was provided then output the same seed
         if (isSeed){
             System.out.println("-----------------SEED VALUE-------------------");
             System.out.println("SEED: "+seedInput);
             System.out.println("----------------------------------------------");
 
         }
+
+        //if no seed provided
         else{
+            //Go through double digit attribute list and add a leading 0 to all single digit numbers, storing them all in a List as Strings
             for (int i = 0; i < attributes.size(); i++){
                 if (attributes.get(i) < 10){
                     attributesStr.add("0"+(attributes.get(i)));
@@ -418,27 +470,33 @@ public class IslandGen extends IslandSeed {
                 }
             }
 
+            //Creating an 18 digit seed based on the island attributes that can reproduce the exact same island
             String seed = (String.valueOf(islandShape) + String.valueOf(altType) + attributesStr.get(0) + attributesStr.get(1) + attributesStr.get(2) + attributesStr.get(3)+ attributesStr.get(4) + attributesStr.get(5) + attributesStr.get(6) + String.valueOf(soilMoisture) + String.valueOf(biome));
+
+            //Output the Seed
             System.out.println("-----------------SEED VALUE-------------------");
             System.out.println("SEED: "+seed);
             System.out.println("----------------------------------------------");
         }
 
-        // Creating Heatmap
+        // Creating Heatmap if the User wants the map to be displayed as one
         Heatmaps heatMap = new Heatmaps();
         heatMap.selectMap(polygonList,humidity,elevations,islandBlocks,map);
         polygonList = heatMap.polygonList;
         return Mesh.newBuilder().addAllVertices(vertexList).addAllSegments(segmentList).addAllPolygons(polygonList).build();
     }
 
+    //Gets all the polygons that make up the island
     private void getIslandBlocks(){
         for (int i = 0; i < polygonList.size();i++){
             Polygon poly = polygonList.get(i);
+            //If the polygon is coloured as land
             if (extractColorString(poly.getPropertiesList()).equals(islandColor)){
                 islandBlocks.add(i);
-                elevations.set(i,defaultBlockElev);
+                elevations.set(i,defaultBlockElev);//give that polygon an elevation based on biome
             }
         }
+
         Collections.shuffle(islandBlocks,new Random(2));
         generateInnerIsland();
     }

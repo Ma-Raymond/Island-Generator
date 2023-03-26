@@ -405,6 +405,10 @@ public class IslandGen extends IslandSeed {
         }
 
         // Assigning Biomes and Types
+
+        System.out.println(humidity);
+        System.out.println(elevations);
+
         return Mesh.newBuilder().addAllVertices(vertexList).addAllSegments(segmentList).addAllPolygons(polygonList).build();
     }
 
@@ -468,12 +472,6 @@ public class IslandGen extends IslandSeed {
     }
 
 
-    private void colorPolygon(int red, int green, int blue, int alpha, int index){
-        Polygon poly = polygonList.get(index);
-        Structs.Property color = Structs.Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue+ "," + alpha).build();
-        Polygon colored = Polygon.newBuilder(poly).addProperties(color).build();
-        polygonList.set(index, colored);
-    }
     private void assignType(Polygon poly, String type){
         Structs.Property typeProperty = Structs.Property.newBuilder().setKey("Type").setValue(type).build();
         Polygon typed = Polygon.newBuilder(poly).addProperties(typeProperty).build();

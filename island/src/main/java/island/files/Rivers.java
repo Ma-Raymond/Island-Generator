@@ -104,10 +104,12 @@ public class Rivers {
 
     private void riverFlow(){
         Random rand = new Random();
+        int minimumLengthRiver = 2;
         for (int i = 0; i < riverNum; i++){
             boolean notEnd = true;
             int randIslandVert = (riverStartIdx + i) % islandVertices.size();
             int id = islandVertices.get(randIslandVert);
+            int lengthOfRiver = 0;
             while (notEnd) {
                 List<Integer> vertNeighbours = VTVRelations.get(id);
                 Integer nextSeg = null;
@@ -121,10 +123,22 @@ public class Rivers {
                         nextVert = vertNeighbours.get(j);
                     }
                 }
-                if (nextSeg == null) {
+                if (nextSeg == null && lengthOfRiver > minimumLengthRiver) {
                     notEnd = false;
                     colorVertex(vertexList.get(id),0,0,255,255);
                     break;
+                }
+                if (lengthOfRiver <= minimumLengthRiver){
+                    int valueToChange = 0;
+                    List<Integer> polygonsAtVertex = VTPRelations.get(id);
+                    for (int k = 0; k < polygonsAtVertex.size();k++){
+                        if (islandBlocks.contains(polygonsAtVertex.get(k))){
+                            valueToChange = VTSRelations.get(id).get(k);
+                            nextVert = VTVRelations.get(id).get(k);
+                            break;
+                        }
+                    }
+                    nextSeg = valueToChange;
                 }
                 Structs.Segment seg = segmentList.get(nextSeg);
                 if (extractColorString(seg.getPropertiesList()).equals("0,0,255,255")){
@@ -140,6 +154,7 @@ public class Rivers {
                     humidity.set(polyIdx,humidity.get(polyIdx)+100*soil);
                 }
                 id = nextVert;
+                lengthOfRiver += 1;
             }
         }
     }

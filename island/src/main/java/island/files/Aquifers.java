@@ -47,11 +47,4 @@ public class Aquifers{
             humidity.set(n,humidityValNeigbours);
         }
     }
-
-    private void colorPolygon(int red, int green, int blue, int alpha, int index){
-        Structs.Polygon poly = polygonList.get(index);
-        Structs.Property color = Structs.Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue+ "," + alpha).build();
-        Structs.Polygon colored = Structs.Polygon.newBuilder(poly).addProperties(color).build();
-        polygonList.set(index, colored);
-    }
 }

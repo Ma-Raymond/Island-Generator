@@ -129,6 +129,9 @@ public class IslandShapes implements IslandColour{
         }
     }
 
+    private void HeartIsland(){
+
+    }
 
     @Override
     public void colorPolygon(int red, int green, int blue, int alpha, int index) {
@@ -136,11 +139,6 @@ public class IslandShapes implements IslandColour{
         Structs.Property color = Structs.Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue+ "," + alpha).build();
         Structs.Polygon colored = Structs.Polygon.newBuilder(poly).addProperties(color).build();
         polygonList.set(index, colored);
-    }
-
-    private void HeartIsland(){
-
-
     }
 
 

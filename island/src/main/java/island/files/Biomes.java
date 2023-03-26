@@ -46,6 +46,12 @@ public class Biomes implements IslandColour{
 
         return biomeMap.get(num);
     }
+    public String biomeCheck(String Biome){
+        if (Biome.equals("")){
+            return numToBiome(new Random().nextInt(0,8));
+        }
+        return Biome;
+    }
 
     //OFFSETS INITIAL ELEVATION OF THE ISLAND DEPENDANT ON BIOME AS COLOUR DEPENDS ON THIS
     public double BiomeElevation(String Biome){
@@ -82,7 +88,6 @@ public class Biomes implements IslandColour{
     //OFFSETS HUMIDITY BASED ON CHOSEN BIOME
     public double BiomeHumidity(String Biome){
         double humidity = 0;
-
         if (Biome.equals("Desert")){
             humidity = 20;
             biome = 0;
@@ -94,27 +99,22 @@ public class Biomes implements IslandColour{
         else if (Biome.equals("Tropical")){
             humidity = 330;
             biome = 2;
-
         }
         else if (Biome.equals("Grassland")){
             humidity = 70;
             biome = 3;
-
         }
         else if (Biome.equals("Deciduous")){
             humidity = 140;
             biome = 4;
-
         }
         else if (Biome.equals("TemperateRain")){
             humidity = 240;
             biome = 5;
-
         }
         else if (Biome.equals("Taiga")){
             humidity = 100;
             biome = 6;
-
         }
         else if (Biome.equals("Tundra")){
             humidity = 10;
@@ -147,8 +147,8 @@ public class Biomes implements IslandColour{
                 }
                 //TROPICAL RAIN FOREST
                 else if (275 <= humid && 0 <= height && height < 50) {
-                    colorPolygon(75,255,132,255, i);
-                    new Color(75, 255, 132,255);
+                    colorPolygon(160,255,30,255, i);
+                    new Color(160, 255, 30,255);
                 }
                 //GRASSLAND
                 else if (50 < humid && humid < 100 && 50 <= height && height < 175) {
@@ -174,24 +174,25 @@ public class Biomes implements IslandColour{
                 else if (0 <= humid && 150 > humid && 175 <= height) {
                     colorPolygon(238,254,255,255, i);
                     new Color(238, 254, 255,255);
-
                 }
                 //TUNDRA ICE
                 else if (150 <= humid && 175 <= height) {
                     colorPolygon(184,217,255,255, i);
                     new Color(184, 217, 255,255);
-
                 }
-
                 else{
                     System.out.println("Humidity:"+humid+" Height:"+height);
                     colorPolygon(255,255,255,255,i);
                 }
 
+
                 }
 
+
+            }
+
         }
-    }
+
 
 
     //COLOUR THE POLYGON

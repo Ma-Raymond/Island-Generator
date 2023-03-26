@@ -32,6 +32,57 @@ mosser@azrael generator % ls -lh sample.mesh
 mosser@azrael generator % 
 ```
 
+### Island
+To run the island, go to the `island` directory, and use `java -jar` to run the product. This product takes Mesh as an Input and Outputs a mesh to visualize. 
+```
+java -jar island.jar -I ../generator/sample.mesh -O island.mesh
+```
+```
+Options:
+------------------------------------
+--help
+For the Help Menu
+------------------------------------
+Shape "-shape xx"
+- Options Here: 
+Moon
+Cross
+Circle
+Oval
+Heart
+------------------------------------
+Altitude "-altitude xx"
+- Options Here: 
+Mountain
+Hill
+Flat
+------------------------------------
+Maximum # Lakes "-lakes xx"
+Options: Integer Value
+------------------------------------
+# of Aquifers "-aquifers xx"
+Options: Integer Value
+------------------------------------
+Type of Island Soil "-soil xx"
+- Options Here: 
+Wet
+Dry
+Normal
+------------------------------------
+Type of Biomes "-biomes xx"
+- Options Here: 
+Desert
+Grassland
+Deciduous
+Taiga
+Tundra
+Forest
+TemperateRain
+Tropical
+Savana
+------------------------------------
+```
+
 ### Visualizer
 
 To visualize an existing mesh, go the the `visualizer` directory, and use `java -jar` to run the product. The product take two arguments (so far): the file containing the mesh, and the name of the file to store the visualization (as an SVG image).
@@ -97,10 +148,10 @@ When you develop features and enrich the product, remember that you have first t
 | F29 | Tundra Biome                                                                                       | Rhea Gokhale & Raymond     | Mar 23 | Mar 24 | Done    |
 | F30 | Forest Biome                                                                                       | Rhea Gokhale & Raymond     | Mar 23 | Mar 24 | Done    |
 | F31 | Field Biome                                                                                        | Rhea Gokhale & Raymond     | Mar 23 | Mar 24 | Done    |
-| F32 | User can enter any combination of integers and it will generate a reproducable seed                | Gayan Athukorala           | Mar 23 |        | Started |
+| F32 | User can enter any combination of integers and it will generate a reproducable seed                | Gayan Athukorala           | Mar 23 | Mar 26 | Done    |
 | F33 | Mangrove Biome                                                                                     | Rhea Gokhale   & Raymond   | Mar 23 | Mar 24 | Done    |
 | F34 | Beach Biome                                                                                        | Rhea Gokhale  & Raymond    | Mar 23 | Mar 24 | Done    |
-| F35 | Resource Production                                                                                | Gayan Athukorala           | Mar 24 |        | Started |
+| F35 | HeatMaps                                                                                           | Gayan Athukorala           | Mar 25 | Mar 25 | Done    |
 
 
 

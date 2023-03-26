@@ -25,7 +25,7 @@ public class Elevation {
     }
     private void selectElevation(int elevationNum){
         if (elevationNum == 0){
-            volcano(altStartIdx);
+            mountain(altStartIdx);
         }
         else if (elevationNum == 2){
             generateHilly(altStartIdx);
@@ -76,7 +76,7 @@ public class Elevation {
             }
         }
     }
-    private void volcano(int startIdx){
+    private void mountain(int startIdx){
         Deque<Integer> deque = new ArrayDeque<>();
         Set<Integer> visited = new HashSet<>();
         int polyIdx = heightPoints.get(startIdx);

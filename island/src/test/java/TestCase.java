@@ -27,6 +27,7 @@ public class TestCase {
         String aquifers = "";
         String soil = "";
         String biome = "";
+        String map = "";
 
 
         // These are Strings the user is not able to Manipulate
@@ -35,7 +36,7 @@ public class TestCase {
         String riverStartIdx = "";
         String aquiferStartIdx = "";
 
-        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome);
+        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map);
         assertNotNull(myMesh);
     }
 
@@ -52,6 +53,7 @@ public class TestCase {
         String aquifers = "";
         String soil = "";
         String biome = "";
+        String map = "";
 
 
         // These are Strings the user is not able to Manipulate
@@ -60,7 +62,7 @@ public class TestCase {
         String riverStartIdx = "";
         String aquiferStartIdx = "";
 
-        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome);
+        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map);
         assertNotNull(myMesh);
     }
 
@@ -77,6 +79,7 @@ public class TestCase {
         String aquifers = "";
         String soil = "";
         String biome = "";
+        String map = "";
 
 
         // These are Strings the user is not able to Manipulate
@@ -85,7 +88,7 @@ public class TestCase {
         String riverStartIdx = "";
         String aquiferStartIdx = "";
 
-        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome);
+        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map);
         assertNotNull(myMesh);
     }
     public void incorrectAltitudeInput() throws IOException {
@@ -101,6 +104,7 @@ public class TestCase {
         String aquifers = "";
         String soil = "";
         String biome = "";
+        String map = "";
 
 
         // These are Strings the user is not able to Manipulate
@@ -109,7 +113,7 @@ public class TestCase {
         String riverStartIdx = "";
         String aquiferStartIdx = "";
 
-        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome);
+        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map);
         assertNotNull(myMesh);
     }
     public void negativeAquifers() throws IOException {
@@ -125,6 +129,7 @@ public class TestCase {
         String aquifers = "-34";
         String soil = "";
         String biome = "";
+        String map = "";
 
 
         // These are Strings the user is not able to Manipulate
@@ -133,7 +138,7 @@ public class TestCase {
         String riverStartIdx = "";
         String aquiferStartIdx = "";
 
-        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome);
+        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map);
         assertNotNull(myMesh);
     }
     public void negativeLakes() throws IOException {
@@ -149,6 +154,7 @@ public class TestCase {
         String aquifers = "";
         String soil = "";
         String biome = "";
+        String map = "";
 
 
         // These are Strings the user is not able to Manipulate
@@ -157,7 +163,7 @@ public class TestCase {
         String riverStartIdx = "";
         String aquiferStartIdx = "";
 
-        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome);
+        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map);
         assertNotNull(myMesh);
     }
     public void negativeRivers() throws IOException {
@@ -173,6 +179,7 @@ public class TestCase {
         String aquifers = "";
         String soil = "";
         String biome = "";
+        String map = "";
 
 
         // These are Strings the user is not able to Manipulate
@@ -181,7 +188,7 @@ public class TestCase {
         String riverStartIdx = "";
         String aquiferStartIdx = "";
 
-        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome);
+        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map);
         assertNotNull(myMesh);
     }
 
@@ -198,6 +205,7 @@ public class TestCase {
         String aquifers = "1000";
         String soil = "";
         String biome = "";
+        String map = "";
 
 
         // These are Strings the user is not able to Manipulate
@@ -206,7 +214,7 @@ public class TestCase {
         String riverStartIdx = "";
         String aquiferStartIdx = "";
 
-        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome);
+        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map);
         assertNotNull(myMesh);
     }
     public void tooManyLakes() throws IOException {
@@ -222,6 +230,7 @@ public class TestCase {
         String aquifers = "";
         String soil = "";
         String biome = "";
+        String map = "";
 
 
         // These are Strings the user is not able to Manipulate
@@ -230,7 +239,7 @@ public class TestCase {
         String riverStartIdx = "";
         String aquiferStartIdx = "";
 
-        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome);
+        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map);
         assertNotNull(myMesh);
     }
     public void tooManyRivers() throws IOException {
@@ -246,6 +255,7 @@ public class TestCase {
         String aquifers = "";
         String soil = "";
         String biome = "";
+        String map = "";
 
 
         // These are Strings the user is not able to Manipulate
@@ -254,7 +264,7 @@ public class TestCase {
         String riverStartIdx = "";
         String aquiferStartIdx = "";
 
-        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome);
+        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map);
         assertNotNull(myMesh);
     }
     public void incorrectSoilInput() throws IOException {
@@ -270,6 +280,7 @@ public class TestCase {
         String aquifers = "";
         String soil = "50";
         String biome = "";
+        String map = "";
 
 
         // These are Strings the user is not able to Manipulate
@@ -278,7 +289,7 @@ public class TestCase {
         String riverStartIdx = "";
         String aquiferStartIdx = "";
 
-        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome);
+        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map);
         assertNotNull(myMesh);
     }
     public void incorrectBiomeInput() throws IOException {
@@ -294,6 +305,7 @@ public class TestCase {
         String aquifers = "";
         String soil = "";
         String biome = "50";
+        String map = "";
 
 
         // These are Strings the user is not able to Manipulate
@@ -302,7 +314,7 @@ public class TestCase {
         String riverStartIdx = "";
         String aquiferStartIdx = "";
 
-        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome);
+        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map);
         assertNotNull(myMesh);
     }
 

@@ -71,6 +71,7 @@ public class IslandShapes implements IslandColour{
             for (int j = 100; j<= 400; j+=150) {
                 if (inOval(50, 100, j, 50, x, y) < 0) {
                     colorPolygon( 35, 85, 138, 255, i);
+
                 }
                 if (inOval(50, 100, j, 450, x, y) < 0) {
                     colorPolygon(35, 85, 138, 255, i);

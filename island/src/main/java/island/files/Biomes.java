@@ -135,8 +135,8 @@ public class Biomes implements IslandColour{
                 }
                 else if (275 <= humid && 0 <= height && height < 50) {
                     //BiomeTypes.add("Tropic Rain Forest");
-                    colorPolygon(75,255,132,255, i);
-                    new Color(75, 255, 132,255);
+                    colorPolygon(160,255,30,255, i);
+                    new Color(160, 255, 30,255);
                 }
                 else if (50 < humid && humid < 100 && 50 <= height && height < 175) {
                     //BiomeTypes.add("Grassland");

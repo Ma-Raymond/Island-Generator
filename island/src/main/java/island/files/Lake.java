@@ -7,6 +7,9 @@ import java.text.DecimalFormat;
 import java.util.*;
 import java.util.List;
 
+/**
+ * This Class Lake is to create Lakes for the Mesh, while contributing moisture to nearby soil.
+ */
 public class Lake implements IslandColour {
 
     int lakeNum;
@@ -21,6 +24,10 @@ public class Lake implements IslandColour {
     DecimalFormat precision  = new DecimalFormat("0.00");
     double soil;
 
+    /**
+     *
+     * This method is the parent where it initiates values and calls methods
+     */
     public void generateLakes(double soilPercent, List<Integer> iBlocks,boolean seed, int maximumLakes, int startIndexL, int lN, List<Double> humid,List<Integer> hPoints, List<Structs.Polygon> pList){
         lakeNum = lN;
         maxLakes = maximumLakes;
@@ -33,29 +40,39 @@ public class Lake implements IslandColour {
 
         createLakes(maximumLakes,startIndexL);
     }
-    public void createLakes(int maximumLakes, int startIndexL){
 
+    /**
+     * CreateLakes will create lakes with varying sizes!
+     * This method will also determine what number to use whether there is a seed or not.
+     * @param maximumLakes
+     * @param startIndexL
+     */
+    public void createLakes(int maximumLakes, int startIndexL){
         Random randNum = new Random();
         if(maximumLakes> 0){
             //int startIndexL = randNum.nextInt(heightPoints.size()); //put this in the generator in an if statement
-            if (isSeed){
+            if (isSeed){    // IF THERE IS A SEED, USE THE NUMBER MATCHING TO THE SEED.
                 lakeNum = maxLakes;
             }else {
-                lakeNum = randNum.nextInt(maxLakes);
+                lakeNum = randNum.nextInt(maxLakes); // SINCE THIS A USER GIVEN "MAX" Number of Lakes, we can randomize how many based on their input, but save that random num.
             }
             for (int i = 0; i < lakeNum; i ++){
-                int polyIndex = (startIndexL + i) % heightPoints.size();
+                int polyIndex = (startIndexL + i) % heightPoints.size();    // INDEX CHECKING
                 int validPolyId  = heightPoints.get(polyIndex);
-                lakeSizes(validPolyId);
+                lakeSizes(validPolyId);                                     // THIS WILL CREATE UNIQUE SIZES
             }
         }
     }
 
+    /**
+     * This method creates unique sizes of lake shapes by taking in a polygon identifier
+     * @param polyIdx
+     */
     private void lakeSizes(int polyIdx){
         lakeIdxs.add(polyIdx);
         Structs.Polygon poly = polygonList.get(polyIdx);
         colorPolygon(79, 156,255,255, polyIdx);
-        new Color(79, 156, 255);
+        new Color(79, 156, 255);       
         addLakeHumidity(polyIdx);
         List<Integer> neighbours;
         Deque<Integer> stack = new ArrayDeque<>();

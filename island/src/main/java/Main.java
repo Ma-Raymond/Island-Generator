@@ -4,6 +4,7 @@ import island.files.IslandGen;
 import org.apache.commons.cli.*;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Random;
 
 public class Main {
@@ -110,7 +111,7 @@ public class Main {
             if (commandline.hasOption("biomes")){
                 biome = commandline.getOptionValue("biomes");
             }
-
+            String errorMessage = "";
             if (!maxNumLakes.equals("")){
                 try{
                     numLakes = Integer.parseInt(maxNumLakes);
@@ -123,7 +124,7 @@ public class Main {
                     }
                 }catch(Exception e){
                     maxNumLakes = "";
-                    throw new ParseException("The lake input you've provided is not an integer or negative, try again!");
+                    errorMessage = errorMessage + "The lake input you've provided is not an integer or negative, try again!, ";
                 }
             }
             if (!aquifers.equals("")){
@@ -138,7 +139,7 @@ public class Main {
                     }
                 }catch(Exception e){
                     aquifers = "";
-                    throw new ParseException("The Aquifer input you've provided is not an integer or negative, try again!");
+                    errorMessage = errorMessage + "The Aquifer input you've provided is not an integer or negative, try again!, ";
                 }
             }
 
@@ -154,7 +155,7 @@ public class Main {
                     }
                 }catch(Exception e){
                     rivers = "";
-                    throw new ParseException("The river input you've provided is not an integer or negative, try again!");
+                    errorMessage = errorMessage + "The river input you've provided is not an integer or negative, try again!, ";
                 }
             }
 
@@ -165,7 +166,7 @@ public class Main {
                 }
             }catch(Exception e) {
                 System.out.println("------------------------------------");
-                System.out.println("Incorrect Biome Inputted!! Here are your Options: \n" +
+                System.out.println("Incorrect Biome Inputted!! Here are your Options: , " +
                         "Tundra \n" +
                         "Taiga \n" +
                         "TemperateRain \n" +
@@ -174,28 +175,33 @@ public class Main {
                         "Tropical \n" +
                         "Savana \n" +
                         "Desert");
+                errorMessage = errorMessage + "Incorrect Biome Inputted, ";
                 System.out.println("------------------------------------");
             }
             if (!(soil.equals("Wet")|soil.equals("Normal")|soil.equals("Dry")|soil.equals(""))){
                 soil = ""; //random default if input incorrectly
-                throw new ParseException("Incorrect Soil Input");
+                errorMessage = errorMessage + "Incorrect Soil Input, ";
             }
             if (!(elevType.equals("Mountain")|elevType.equals("Hill")|elevType.equals("Flat")|elevType.equals(""))){
                 elevType = ""; //random default if input incorrectly
-                throw new ParseException("Incorrect Elevation Input");
+                errorMessage = errorMessage + "Incorrect Elevation Input, ";
             }
             if (!(shape.equals("Circle")|shape.equals("Oval")|shape.equals("Moon")|shape.equals("Cross")|shape.equals("Heart")|shape.equals(""))){
                 shape = ""; //random default if input incorrectly
-                throw new ParseException("Incorrect Shape Input");
+                errorMessage = errorMessage + "Incorrect Shape Input, ";
             }
             if (!seed.equals("")){
                 try{
-                    Long val = Long.parseLong(seed);
+                    Double val = Double.parseDouble(seed);
                 }catch (Exception e){
                     seed = "";
-                    throw new ParseException("Only Integer Inputs Allowed for Seeds");
+                    errorMessage = errorMessage + "Only Integer Inputs Allowed for Seeds, ";
                 }
             }
+            if (!errorMessage.equals("")){
+                throw new ParseException(errorMessage);
+            }
+
         }
         catch (ParseException e) {
             System.out.println("----------------------------------------------ERROR MESSAGE----------------------------------------------");

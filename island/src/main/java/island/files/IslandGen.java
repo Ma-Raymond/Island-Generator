@@ -357,39 +357,40 @@ public class IslandGen extends IslandSeed {
         humidity = river.humidity;
 
 
-        //Biomes
-        biomeGen.generate(elevations, islandBlocks, lakeIdxs, humidity, polygonList);
-        polygonList = biomeGen.polygonList;
-
-
         //Aquifers
         Aquifers aquifer = new Aquifers();
         aquifer.generate(heightPoints, aquaStartIdx, polygonList, humidity, soilPercent, aquaNum);
         humidity = aquifer.humidity;
 
-        //Testing the island attribute values
-//        System.out.println("island shape");
-//        System.out.println(islandShape);
-//        System.out.println("alt type");
-//        System.out.println(altType);
-//        System.out.println("alrt start idx");
-//        System.out.println(altStartIdx);
-//        System.out.println("lake num");
-//        System.out.println(lakeNum);
-//        System.out.println("lake start idx");
-//        System.out.println(lakeStartIdx);
-//        System.out.println("river num");
-//        System.out.println(riverNum);
-//        System.out.println("river start idx");
-//        System.out.println(riverStartIdx);
-//        System.out.println("aqua num");
-//        System.out.println(aquaNum);
-//        System.out.println("aqua start idx");
-//        System.out.println(aquaStartIdx);
-//        System.out.println("soil moisture");
-//        System.out.println(soilMoisture);
-//        System.out.println("biome");
-//        System.out.println(biome);
+        //Biomes
+        biomeGen.generate(elevations, islandBlocks, lakeIdxs, humidity, polygonList);
+        polygonList = biomeGen.polygonList;
+
+
+
+//        Testing the island attribute values
+        System.out.println("island shape");
+        System.out.println(islandShape);
+        System.out.println("alt type");
+        System.out.println(altType);
+        System.out.println("alrt start idx");
+        System.out.println(altStartIdx);
+        System.out.println("lake num");
+        System.out.println(lakeNum);
+        System.out.println("lake start idx");
+        System.out.println(lakeStartIdx);
+        System.out.println("river num");
+        System.out.println(riverNum);
+        System.out.println("river start idx");
+        System.out.println(riverStartIdx);
+        System.out.println("aqua num");
+        System.out.println(aquaNum);
+        System.out.println("aqua start idx");
+        System.out.println(aquaStartIdx);
+        System.out.println("soil moisture");
+        System.out.println(soilMoisture);
+        System.out.println("biome");
+        System.out.println(biome);
 
         //Seed generator
         ArrayList<Integer> attributes = new ArrayList<Integer>();

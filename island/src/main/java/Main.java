@@ -30,7 +30,7 @@ public class Main {
         //Seed Parameters
         String shape = "";
         String elevType = "";
-        String biome = String.valueOf(rand.nextInt(0, 7));
+        String biome = "";
 
         //These can all be randomized after island generation
         String elevationStartIdx = "";
@@ -61,7 +61,7 @@ public class Main {
                 System.out.println("Options: Moon\nCross\nCircle\nOval\nHeart");
                 System.out.println("------------------------------------");
                 System.out.println("Altitude \"-altitude xx\"");
-                System.out.println("Options: Volcano\nHill\nFlat");
+                System.out.println("Options: Mountain\nHill\nFlat");
                 System.out.println("------------------------------------");
                 System.out.println("Maximum # Lakes \"-lakes xx\"");
                 System.out.println("Options: Integer Value");
@@ -116,13 +116,14 @@ public class Main {
                     numLakes = Integer.parseInt(maxNumLakes);
                     if (numLakes < 0){
                         maxNumLakes = "";
+                        throw new ParseException("Sorry, no negative lakes. try again!");
                     }
                     if (numLakes > 400){
                         maxNumLakes = "200";
                     }
                 }catch(Exception e){
                     maxNumLakes = "";
-                    throw new ParseException("The input you've provided is not an integer, try again!");
+                    throw new ParseException("The lake input you've provided is not an integer or negative, try again!");
                 }
             }
             if (!aquifers.equals("")){
@@ -130,13 +131,14 @@ public class Main {
                     numAquifers = Integer.parseInt(aquifers);
                     if (numAquifers < 0){
                         aquifers = "";
+                        throw new ParseException("Sorry, no negative aquifers. try again!");
                     }
                     if (numAquifers > 400){
                         aquifers = "200";
                     }
                 }catch(Exception e){
                     aquifers = "";
-                    throw new ParseException("The input you've provided is not an integer, try again!");
+                    throw new ParseException("The Aquifer input you've provided is not an integer or negative, try again!");
                 }
             }
 
@@ -145,18 +147,19 @@ public class Main {
                     numRivers = Integer.parseInt(rivers);
                     if (numRivers < 0){
                         rivers = "";
+                        throw new ParseException("Sorry, no negative rivers. try again!");
                     }
                     if (numRivers > 400){
                         rivers = "200";
                     }
                 }catch(Exception e){
                     rivers = "";
-                    throw new ParseException("The input you've provided is not an integer, try again!");
+                    throw new ParseException("The river input you've provided is not an integer or negative, try again!");
                 }
             }
 
             try{
-                if (!(biome.equals("Desert")||biome.equals("Savana")||biome.equals("Tropical")||biome.equals("Grassland")||biome.equals("Deciduous")||biome.equals("TemperateRain")||biome.equals("Taiga")||biome.equals("Tundra")||biome.equals(""))){
+                if (!(biome.equals("Desert")|biome.equals("Savana")|biome.equals("Tropical")|biome.equals("Grassland")|biome.equals("Deciduous")|biome.equals("TemperateRain")|biome.equals("Taiga")|biome.equals("Tundra")|biome.equals(""))){
                     biome = "Deciduous"; //random default if input incorrectly
                     throw new ParseException("Incorrect Biome Input");
                 }
@@ -173,15 +176,15 @@ public class Main {
                         "Desert");
                 System.out.println("------------------------------------");
             }
-            if (!(soil.equals("Wet")||soil.equals("Normal")||soil.equals("Dry")||soil.equals(""))){
+            if (!(soil.equals("Wet")|soil.equals("Normal")|soil.equals("Dry")|soil.equals(""))){
                 soil = ""; //random default if input incorrectly
                 throw new ParseException("Incorrect Soil Input");
             }
-            if (!(elevType.equals("Volcano")||elevType.equals("Hill")||elevType.equals("Flat")||elevType.equals(""))){
+            if (!(elevType.equals("Mountain")|elevType.equals("Hill")|elevType.equals("Flat")|elevType.equals(""))){
                 elevType = ""; //random default if input incorrectly
                 throw new ParseException("Incorrect Elevation Input");
             }
-            if (!(shape.equals("Circle")||shape.equals("Oval")||shape.equals("Moon")||shape.equals("Cross")||shape.equals("Heart")||shape.equals(""))){
+            if (!(shape.equals("Circle")|shape.equals("Oval")|shape.equals("Moon")|shape.equals("Cross")|shape.equals("Heart")|shape.equals(""))){
                 shape = ""; //random default if input incorrectly
                 throw new ParseException("Incorrect Shape Input");
             }
@@ -189,13 +192,14 @@ public class Main {
                 try{
                     Long val = Long.parseLong(seed);
                 }catch (Exception e){
+                    seed = "";
                     throw new ParseException("Only Integer Inputs Allowed for Seeds");
                 }
             }
         }
         catch (ParseException e) {
-            System.out.println("----------------------------------------------ERROR MESSAGE----------------------------------------------\n");
-            System.out.println("Please Re-Enter. An ERROR occured with your user input \""+e.getMessage()+"\". Use --help/-h");
+            System.out.println("----------------------------------------------ERROR MESSAGE----------------------------------------------");
+            System.out.println("Please Re-Enter. An ERROR occured with your user input \""+e.getMessage()+"\". Use --help/-H");
             System.out.println("----------------------------------------------ERROR MESSAGE----------------------------------------------\n");
         }
 

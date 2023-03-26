@@ -128,18 +128,24 @@ public class Rivers {
                     colorVertex(vertexList.get(id),0,0,255,255);
                     break;
                 }
+                boolean oceanEdge = false;
+                List<Integer> polygonsAtVertex = VTPRelations.get(id);
                 if (lengthOfRiver <= minimumLengthRiver){
                     int valueToChange = 0;
-                    List<Integer> polygonsAtVertex = VTPRelations.get(id);
                     for (int k = 0; k < polygonsAtVertex.size();k++){
-                        if (islandBlocks.contains(polygonsAtVertex.get(k))){
+                        if (islandVertices.contains(id)){
                             valueToChange = VTSRelations.get(id).get(k);
                             nextVert = VTVRelations.get(id).get(k);
+                        }
+                        else{
+                            oceanEdge = true;
                             break;
                         }
                     }
                     nextSeg = valueToChange;
                 }
+                if (oceanEdge)
+                    break;
                 Structs.Segment seg = segmentList.get(nextSeg);
                 if (extractColorString(seg.getPropertiesList()).equals("0,0,255,255")){
                     increaseThickness(seg);

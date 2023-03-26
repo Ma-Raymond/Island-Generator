@@ -99,9 +99,25 @@ public class IslandGen extends IslandSeed {
             islandShapes.put("Moon", 2);
             islandShapes.put("Cross", 3);
             islandShapes.put("Heart", 4);
+
             islandShape = islandShapes.get(shape);
         }
 
+    }
+
+    HashMap<Integer, String> numToShapes = new HashMap<Integer, String>();
+    HashMap<Integer, String> numToElevate = new HashMap<Integer, String>();
+
+    public void initalMaps(){
+        numToShapes.put(0,"Circle");
+        numToShapes.put(1,"Oval");
+        numToShapes.put(2,"Moon");
+        numToShapes.put(3,"Cross");
+        numToShapes.put(4,"Heart");
+
+        numToElevate.put(0,"Mountain");
+        numToElevate.put(1,"Flat");
+        numToElevate.put(2,"Hill");
     }
 
     private void getElevationType(String elevType){
@@ -112,7 +128,7 @@ public class IslandGen extends IslandSeed {
 
         else{
             HashMap<String, Integer> elevationTypes = new HashMap<String, Integer>();
-            elevationTypes.put("Volcano", 0);
+            elevationTypes.put("Mountain", 0);
             elevationTypes.put("Flat", 1);
             elevationTypes.put("Hill", 2);
             altType = elevationTypes.get(elevType);
@@ -141,7 +157,7 @@ public class IslandGen extends IslandSeed {
         Random rand = new Random();
         int maxLand = islandBlocks.size();
         if (maxNumLakes.equals("")){
-             maxLakes = rand.nextInt(0, maxLand/20);
+             maxLakes = rand.nextInt(0, maxLand%20);
         }
         else{
             maxLakes = Integer.parseInt(maxNumLakes);
@@ -171,7 +187,7 @@ public class IslandGen extends IslandSeed {
         Random rand = new Random();
         int maxRivers = islandVertices.size();
         if (numRivers.equals("")){
-            riverNum = rand.nextInt(0, maxRivers%100);
+            riverNum = rand.nextInt(0, maxRivers%20);
         }
         else{
             int rivers = Integer.parseInt(numRivers);
@@ -206,7 +222,7 @@ public class IslandGen extends IslandSeed {
         Random rand = new Random();
         int maxLand = islandBlocks.size();
         if (maxNumAquifer.equals("")){
-            aquaNum = rand.nextInt(0, maxLand%100);
+            aquaNum = rand.nextInt(0, maxLand%20);
         }
         else{
             int maxAqua = Integer.parseInt(maxNumAquifer);
@@ -263,6 +279,7 @@ public class IslandGen extends IslandSeed {
         elevations = new ArrayList<Double>(Collections.nCopies(nPolygons, 0.0));
         humidity = new ArrayList<Double>(Collections.nCopies(nPolygons, defaultHumidity));
         vertexHeights = new ArrayList<>(Collections.nCopies(nVertices, 0.0));
+        initalMaps();
     }
 
     public Mesh generate(Mesh aMesh,String seedInput, String shape, String elevType, String elevationStartIdx,String maxNumLakes, String lakeStartingIdx, String rivers, String riverStartingIdx, String aquifers, String aquiferStartingIdx, String soilSelect, String biomeSelect){
@@ -290,6 +307,7 @@ public class IslandGen extends IslandSeed {
         }
         //If user did not input seed
         else{
+            biomeSelect = biomeGen.biomeCheck(biomeSelect);
             defaultBlockElev = biomeGen.BiomeElevation(biomeSelect);
             defaultHumidity = biomeGen.BiomeHumidity(biomeSelect);
             defaultValues(aMesh);
@@ -310,6 +328,10 @@ public class IslandGen extends IslandSeed {
             getAquiferStartIdx(aquiferStartingIdx);
             getSoil(soilSelect);
         }
+        System.out.println("-----------------ISLAND INFO------------------");
+        System.out.println("Biome: "+biomeGen.numToBiome(biome));
+        System.out.println("Elevation: "+ numToElevate.get(altType));
+        System.out.println("Shape: "+ numToShapes.get(islandShape));
 
         // Generate Elevation
         Elevation elevate = new Elevation();
@@ -379,7 +401,6 @@ public class IslandGen extends IslandSeed {
         attributes.add(riverStartIdx);
         attributes.add(aquaNum);
         attributes.add(aquaStartIdx);
-
         if (isSeed){
             System.out.println("-----------------SEED VALUE-------------------");
             System.out.println("SEED: "+seedInput);
@@ -466,12 +487,6 @@ public class IslandGen extends IslandSeed {
         Collections.shuffle(islandVertices,new Random(2));
     }
 
-
-    private void assignType(Polygon poly, String type){
-        Structs.Property typeProperty = Structs.Property.newBuilder().setKey("Type").setValue(type).build();
-        Polygon typed = Polygon.newBuilder(poly).addProperties(typeProperty).build();
-        polygonList.set(polygonList.indexOf(poly), typed);
-    }
     private String extractColorString(List<Structs.Property> properties){
         String val = null;
         for(Structs.Property p: properties) {

@@ -2,6 +2,7 @@ package island.files;
 
 import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Random;
 
@@ -45,6 +46,7 @@ public class IslandShapes implements IslandColour{
             //island
             if (distance < 200){
                 colorPolygon(253, 255,208,255, i);
+                new Color(253,255,208,255);
             }
             else{
                 colorPolygon( 35, 85,138,255, i);

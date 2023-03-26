@@ -50,12 +50,7 @@ public class Lake implements IslandColour {
             }
         }
     }
-    //201032397312166626
-    // 109201
-    // 201032397312166626109201
-    // 12281130018120101
-    // 02393324472210461501
-    // 222240012601111001
+
     private void lakeSizes(int polyIdx){
         lakeIdxs.add(polyIdx);
         Structs.Polygon poly = polygonList.get(polyIdx);

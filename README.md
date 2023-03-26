@@ -22,8 +22,10 @@ mosser@azrael A2 % mvn install
 After installation, you'll find an application named `generator.jar` in the `generator` directory, and a file named `visualizer.jar` in the `visualizer` one. 
 
 ### Generator
+**NOTE THE GENERATOR WILL TAKE LONG AS IT IS RELAXING THE MESH MULTIPLE TIMES.**
 
 To run the generator, go to the `generator` directory, and use `java -jar` to run the product. The product takes one single argument (so far), the name of the file where the generated mesh will be stored as binary.
+
 
 ```
 mosser@azrael A2 % cd generator 

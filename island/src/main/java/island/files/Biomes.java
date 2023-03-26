@@ -12,13 +12,9 @@ public class Biomes implements IslandColour{
     List<Double> humidities;
     List<Structs.Polygon> polygonList;
     List<Integer> IslandBlocks;
-
     List<Integer> LakeIdxs;
-
-    int startHeightCase;
-    List<String> BiomeTypes;
-    String BiomeType;
     int biome;
+    public HashMap<Integer,String> biomeMap;
 
     //if island polygon is not a lake, get the elevation
 
@@ -32,8 +28,6 @@ public class Biomes implements IslandColour{
         BiomeType(elevations, humidities, IslandBlocks, LakeIdxs);
 
     }
-
-    public HashMap<Integer,String> biomeMap;
 
     public String numToBiome(int num){
         biomeMap = new HashMap<>();
@@ -124,7 +118,7 @@ public class Biomes implements IslandColour{
 
     }
 
-    public void BiomeType(List<Double> elev, List<Double> humidity, List<Integer> IsleBlocks, List<Integer> LakeBlocks){
+    private void BiomeType(List<Double> elev, List<Double> humidity, List<Integer> IsleBlocks, List<Integer> LakeBlocks){
         for (Integer i: IsleBlocks){
             if (!LakeBlocks.contains(i)){
                 double height = elev.get(i);

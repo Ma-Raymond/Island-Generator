@@ -17,6 +17,9 @@ public class Rivers {
     List<Structs.Segment> segmentList;
     List<Structs.Vertex> vertexList;
     List<Double> humidity;
+    List<List<Integer>> VTVRelations;
+    List<List<Integer>> VTSRelations;
+    List<List<Integer>> VTPRelations;
     int riverNum;
     int riverStartIdx;
     double soil;
@@ -71,8 +74,6 @@ public class Rivers {
         }
     }
 
-    List<List<Integer>> VTVRelations;
-    List<List<Integer>> VTSRelations;
     private void getVTVRelation(){
         VTVRelations = new ArrayList<>(Collections.nCopies(vertexList.size(),new ArrayList<>()));
         VTSRelations = new ArrayList<>(Collections.nCopies(vertexList.size(),new ArrayList<>()));
@@ -173,7 +174,7 @@ public class Rivers {
         // Set the old segment in the list as the new one with color property
         segmentList.set(segmentList.indexOf(seg), colored);
     }
-    List<List<Integer>> VTPRelations;
+
     private void generateVTPRelation(){
         VTPRelations = new ArrayList<>(Collections.nCopies(vertexList.size(),new ArrayList<>()));
         for (Integer polyIdx : islandBlocks){

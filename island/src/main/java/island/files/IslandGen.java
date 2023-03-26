@@ -72,7 +72,8 @@ public class IslandGen extends IslandSeed {
         }
         //Get island details from seed
         String[] seedDetails = seed.split("");
-        islandShape = (Integer.parseInt(seedDetails[0]))%4;
+        islandShape = (Integer.parseInt(seedDetails[0]))%5;
+        System.out.println(islandShape);
         altType = (Integer.parseInt(seedDetails[1]))%3;
         altStartIdx = Integer.parseInt(seedDetails[2]+seedDetails[3]);
         maxLakes = Integer.parseInt(seedDetails[4] + seedDetails[5]);
@@ -89,7 +90,7 @@ public class IslandGen extends IslandSeed {
     private void getIslandShape(String shape){
         Random rand = new Random();
         if (shape.equals("")){
-            islandShape = (rand.nextInt(0, 4));
+            islandShape = (rand.nextInt(0, 5));
         }
         else{
             HashMap<String, Integer> islandShapes = new HashMap<String, Integer>();
@@ -97,6 +98,7 @@ public class IslandGen extends IslandSeed {
             islandShapes.put("Oval", 1);
             islandShapes.put("Moon", 2);
             islandShapes.put("Cross", 3);
+            islandShapes.put("Heart", 4);
             islandShape = islandShapes.get(shape);
         }
 
@@ -401,6 +403,10 @@ public class IslandGen extends IslandSeed {
         }
 
         // Assigning Biomes and Types
+
+        System.out.println(humidity);
+        System.out.println(elevations);
+
         return Mesh.newBuilder().addAllVertices(vertexList).addAllSegments(segmentList).addAllPolygons(polygonList).build();
     }
 
@@ -464,12 +470,6 @@ public class IslandGen extends IslandSeed {
     }
 
 
-    private void colorPolygon(int red, int green, int blue, int alpha, int index){
-        Polygon poly = polygonList.get(index);
-        Structs.Property color = Structs.Property.newBuilder().setKey("rgb_color").setValue(red + "," + green + "," + blue+ "," + alpha).build();
-        Polygon colored = Polygon.newBuilder(poly).addProperties(color).build();
-        polygonList.set(index, colored);
-    }
     private void assignType(Polygon poly, String type){
         Structs.Property typeProperty = Structs.Property.newBuilder().setKey("Type").setValue(type).build();
         Polygon typed = Polygon.newBuilder(poly).addProperties(typeProperty).build();

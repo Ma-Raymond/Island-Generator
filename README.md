@@ -87,6 +87,7 @@ Elevation
 Mositure
 ------------------------------------
 ```
+![Assignment 3 - Legend](https://user-images.githubusercontent.com/107081345/227812407-daba7a00-31b3-466c-8712-f39bd007e5a2.png)
 
 ### Visualizer
 
@@ -94,7 +95,7 @@ To visualize an existing mesh, go the the `visualizer` directory, and use `java 
 
 ```
 mosser@azrael A2 % cd visualizer 
-mosser@azrael visualizer % java -jar visualizer.jar ../generator/sample.mesh sample.svg
+mosser@azrael visualizer % java -jar visualizer.jar ../island/island.mesh sample.svg
 
 ... (lots of debug information printed to stdout) ...
 

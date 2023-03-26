@@ -159,6 +159,15 @@ public class IslandShapes implements IslandColour{
     }
 
 
+    private void poopIsland(){
+
+    }
+
+    private void getAngle(double x, double y){
+        double distance = Math.pow((x-255),2) + Math.pow((x-255),2);
+
+    }
+
     @Override
     public void colorPolygon(int red, int green, int blue, int alpha, int index) {
         Structs.Polygon poly = polygonList.get(index);

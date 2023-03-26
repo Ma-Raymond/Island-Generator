@@ -140,10 +140,13 @@ public class IslandShapes implements IslandColour{
             double distance = Math.sqrt(Math.pow(x-250,2)+Math.pow(y-300,2));
             double distance3 = Math.sqrt(Math.pow(x-250,2)+Math.pow(y-390,2));
 
-            double distance1 = Math.sqrt(Math.pow(x-185,2)+Math.pow(y-220,2));
-            double distance2 = Math.sqrt(Math.pow(x-310,2)+Math.pow(y-220,2));
+            double distance1 = Math.sqrt(Math.pow(x-185,2)+Math.pow(y-230,2));
+            double distance2 = Math.sqrt(Math.pow(x-315,2)+Math.pow(y-230,2));
+            double distance4 = Math.sqrt(Math.pow(x-330,2)+Math.pow(y-290,2));
+            double distance5 = Math.sqrt(Math.pow(x-160,2)+Math.pow(y-300,2));
 
-            if (distance < 100 | distance1 < 80 | distance2 < 80 | distance3 < 30){
+
+            if (distance < 100 | distance1 < 80 | distance2 < 80 | distance3 < 40 | distance4 < 40 | distance5 < 30){
                 colorPolygon(253, 255,208,255, i);
             }
             else{

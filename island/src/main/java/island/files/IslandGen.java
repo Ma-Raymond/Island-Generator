@@ -72,7 +72,7 @@ public class IslandGen extends IslandSeed {
         }
         //Get island details from seed
         String[] seedDetails = seed.split("");
-        islandShape = (Integer.parseInt(seedDetails[0]))%4;
+        islandShape = (Integer.parseInt(seedDetails[0]))%5;
         System.out.println(islandShape);
         altType = (Integer.parseInt(seedDetails[1]))%3;
         altStartIdx = Integer.parseInt(seedDetails[2]+seedDetails[3]);
@@ -90,7 +90,7 @@ public class IslandGen extends IslandSeed {
     private void getIslandShape(String shape){
         Random rand = new Random();
         if (shape.equals("")){
-            islandShape = (rand.nextInt(0, 4));
+            islandShape = (rand.nextInt(0, 5));
         }
         else{
             HashMap<String, Integer> islandShapes = new HashMap<String, Integer>();
@@ -98,6 +98,7 @@ public class IslandGen extends IslandSeed {
             islandShapes.put("Oval", 1);
             islandShapes.put("Moon", 2);
             islandShapes.put("Cross", 3);
+            islandShapes.put("Heart", 4);
             islandShape = islandShapes.get(shape);
         }
 

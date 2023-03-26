@@ -26,10 +26,12 @@ public class IslandShapes implements IslandColour{
         else if (shapeSeed ==2){
             moonIsland(aMesh);
         }
-        else{
+        else if (shapeSeed == 3){
             crossIsland(aMesh);
         }
-
+        else{
+            HeartIsland(aMesh);
+        }
     }
 
     private void circleIsland(Structs.Mesh aMesh){
@@ -99,7 +101,7 @@ public class IslandShapes implements IslandColour{
             double y = centroid.getY();
             double distance = Math.sqrt(Math.pow(x-250,2)+Math.pow(y-250,2));
 
-            double distance1 = Math.sqrt(Math.pow(x-450,2)+Math.pow(y-250,2));
+            double distance1 = Math.sqrt(Math.pow(x-380,2)+Math.pow(y-250,2));
 
             if (distance < 200 && distance1 > 100){
                 colorPolygon(253, 255,208,255, i);
@@ -129,6 +131,27 @@ public class IslandShapes implements IslandColour{
         }
     }
 
+    private void HeartIsland(Structs.Mesh aMesh){
+        for (int i =0; i< aMesh.getPolygonsCount(); i++){
+            Structs.Polygon poly = polygonList.get(i);
+            Structs.Vertex centroid = vertexList.get(poly.getCentroidIdx());
+            double x = centroid.getX();
+            double y = centroid.getY();
+            double distance = Math.sqrt(Math.pow(x-250,2)+Math.pow(y-300,2));
+
+            double distance1 = Math.sqrt(Math.pow(x-170,2)+Math.pow(y-220,2));
+            double distance2 = Math.sqrt(Math.pow(x-330,2)+Math.pow(y-220,2));
+
+            if (distance < 100 | distance1 < 100 | distance2 < 100){
+                colorPolygon(253, 255,208,255, i);
+            }
+            else{
+                colorPolygon(35, 85,138,255, i);
+            }
+        }
+
+    }
+
 
     @Override
     public void colorPolygon(int red, int green, int blue, int alpha, int index) {
@@ -138,10 +161,7 @@ public class IslandShapes implements IslandColour{
         polygonList.set(index, colored);
     }
 
-    private void HeartIsland(){
 
-
-    }
 
 
 }

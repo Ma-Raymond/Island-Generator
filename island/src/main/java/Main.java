@@ -110,17 +110,7 @@ public class Main {
             if (commandline.hasOption("biomes")){
                 biome = commandline.getOptionValue("biomes");
             }
-            //negative seed value
-            //incorrect shape
-            //incorrect altitude
-            //neg aquifers
-            //neg lakes
-            //neg rivers
-            //too many rivers
-            //too many lakes
-            //too many aquifers
-            //incorrect soil input
-            //incorrect biome
+
             if (!maxNumLakes.equals("")){
                 try{
                     numLakes = Integer.parseInt(maxNumLakes);
@@ -189,7 +179,7 @@ public class Main {
                 elevType = ""; //random default if input incorrectly
                 throw new ParseException("Incorrect Elevation Input");
             }
-            if (!(shape.equals("Circle")||shape.equals("Oval")||shape.equals("Moon")||shape.equals("Cross")||shape.equals(""))){
+            if (!(shape.equals("Circle")||shape.equals("Oval")||shape.equals("Moon")||shape.equals("Cross")||shape.equals("Heart")||shape.equals(""))){
                 shape = ""; //random default if input incorrectly
                 throw new ParseException("Incorrect Shape Input");
             }

@@ -30,17 +30,16 @@ abstract class IslandSeed{
     double defaultBlockElev;
     double defaultHumidity;
 
+
 }
 
 public class IslandGen extends IslandSeed {
-
     List<Polygon> polygonList;
     List<Segment> segmentList;
     List<Vertex> vertexList;
     List<Double> elevations;
     List<Double> humidity;
     List<Double> vertexHeights;
-    List<Double> soil;
 
     List <Integer> lakeIdxs = new ArrayList<>();
 

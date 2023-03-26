@@ -28,18 +28,17 @@ public class Elevation {
             volcano(altStartIdx);
         }
         else if (elevationNum == 2){
-            generateHills(altStartIdx);
+            generateHilly(altStartIdx);
         }
     }
     private void generateHills(int startIdx){
         // Have it incrementally do it with the seed
-        altStartIdx = startIdx % heightPoints.size();
         for (int i = 0; i < heightPoints.size()/4; i++){
             int Idx = (startIdx + i) % heightPoints.size();
             int polyIdx = heightPoints.get(Idx);
             Structs.Polygon poly = polygonList.get(polyIdx);
             List<Integer> neighbourList = poly.getNeighborIdxsList();
-            double elevationVal = Double.parseDouble(precision.format(elevations.get(polyIdx)+10));
+            double elevationVal = Double.parseDouble(precision.format(elevations.get(polyIdx)+15));
             elevations.set(polyIdx,elevationVal);
             for (Integer j : neighbourList){
                 double elevationVal2 = Double.parseDouble(precision.format(elevations.get(polyIdx)+1));
@@ -47,15 +46,43 @@ public class Elevation {
             }
         }
     }
+    private void generateHilly(int startIdx){
+        // Have it incrementally do it with the seed
+        for (int i = 0; i < heightPoints.size()/4; i++){
+            Deque<Integer> deque = new ArrayDeque<>();
+            Set<Integer> visited = new HashSet<>();
+            int growthPoint = (startIdx + i) % heightPoints.size();
+            int polyIdx = heightPoints.get(growthPoint);
+            double hillHeight = 20.0;
+            visited.add(polyIdx);
+            deque.add(polyIdx);
+            while (!deque.isEmpty()){
+                int idxVal = deque.removeFirst();
+                Structs.Polygon poly = polygonList.get(idxVal);
+//                System.out.println("Current:"+elevations.get(idxVal)+ "HILL: "+hillHeight+" OUTCOME: "+(elevations.get(idxVal)+hillHeight));
+                double val = elevations.get(idxVal) + hillHeight;
+//                System.out.println("Current:"+elevations.get(idxVal)+"VAL: "+val);
+                elevations.set(idxVal,Double.parseDouble(precision.format(val)));
+                List<Integer> neighbourList = poly.getNeighborIdxsList();
+                for (Integer idx : neighbourList){
+                    if (!visited.contains(idx) && islandBlocks.contains(idx)){
+                        visited.add(idx);
+                        deque.add(idx);
+                    }
+                }
+                if (hillHeight > 0){
+                    hillHeight = Double.parseDouble(precision.format(hillHeight-5.0));
+                }
+            }
+        }
+    }
     private void volcano(int startIdx){
-        altStartIdx = startIdx % heightPoints.size();
         Deque<Integer> deque = new ArrayDeque<>();
         Set<Integer> visited = new HashSet<>();
         int polyIdx = heightPoints.get(startIdx);
         double volcanoHeight = 100.0;
         visited.add(polyIdx);
         deque.add(polyIdx);
-        double visual = 5;
         while (!deque.isEmpty()){
             int idxVal = deque.removeFirst();
             Structs.Polygon poly = polygonList.get(idxVal);
@@ -67,7 +94,6 @@ public class Elevation {
                     deque.add(idx);
                 }
             }
-            visual -= 0.01;
             if (volcanoHeight >0)
                 volcanoHeight = Double.parseDouble(precision.format(volcanoHeight-0.2));
         }

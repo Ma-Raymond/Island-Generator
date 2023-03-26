@@ -73,7 +73,6 @@ public class IslandGen extends IslandSeed {
         //Get island details from seed
         String[] seedDetails = seed.split("");
         islandShape = (Integer.parseInt(seedDetails[0]))%4;
-        System.out.println(islandShape);
         altType = (Integer.parseInt(seedDetails[1]))%3;
         altStartIdx = Integer.parseInt(seedDetails[2]+seedDetails[3]);
         maxLakes = Integer.parseInt(seedDetails[4] + seedDetails[5]);
@@ -286,7 +285,6 @@ public class IslandGen extends IslandSeed {
             getRiverStartIdx(String.valueOf(riverStartIdx));
             getAquiferNum(String.valueOf(aquaNum));
             getAquiferStartIdx(String.valueOf(aquaStartIdx));
-            System.out.println("IM BIOME FROM SEED "+biome);
         }
         //If user did not input seed
         else{
@@ -310,9 +308,6 @@ public class IslandGen extends IslandSeed {
             getAquiferStartIdx(aquiferStartingIdx);
             getSoil(soilSelect);
         }
-
-        System.out.println(defaultBlockElev);
-        System.out.println(defaultHumidity);
 
         // Generate Elevation
         Elevation elevate = new Elevation();
@@ -349,30 +344,28 @@ public class IslandGen extends IslandSeed {
         humidity = aquifer.humidity;
 
         //Testing the island attribute values
-        System.out.println("island shape");
-        System.out.println(islandShape);
-        System.out.println("alt type");
-        System.out.println(altType);
-        System.out.println("alrt start idx");
-        System.out.println(altStartIdx);
-        System.out.println("lake num");
-        System.out.println(lakeNum);
-        System.out.println(maxLakes);
-        System.out.println(maxNumLakes);
-        System.out.println("lake start idx");
-        System.out.println(lakeStartIdx);
-        System.out.println("river num");
-        System.out.println(riverNum);
-        System.out.println("river start idx");
-        System.out.println(riverStartIdx);
-        System.out.println("aqua num");
-        System.out.println(aquaNum);
-        System.out.println("aqua start idx");
-        System.out.println(aquaStartIdx);
-        System.out.println("soil moisture");
-        System.out.println(soilMoisture);
-        System.out.println("biome");
-        System.out.println(biome);
+//        System.out.println("island shape");
+//        System.out.println(islandShape);
+//        System.out.println("alt type");
+//        System.out.println(altType);
+//        System.out.println("alrt start idx");
+//        System.out.println(altStartIdx);
+//        System.out.println("lake num");
+//        System.out.println(lakeNum);
+//        System.out.println("lake start idx");
+//        System.out.println(lakeStartIdx);
+//        System.out.println("river num");
+//        System.out.println(riverNum);
+//        System.out.println("river start idx");
+//        System.out.println(riverStartIdx);
+//        System.out.println("aqua num");
+//        System.out.println(aquaNum);
+//        System.out.println("aqua start idx");
+//        System.out.println(aquaStartIdx);
+//        System.out.println("soil moisture");
+//        System.out.println(soilMoisture);
+//        System.out.println("biome");
+//        System.out.println(biome);
 
         //Seed generator
         ArrayList<Integer> attributes = new ArrayList<Integer>();
@@ -386,9 +379,11 @@ public class IslandGen extends IslandSeed {
         attributes.add(aquaStartIdx);
 
         if (isSeed){
-            System.out.println(seedInput);
-        }
+            System.out.println("-----------------SEED VALUE-------------------");
+            System.out.println("SEED: "+seedInput);
+            System.out.println("----------------------------------------------");
 
+        }
         else{
             for (int i = 0; i < attributes.size(); i++){
                 if (attributes.get(i) < 10){
@@ -400,7 +395,9 @@ public class IslandGen extends IslandSeed {
             }
 
             String seed = (String.valueOf(islandShape) + String.valueOf(altType) + attributesStr.get(0) + attributesStr.get(1) + attributesStr.get(2) + attributesStr.get(3)+ attributesStr.get(4) + attributesStr.get(5) + attributesStr.get(6) + String.valueOf(soilMoisture) + String.valueOf(biome));
-            System.out.println(seed);
+            System.out.println("-----------------SEED VALUE-------------------");
+            System.out.println("SEED: "+seed);
+            System.out.println("----------------------------------------------");
         }
 
         // Assigning Biomes and Types

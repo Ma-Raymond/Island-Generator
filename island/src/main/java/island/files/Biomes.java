@@ -53,7 +53,6 @@ public class Biomes implements IslandColour{
         double elevation = 0;
         if (Biome.equals("Desert")){
             elevation = 10;
-
         }
         else if (Biome.equals("Savana")){
             elevation = 25;
@@ -62,7 +61,7 @@ public class Biomes implements IslandColour{
             elevation = 25;
         }
         else if (Biome.equals("Grassland")){
-            elevation = 100;
+            elevation = 50;
         }
         else if (Biome.equals("Deciduous")){
             elevation = 100;
@@ -84,7 +83,7 @@ public class Biomes implements IslandColour{
         double humidity = 0;
 
         if (Biome.equals("Desert")){
-            humidity = 0;
+            humidity = 20;
             biome = 0;
         }
         else if (Biome.equals("Savana")){
@@ -132,13 +131,13 @@ public class Biomes implements IslandColour{
                 double humid = humidity.get(i);
                 if (0 <= humid && humid <= 50 && 0 <= height && height < 175){
                     //BiomeTypes.add("Desert");
-                    colorPolygon(206,112,44,255, i);
-                    new Color(206,112,44,255);
+                    colorPolygon(255,255,221,255, i);
+                    new Color(255,255,221,255);
                 }
                 else if (50 < humid && humid < 275 && 0 <= height && height < 50) {
                     //BiomeTypes.add("Savana");
-                    colorPolygon(255,255,221,255, i);
-                    new Color(255,255,221,255);
+                    colorPolygon(138,138,77,255, i);
+                    new Color(138, 138, 77,255);
                 }
                 else if (275 <= humid && 0 <= height && height < 50) {
                     //BiomeTypes.add("Tropic Rain Forest");
@@ -147,8 +146,8 @@ public class Biomes implements IslandColour{
                 }
                 else if (50 < humid && humid < 100 && 50 <= height && height < 175) {
                     //BiomeTypes.add("Grassland");
-                    colorPolygon(240,167,74,255, i);
-                    new Color(240,167,74,255);
+                    colorPolygon(206,112,44,255, i);
+                    new Color(206,112,44,255);
                 }
                 else if (100 <= humid && humid <= 225 && 50 <= height && height < 125) {
                     //BiomeTypes.add("Deciduous");
@@ -162,14 +161,22 @@ public class Biomes implements IslandColour{
                 }
                 else if (50 <= humid && 125 <= height && height <= 175) {
                     //BiomeTypes.add("Taiga");
-                    colorPolygon(0,127,0,255, i);
-                    new Color(0,127,0,255);
+                    colorPolygon(0,59,3,255, i);
+                    new Color(0, 59, 3,255);
                 }
-                else if (0 <= humid && 175 <= height) {
+                else if (0 <= humid && 150 > humid && 175 <= height) {
                     //BiomeTypes.add("Tundra");
-                    colorPolygon(206,221,237,255, i);
-                    new Color(206,221,237,255);
+                    colorPolygon(238,254,255,255, i);
+                    new Color(238, 254, 255,255);
+
                 }
+                else if (150 <= humid && 175 <= height) {
+                    //BiomeTypes.add("Tundra ice");
+                    colorPolygon(184,217,255,255, i);
+                    new Color(184, 217, 255,255);
+
+                }
+
                 else{
                     System.out.println("Humidity:"+humid+" Height:"+height);
                     colorPolygon(255,255,255,255,i);

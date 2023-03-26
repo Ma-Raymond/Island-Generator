@@ -58,7 +58,7 @@ public class Main {
                 System.out.println("Enter these commands to personalize the Island you would like to create! \n");
                 System.out.println("------------------------------------");
                 System.out.println("Shape \"-shape xx\"");
-                System.out.println("Options: Moon\nCross\nCircle\nOval");
+                System.out.println("Options: Moon\nCross\nCircle\nOval\nHeart");
                 System.out.println("------------------------------------");
                 System.out.println("Altitude \"-altitude xx\"");
                 System.out.println("Options: Volcano\nHill\nFlat");
@@ -171,7 +171,8 @@ public class Main {
                     throw new ParseException("Incorrect Biome Input");
                 }
             }catch(Exception e) {
-                System.out.println("Biome type must be inputted as a valid string. Any one of the following will be accepted: \n" +
+                System.out.println("------------------------------------");
+                System.out.println("Incorrect Biome Inputted!! Here are your Options: \n" +
                         "Tundra \n" +
                         "Taiga \n" +
                         "TemperateRain \n" +
@@ -179,7 +180,8 @@ public class Main {
                         "Grassland \n" +
                         "Tropical \n" +
                         "Savana \n" +
-                        "Desert \n");
+                        "Desert");
+                System.out.println("------------------------------------");
             }
             if (!(soil.equals("Wet")||soil.equals("Normal")||soil.equals("Dry")||soil.equals(""))){
                 soil = ""; //random default if input incorrectly
@@ -195,7 +197,7 @@ public class Main {
             }
             if (!seed.equals("")){
                 try{
-                    Integer val = Integer.parseInt(seed);
+                    Long val = Long.parseLong(seed);
                 }catch (Exception e){
                     throw new ParseException("Only Integer Inputs Allowed for Seeds");
                 }

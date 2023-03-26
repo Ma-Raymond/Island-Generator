@@ -20,6 +20,21 @@ public class Rivers {
     int riverNum;
     int riverStartIdx;
     double soil;
+
+    /**
+     *
+     * @param soilPercent
+     * @param rM
+     * @param rSI
+     * @param pList
+     * @param sList
+     * @param vList
+     * @param e
+     * @param vH
+     * @param iV
+     * @param iB
+     * @param humid
+     */
     public void generate(double soilPercent,int rM, int rSI, List<Structs.Polygon> pList ,List<Structs.Segment> sList,List<Structs.Vertex> vList, List<Double> e,List<Double> vH, List<Integer> iV, List<Integer> iB,List<Double> humid){
         islandBlocks = iB;
         elevations = e;
@@ -48,7 +63,7 @@ public class Rivers {
                     lowestValue = height;
                     continue;
                 }
-                if (height < lowestValue){
+                if (height > lowestValue){
                     lowestValue = height;
                 }
             }

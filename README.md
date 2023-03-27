@@ -160,6 +160,7 @@ When you develop features and enrich the product, remember that you have first t
 | F33 | Mangrove Biome                                                                                     | Rhea Gokhale   & Raymond   | Mar 23 | Mar 24 | Done   |
 | F34 | Beach Biome                                                                                        | Rhea Gokhale  & Raymond    | Mar 23 | Mar 24 | Done   |
 | F35 | HeatMaps                                                                                           | Gayan Athukorala           | Mar 25 | Mar 25 | Done   |
+| F36 | Loading Bar on Generator                                                                           | Raymond Ma                 | Mar 26 | Mar 26 | Done   |
 
 
 

@@ -3,6 +3,7 @@ import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.*;
 
 
+import me.tongfei.progressbar.ProgressBar;
 import org.locationtech.jts.geom.*;
 //import org.locationtech.jts.geom.Polygon;
 import org.locationtech.jts.geom.Polygon;
@@ -179,12 +180,15 @@ public class IrregMeshGen extends GeneralMesh {
         constrainPoly(allPolygons);
         loadCentroids(allPolygons);
 
-
+        ProgressBar pb = new ProgressBar("Generating Voronoi Mesh", userRelax);
+        pb.start();
         // RELAXATION -----------------------
         int relaxAmount = userRelax;        // RELAXATION AMOUNT BASED ON USER INPUT
         for (int i=0; i < relaxAmount; i++){    // Based on user input, how many times to relax
+            pb.step();
             voronoi = relaxation(voronoi);      // Sets the voronoi to a new relaxed voronoi
         }
+        pb.stop();
 
         // Adds all the centroids vertexes after relaxation, to the vertexList
         allPolygons = voronoi.getDiagram(makePolygons);

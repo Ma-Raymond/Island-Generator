@@ -199,7 +199,7 @@ public class Main {
                 shape = ""; //random default if input incorrectly
                 errorMessage = errorMessage + "Incorrect Shape Input, ";
             }
-            if (!(heatmap.equals("Moisture")|heatmap.equals("Elevation"))){
+            if (!(heatmap.equals("Moisture")|heatmap.equals("Elevation")|heatmap.equals(""))){
                 heatmap = ""; //random default if input incorrectly
                 errorMessage = errorMessage + "Incorrect Map Input, ";
             }

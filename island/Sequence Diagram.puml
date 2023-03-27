@@ -75,5 +75,9 @@ Create Aquifers
 IslandGen -> Aquifers: generate(List<Integer> heightPoints, int aquaStartIdx, List<Polygon> polygonList, List<Double> humidity, double soilPercent, int aquaNum)
 Aquifers --> IslandGen: generate(void)
 
+Create Heatmaps
+IslandGen -> Heatmaps: selectMap(List<Polygon> polygonList, List<Double> humidity, List<Double> elevations, List<Integer> islandBlocks, String map)
+Heatmaps --> IslandGen: selectMap(void)
+
 IslandGen --> Main: generate(Mesh Mesh.newBuilder().addAllVertices(vertexList).addAllSegments(segmentList).addAllPolygons(polygonList).build())
 @enduml

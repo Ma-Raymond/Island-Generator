@@ -404,12 +404,23 @@ public class IslandGen extends IslandSeed {
         System.out.println("Elevation: "+ numToElevate.get(altType));
         System.out.println("Shape: "+ numToShapes.get(islandShape));
 
+        generateAttributes(biomeGen);
+        seedOutput(seedInput);
+
+        // Creating Heatmap if the User wants the map to be displayed as one
+        Heatmaps heatMap = new Heatmaps();
+        heatMap.selectMap(polygonList,humidity,elevations,islandBlocks,map);
+        polygonList = heatMap.polygonList;
+        return Mesh.newBuilder().addAllVertices(vertexList).addAllSegments(segmentList).addAllPolygons(polygonList).build();
+    }
+
+
+    private void generateAttributes(Biomes biomeGen){
         // Generate Elevation
         Elevation elevate = new Elevation();
         elevate.generate(altType,elevations,altStartIdx,heightPoints,polygonList,islandBlocks);
         elevations = elevate.elevations;
         altStartIdx = elevate.altStartIdx;
-
 
         soilProfile();
         //Lakes
@@ -427,7 +438,6 @@ public class IslandGen extends IslandSeed {
         vertexList = river.vertexList;
         humidity = river.humidity;
 
-
         //Aquifers
         Aquifers aquifer = new Aquifers();
         aquifer.generate(heightPoints, aquaStartIdx, polygonList, humidity, soilPercent, aquaNum);
@@ -437,6 +447,8 @@ public class IslandGen extends IslandSeed {
         biomeGen.generate(elevations, islandBlocks, lakeIdxs, humidity, polygonList);
         polygonList = biomeGen.polygonList;
 
+    }
+    private void seedOutput(String seedInput){
         //Seed generator
 
         //Create Lists for all the attribute values that can be double digits
@@ -458,7 +470,7 @@ public class IslandGen extends IslandSeed {
 
         }
 
-        //if no seed provided
+        // If no seed provided
         else{
             //Go through double digit attribute list and add a leading 0 to all single digit numbers, storing them all in a List as Strings
             for (int i = 0; i < attributes.size(); i++){
@@ -478,12 +490,6 @@ public class IslandGen extends IslandSeed {
             System.out.println("SEED: "+seed);
             System.out.println("----------------------------------------------");
         }
-
-        // Creating Heatmap if the User wants the map to be displayed as one
-        Heatmaps heatMap = new Heatmaps();
-        heatMap.selectMap(polygonList,humidity,elevations,islandBlocks,map);
-        polygonList = heatMap.polygonList;
-        return Mesh.newBuilder().addAllVertices(vertexList).addAllSegments(segmentList).addAllPolygons(polygonList).build();
     }
 
     //Gets all the polygons that make up the island
@@ -501,6 +507,11 @@ public class IslandGen extends IslandSeed {
         generateInnerIsland();
     }
 
+    /**
+     * This method extracts Vertices and returns as a List of Integer
+     * @param properties
+     * @return
+     */
     private List<Integer> extractVertices(List<Structs.Property> properties){
         String val = null;
         for(Structs.Property p: properties) {
@@ -521,33 +532,43 @@ public class IslandGen extends IslandSeed {
         }
         return rawInts;
     }
+
+    /**
+     * This generates the inner island and this is useful as we can constrain river growth, lake growth & elevation growth to be NOT right beside the ocean polygons
+     *
+     */
     private void generateInnerIsland(){
         // heightPoint Island Blocks
         Set<Integer> verticesInIsland = new HashSet<>();
-        for (Integer polyIdx : islandBlocks){
+        for (Integer polyIdx : islandBlocks){       //  For each polygon get the neighbours and check if their neightbours are all soil
             boolean allNeighbourIslands = true;
             Polygon poly = polygonList.get(polyIdx);
             List<Integer> neighbourList = poly.getNeighborIdxsList();
             for (Integer j : neighbourList){
-                if (!islandBlocks.contains(j)){
+                if (!islandBlocks.contains(j)){     // If not a soil block, flag it.
                     allNeighbourIslands = false;
                 }
             }
-            if (allNeighbourIslands){
+            if (allNeighbourIslands){       // Only if it is a valid Inner Island, add it to "heightPoints"
                 heightPoints.add(polyIdx);
                 List<Integer> islandVertexList = extractVertices(poly.getPropertiesList());
                 if (islandVertexList != null)
-                    for (Integer i : islandVertexList){
-                        if (!verticesInIsland.contains(i)){
+                    for (Integer i : islandVertexList){     // For all the vertices in the valid polygon, add it to the islandVertice list
+                        if (!verticesInIsland.contains(i)){     // To keep track of all the vertices as there might be duplicates, I use a set.
                             islandVertices.add(i);
                             verticesInIsland.add(i);
                         }
                     }
             }
         }
-        Collections.shuffle(islandVertices,new Random(2));
+        Collections.shuffle(islandVertices,new Random(2));  // As we go in order adding polygons to the list, we want to avoid polygons exactly next to eachother, so we randomize it but the same seed.
     }
 
+    /**
+     * Extracts the colours from a property.
+     * @param properties
+     * @return
+     */
     private String extractColorString(List<Structs.Property> properties){
         String val = null;
         for(Structs.Property p: properties) {

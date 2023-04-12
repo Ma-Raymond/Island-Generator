@@ -335,6 +335,12 @@ public class IslandGen extends IslandSeed {
             }
         }
     }
+
+    /**
+     * This method is responsible in getting in the input of the user
+     * @param numCityParam
+     * @param cityStartIdxParam
+     */
     private void getCity(String numCityParam, String cityStartIdxParam){
         Random rand = new Random();
         int maxIdx = islandBlocks.size();
@@ -356,8 +362,6 @@ public class IslandGen extends IslandSeed {
             cityStartIdx = startIdx;
 
         }
-
-
     }
 
     //Get the soil profile based on the soil type

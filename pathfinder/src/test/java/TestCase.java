@@ -6,6 +6,7 @@ import graphFiles.GraphGen;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -58,8 +59,69 @@ public class TestCase {
         Structs.Mesh aMesh = new MeshFactory().read("../generator/sample.mesh");
 
         gen.generate(aMesh);
-        assertNotNull(gen.getShortestPath(gen.getDijkstras(999),1000,999));
+        List<Integer> test = gen.getDijkstras(999);
+        Integer start = 1000;
+        Integer destination = 999;
+        assertNotNull(gen.getShortestPath(test,start,destination));
     }
 
+    @Test
+    public void invalidGraphs() throws IOException {
+        GraphGen gen = new GraphGen();
+        Structs.Mesh aMesh = new MeshFactory().read("../generator/sample.mesh");
 
+        gen.generate(aMesh);
+        List<Integer> test = new ArrayList<>();
+        Integer start = 1000;
+        Integer destination = 999;
+        assertNotNull(gen.getShortestPath(test,start,destination));
+    }
+
+    @Test
+    public void invalidNegativeInputsGraphs() throws IOException {
+        GraphGen gen = new GraphGen();
+        Structs.Mesh aMesh = new MeshFactory().read("../generator/sample.mesh");
+
+        gen.generate(aMesh);
+        List<Integer> test = gen.getDijkstras(1000);
+        Integer start = -1;
+        Integer destination = 999;
+        assertNotNull(gen.getShortestPath(test,start,destination));
+    }
+
+    @Test
+    public void invalidNegativeDestinationGraphs() throws IOException {
+        GraphGen gen = new GraphGen();
+        Structs.Mesh aMesh = new MeshFactory().read("../generator/sample.mesh");
+
+        gen.generate(aMesh);
+        List<Integer> test = gen.getDijkstras(1000);
+        Integer start = 1000;
+        Integer destination = -1;
+        assertNotNull(gen.getShortestPath(test,start,destination));
+    }
+
+    @Test
+    public void invalidtooLARGEStartGraphs() throws IOException {
+        GraphGen gen = new GraphGen();
+        Structs.Mesh aMesh = new MeshFactory().read("../generator/sample.mesh");
+
+        gen.generate(aMesh);
+        List<Integer> test = gen.getDijkstras(1000);
+        Integer start = 100000000;
+        Integer destination = 999;
+        assertNotNull(gen.getShortestPath(test,start,destination));
+    }
+
+    @Test
+    public void invalidTooLARGEDestinationGraphs() throws IOException {
+        GraphGen gen = new GraphGen();
+        Structs.Mesh aMesh = new MeshFactory().read("../generator/sample.mesh");
+
+        gen.generate(aMesh);
+        List<Integer> test = gen.getDijkstras(1000);
+        Integer start = 1000;
+        Integer destination = 100000000;
+        assertNotNull(gen.getShortestPath(test,start,destination));
+    }
 }

@@ -40,11 +40,15 @@ public class GraphicRenderer {
             double x2 = vertex2.getX();
             double y2 = vertex2.getY();
             boolean isNeighbour = false;
+            boolean isRoad = false;
             for (Property p : s.getPropertiesList()) {
                 // TRY TO FIND THE RGB COLOR
                 if (p.getKey().equals("rgb_color")) {
                     if (p.getValue().equals("169,169,169,255")){
                         isNeighbour = true;
+                    }
+                    if (p.getValue().equals("1,1,1,255")){    // If a road
+                        isRoad = true;
                     }
                 }
             }
@@ -91,10 +95,13 @@ public class GraphicRenderer {
     private void renderVertices(Mesh aMesh, Graphics2D canvas, String debug, boolean isIrreg){
         // FOR EACH VERTEX GET THE X AND Y VALUE, GET THE COLOR AND CREATE AN ELLIPSE2D VISUALIZED DOT
         for (Vertex v: aMesh.getVerticesList()) {
-            double centre_x = v.getX() - (THICKNESS/2.0d);
-            double centre_y = v.getY() - (THICKNESS/2.0d);
+            double thickness = extractCitySize(v.getPropertiesList());
+            double centre_x = v.getX() - (thickness/2.0d);
+            double centre_y = v.getY() - (thickness/2.0d);
             boolean isCentroid = false;
             boolean isWater = false;
+            boolean isRoad = false;
+            boolean isCentral = false;
             for (Property p : v.getPropertiesList()) {
                 // TRY TO FIND THE RGB COLOR
                 if (p.getKey().equals("rgb_color")) {
@@ -104,6 +111,12 @@ public class GraphicRenderer {
                     if (p.getValue().equals("0,0,255,255")){    // If a vertex is red, it is a centroid
                         isWater = true;
                     }
+                    if (p.getValue().equals("1,1,1,255")){    // If a road
+                        isRoad = true;
+                    }
+                    if (p.getValue().equals("255,215,0,255")){    // If a road
+                        isCentral = true;
+                    }
                 }
             }
             // If it is a irregular mode, show the centroids even without debug
@@ -111,7 +124,7 @@ public class GraphicRenderer {
                 // If it is in debug mode, get all vertices colours
                 Color old = canvas.getColor();
                 canvas.setColor(extractColor(v.getPropertiesList()));
-                Ellipse2D point = new Ellipse2D.Double(centre_x, centre_y, THICKNESS, THICKNESS);
+                Ellipse2D point = new Ellipse2D.Double(centre_x, centre_y, thickness, thickness);
                 canvas.fill(point);
                 canvas.setColor(old);
             }
@@ -120,13 +133,20 @@ public class GraphicRenderer {
                 if (debug.equals("debugOff") && !isCentroid) {
                     // Debug Mode should not show centroids for Grid Mode
                     Color old = canvas.getColor();
-                    if (isWater){
+
+                    if (isCentral){
+                        canvas.setColor(Color.orange);
+                    }
+                    else if (isRoad){
+                        canvas.setColor(Color.BLACK);
+                    }
+                    else if (isWater){
                         canvas.setColor(Color.BLUE);
                     }
                     else{
                         canvas.setColor(extractColor(v.getPropertiesList()));
                     }
-                    Ellipse2D point = new Ellipse2D.Double(centre_x, centre_y, THICKNESS, THICKNESS);
+                    Ellipse2D point = new Ellipse2D.Double(centre_x, centre_y, thickness, thickness);
                     canvas.fill(point);
                     canvas.setColor(old);
 
@@ -139,7 +159,7 @@ public class GraphicRenderer {
                     } else {    // Colour the Vertices Black
                         canvas.setColor(Color.BLACK);
                     }
-                    Ellipse2D point = new Ellipse2D.Double(centre_x, centre_y, THICKNESS, THICKNESS);
+                    Ellipse2D point = new Ellipse2D.Double(centre_x, centre_y, thickness, thickness);
                     canvas.fill(point);
                     canvas.setColor(old);
                 }
@@ -179,6 +199,20 @@ public class GraphicRenderer {
         }
         if (val == null){       // IF no thickness, add thinkness lol
             return 1.0;
+        }
+        double valInt = Double.parseDouble(val);
+        return valInt;
+    }
+    private Double extractCitySize(List<Structs.Property> properties){
+        String val = null;
+        for(Structs.Property p: properties) {
+            // TRY TO FIND THE RGB COLOR
+            if (p.getKey().equals("citySize")) {
+                val = p.getValue();
+            }
+        }
+        if (val == null){       // IF no thickness, add thinkness lol
+            return 3.0;
         }
         double valInt = Double.parseDouble(val);
         return valInt;

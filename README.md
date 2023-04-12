@@ -7,7 +7,12 @@
 
 ## How to run the product
 
-_This section needs to be edited to reflect how the user can interact with thefeature released in your project_
+- Run the Generator
+- Run the Island Generator
+- Run the Visualizer
+
+Instructions how to run each project details below
+The Golden Cities is the Central city, the center of the star network
 
 ### Installation instructions
 

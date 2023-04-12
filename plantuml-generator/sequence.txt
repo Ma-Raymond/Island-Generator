@@ -1,0 +1,33 @@
+@startuml
+Main -> IslandGen: generate(USER_PARAMS)
+IslandGen -> IslandShape: islandSelector(shape)
+IslandShape ->  IslandGen: updateList
+IslandGen -> Elevation : generate(elevation)
+Elevation ->  IslandGen: updateList
+IslandGen -> Lake : generateLakes(numLakes)
+Lake ->  IslandGen: updateList
+IslandGen -> Rivers : generate(numRivers)
+Rivers ->  IslandGen: updateList
+IslandGen -> Aquifers : generate(numAquifers)
+Aquifers ->  IslandGen: updateList
+IslandGen -> Biomes : generate(biomes)
+Biomes ->  IslandGen: updateList
+IslandGen -> City : generate(numCity)
+
+
+City -> GraphGen : generate(aMesh)
+GraphGen -> Graph : generate Graph ADT
+Graph -> Node : add Attributes
+Node -> Graph : add to nodeList
+Graph -> GraphGen : return ADT
+
+GraphGen -> ShortestPath : getDijkstras(node)
+ShortestPath -> GraphGen : return dijkstra()
+GraphGen -> City : return dijkstras Graphs
+
+City ->  IslandGen: updateList
+IslandGen -> Main : return generatedIsland
+@enduml
+
+
+java -jar plantuml.jar sequence.txt

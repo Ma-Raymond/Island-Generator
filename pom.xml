@@ -17,7 +17,8 @@
         <module>io</module>
         <module>visualizer</module>
         <module>island</module>
-    </modules>
+		<module>pathfinder</module>
+	</modules>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -45,7 +46,6 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
 
     <build>
 		<plugins>

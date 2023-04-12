@@ -3,6 +3,7 @@ package island.files;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 
 import java.awt.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -69,6 +70,19 @@ public class Rivers {
                 }
             }
             vertexHeights.set(vertIdx,highestValue);        // Setting the values with vertex Heights
+        }
+        vertexHeightPropeties();
+    }
+
+    DecimalFormat precision  = new DecimalFormat("0.00");
+    /**
+     * Assigning heights values to Vertices to use in the
+     */
+    private void vertexHeightPropeties(){
+        for (int i = 0; i< vertexList.size(); i++){
+            Structs.Property height = Structs.Property.newBuilder().setKey("height").setValue(precision.format(vertexHeights.get(i))).build();
+            Structs.Vertex heighted = Structs.Vertex.newBuilder(vertexList.get(i)).addProperties(height).build();
+            vertexList.set(i, heighted);
         }
     }
 

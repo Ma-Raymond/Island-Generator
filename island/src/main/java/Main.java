@@ -24,6 +24,7 @@ public class Main {
         options.addOption("soil", true, "Soil Profile");
         options.addOption("biomes", true, "Biomes");
         options.addOption("seed", true, "Island Seed");
+        options.addOption("city", true, "Number of Cities");
         options.addOption("heatmap", true, "Type of HeatMap to Display");
         options.addOption("H", "help", false, "Command information");
         String input = null;
@@ -44,6 +45,9 @@ public class Main {
         String riverStartIdx = "";
         String soil = "";
         String heatmap = "";
+
+        String city = "";
+        String cityStartIdx ="";
 
         //Seed will be either inputted or created from the above parameters
         String seed = "";
@@ -89,7 +93,9 @@ public class Main {
             if (commandline.hasOption("O")) {
                 output = commandline.getOptionValue("O");
             }
-
+            if (commandline.hasOption("city")) {
+                city = commandline.getOptionValue("city");
+            }
             if (commandline.hasOption("seed")) {
                 seed = commandline.getOptionValue("seed");
             }
@@ -167,7 +173,21 @@ public class Main {
                     errorMessage = errorMessage + "The river input you've provided is not an integer or negative, try again!, ";
                 }
             }
-
+            if (!city.equals("")){
+                try{
+                    Integer numCities = Integer.parseInt(city);
+                    if (numCities < 0){
+                        city = "";
+                        throw new ParseException("Sorry, no negative rivers. try again!");
+                    }
+                    if (numCities > 400){
+                        city = "200";
+                    }
+                } catch(NumberFormatException e){
+                    city = "";
+                    errorMessage = errorMessage + "The city input you've provided is not an integer or negative, try again!, ";
+                }
+            }
             try{
                 if (!(biome.equals("Desert")|biome.equals("Savana")|biome.equals("Tropical")|biome.equals("Grassland")|biome.equals("Deciduous")|biome.equals("TemperateRain")|biome.equals("Taiga")|biome.equals("Tundra")|biome.equals(""))){
                     biome = "Deciduous"; //random default if input incorrectly
@@ -222,16 +242,24 @@ public class Main {
             System.out.println("----------------------------------------------ERROR MESSAGE----------------------------------------------\n");
         }
 
-        // Old Mesh to write on
-        Mesh aMesh = new MeshFactory().read(input);
 
-        // Island Generation
-        IslandGen gen = new IslandGen();
-        Mesh myMesh = gen.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, heatmap);
+        try{
+            // Old Mesh to write on
+            Mesh aMesh = new MeshFactory().read(input);
 
-        // Outputing to new Mesh object
-        MeshFactory factory = new MeshFactory();
-        factory.write(myMesh, output);
+            // Island Generation
+            IslandGen gen = new IslandGen();
+            Mesh myMesh = gen.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, heatmap,city, cityStartIdx);
+
+            // Outputing to new Mesh object
+            MeshFactory factory = new MeshFactory();
+            factory.write(myMesh, output);
+        }catch(NumberFormatException e) {
+            System.out.println(e.getMessage());
+            System.out.println(e.getCause());
+            System.out.println(e);
+        }
+
     }
 }
 //take shape as string

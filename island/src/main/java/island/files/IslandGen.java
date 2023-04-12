@@ -30,6 +30,8 @@ abstract class IslandSeed{
     int biome;
     double defaultBlockElev;
     double defaultHumidity;
+    int numCity;
+    int cityStartIdx;
 }
 
 public class IslandGen extends IslandSeed {
@@ -47,7 +49,6 @@ public class IslandGen extends IslandSeed {
     List<Integer> heightPoints = new ArrayList<>();
     List<Integer> islandVertices = new ArrayList<>();
 
-    DecimalFormat precision  = new DecimalFormat("0.00");
 
     double soilPercent;
 
@@ -56,15 +57,14 @@ public class IslandGen extends IslandSeed {
     private void seedDecoder(String seed){
         isSeed = true;
         //adjust seed length if it is not correct
-        if (seed.length() < 18){
+        if (seed.length() < 22){
             //if seed is too short then add 0's to the end
-            seed += "0".repeat(18-seed.length());
+            seed += "0".repeat(22-seed.length());
         }
-        if (seed.length() > 18) {
-            //if seed is too long, cut it off at 18 digits
-            seed = seed.substring(0,18);
+        if (seed.length() > 22) {
+            //if seed is too long, cut it off at 22 digits
+            seed = seed.substring(0,22);
         }
-
         //Get island details from seed
         String[] seedDetails = seed.split("");
         islandShape = (Integer.parseInt(seedDetails[0]))%5; //modulo 5 as there are only 5 island shapes
@@ -80,6 +80,9 @@ public class IslandGen extends IslandSeed {
         aquaStartIdx = Integer.parseInt(seedDetails[14]+seedDetails[15]);
         soilMoisture = (Integer.parseInt(seedDetails[16]))%3;//modulo 3 as there are only 3 soil profiles
         biome = (Integer.parseInt(seedDetails[17]))%8;//modulo 8 as there are only 8 biomes
+        numCity = Integer.parseInt(seedDetails[18]+seedDetails[19]);
+        cityStartIdx = Integer.parseInt(seedDetails[20]+seedDetails[21]);
+
     }
 
     //If the user did not input a seed then get a
@@ -314,6 +317,30 @@ public class IslandGen extends IslandSeed {
             soilMoisture = soilTypes.get(soilType);
         }
     }
+    private void getCity(String numCityParam, String cityStartIdxParam){
+        Random rand = new Random();
+        int maxIdx = islandBlocks.size();
+        if (numCityParam.equals("")){
+            numCity = (rand.nextInt(5, 15));
+        }
+        else{
+            int num = Integer.parseInt(numCityParam);
+            if (num >= 100) {
+                numCity = 99;
+            } else {
+                numCity = num;
+            }
+        }
+        if (cityStartIdxParam.equals("")){
+            cityStartIdx = (rand.nextInt(0,maxIdx%100+1));
+        }else{
+            int startIdx = Integer.parseInt(cityStartIdxParam);
+            cityStartIdx = startIdx;
+
+        }
+
+
+    }
 
     //Get the soil profile based on the soil type
     private void soilProfile(){
@@ -326,8 +353,6 @@ public class IslandGen extends IslandSeed {
         else if (soilMoisture == 2)
             soilPercent = 0.5;
     }
-
-
 
     public void defaultValues(Mesh aMesh){
         // Get old mesh details
@@ -345,7 +370,7 @@ public class IslandGen extends IslandSeed {
         initalMaps();
     }
 
-    public Mesh generate(Mesh aMesh,String seedInput, String shape, String elevType, String elevationStartIdx,String maxNumLakes, String lakeStartingIdx, String rivers, String riverStartingIdx, String aquifers, String aquiferStartingIdx, String soilSelect, String biomeSelect, String map){
+    public Mesh generate(Mesh aMesh,String seedInput, String shape, String elevType, String elevationStartIdx,String maxNumLakes, String lakeStartingIdx, String rivers, String riverStartingIdx, String aquifers, String aquiferStartingIdx, String soilSelect, String biomeSelect, String map, String cities, String cityStartingIdx){
         //Create new island
         Biomes biomeGen = new Biomes();
         //If user input a seed
@@ -368,6 +393,8 @@ public class IslandGen extends IslandSeed {
             getRiverStartIdx(String.valueOf(riverStartIdx));
             getAquiferNum(String.valueOf(aquaNum));
             getAquiferStartIdx(String.valueOf(aquaStartIdx));
+            getSoil(soilSelect);
+            getCity(String.valueOf(numCity),String.valueOf(cityStartIdx));
         }
         //If user did not input seed
         else{
@@ -396,6 +423,7 @@ public class IslandGen extends IslandSeed {
             getAquiferNum(aquifers);
             getAquiferStartIdx(aquiferStartingIdx);
             getSoil(soilSelect);
+            getCity(cities,cityStartingIdx);
         }
 
         //Display General Island Info
@@ -404,18 +432,19 @@ public class IslandGen extends IslandSeed {
         System.out.println("Elevation: "+ numToElevate.get(altType));
         System.out.println("Shape: "+ numToShapes.get(islandShape));
 
-        generateAttributes(biomeGen);
+        generateAttributes(aMesh, biomeGen);
         seedOutput(seedInput);
-
         // Creating Heatmap if the User wants the map to be displayed as one
         Heatmaps heatMap = new Heatmaps();
         heatMap.selectMap(polygonList,humidity,elevations,islandBlocks,map);
         polygonList = heatMap.polygonList;
+
         return Mesh.newBuilder().addAllVertices(vertexList).addAllSegments(segmentList).addAllPolygons(polygonList).build();
     }
 
 
-    private void generateAttributes(Biomes biomeGen){
+
+    private void generateAttributes(Mesh aMesh, Biomes biomeGen){
         // Generate Elevation
         Elevation elevate = new Elevation();
         elevate.generate(altType,elevations,altStartIdx,heightPoints,polygonList,islandBlocks);
@@ -447,6 +476,11 @@ public class IslandGen extends IslandSeed {
         biomeGen.generate(elevations, islandBlocks, lakeIdxs, humidity, polygonList);
         polygonList = biomeGen.polygonList;
 
+        // Cities
+        City cityObj = new City();
+        cityObj.generate(aMesh, lakeIdxs,islandVertices,numCity,cityStartIdx,segmentList, vertexList, polygonList);
+        segmentList = cityObj.segmentList;
+        vertexList = cityObj.vertexList;
     }
     private void seedOutput(String seedInput){
         //Seed generator
@@ -461,6 +495,8 @@ public class IslandGen extends IslandSeed {
         attributes.add(riverStartIdx);
         attributes.add(aquaNum);
         attributes.add(aquaStartIdx);
+        attributes.add(numCity);
+        attributes.add(cityStartIdx);
 
         //if the seed was provided then output the same seed
         if (isSeed){
@@ -483,13 +519,28 @@ public class IslandGen extends IslandSeed {
             }
 
             //Creating an 18 digit seed based on the island attributes that can reproduce the exact same island
-            String seed = (String.valueOf(islandShape) + String.valueOf(altType) + attributesStr.get(0) + attributesStr.get(1) + attributesStr.get(2) + attributesStr.get(3)+ attributesStr.get(4) + attributesStr.get(5) + attributesStr.get(6) + String.valueOf(soilMoisture) + String.valueOf(biome));
+            String seed = (String.valueOf(islandShape) + String.valueOf(altType) + attributesStr.get(0) + attributesStr.get(1) + attributesStr.get(2) + attributesStr.get(3)+ attributesStr.get(4) + attributesStr.get(5) + attributesStr.get(6) + String.valueOf(soilMoisture) + String.valueOf(biome)+attributesStr.get(7)+attributesStr.get(8));
 
             //Output the Seed
             System.out.println("-----------------SEED VALUE-------------------");
             System.out.println("SEED: "+seed);
             System.out.println("----------------------------------------------");
         }
+    }
+    private void printDebug(){
+        System.out.println(islandShape);
+        System.out.println(altType);
+        System.out.println(altStartIdx);
+        System.out.println(lakeNum);
+        System.out.println(lakeStartIdx);
+        System.out.println(riverNum);
+        System.out.println(riverStartIdx);
+        System.out.println(aquaNum);
+        System.out.println(aquaStartIdx);
+        System.out.println(soilMoisture);
+        System.out.println(biome);
+        System.out.println(numCity);
+        System.out.println(cityStartIdx);
     }
 
     //Gets all the polygons that make up the island

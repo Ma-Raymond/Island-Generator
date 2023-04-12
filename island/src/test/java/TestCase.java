@@ -11,8 +11,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestCase {
 
-
-
     @Test
     public void meshIsNotNull() throws IOException {
         IslandGen generator = new IslandGen();
@@ -36,7 +34,9 @@ public class TestCase {
         String riverStartIdx = "";
         String aquiferStartIdx = "";
 
-        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map);
+        String city = "";
+        String cityStartIdx = "";
+        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map,city,cityStartIdx);
         assertNotNull(myMesh);
     }
 
@@ -62,8 +62,9 @@ public class TestCase {
         String riverStartIdx = "";
         String aquiferStartIdx = "";
 
-        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map);
-        assertNotNull(myMesh);
+        String city = "";
+        String cityStartIdx = "";
+        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map,city,cityStartIdx);        assertNotNull(myMesh);
     }
 
     public void incorrectShapeInput() throws IOException {
@@ -88,8 +89,9 @@ public class TestCase {
         String riverStartIdx = "";
         String aquiferStartIdx = "";
 
-        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map);
-        assertNotNull(myMesh);
+        String city = "";
+        String cityStartIdx = "";
+        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map,city,cityStartIdx);        assertNotNull(myMesh);
     }
     public void incorrectAltitudeInput() throws IOException {
         IslandGen generator = new IslandGen();
@@ -113,8 +115,9 @@ public class TestCase {
         String riverStartIdx = "";
         String aquiferStartIdx = "";
 
-        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map);
-        assertNotNull(myMesh);
+        String city = "";
+        String cityStartIdx = "";
+        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map,city,cityStartIdx);        assertNotNull(myMesh);
     }
     public void negativeAquifers() throws IOException {
         IslandGen generator = new IslandGen();
@@ -138,8 +141,9 @@ public class TestCase {
         String riverStartIdx = "";
         String aquiferStartIdx = "";
 
-        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map);
-        assertNotNull(myMesh);
+        String city = "";
+        String cityStartIdx = "";
+        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map,city,cityStartIdx);        assertNotNull(myMesh);
     }
     public void negativeLakes() throws IOException {
         IslandGen generator = new IslandGen();
@@ -163,8 +167,9 @@ public class TestCase {
         String riverStartIdx = "";
         String aquiferStartIdx = "";
 
-        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map);
-        assertNotNull(myMesh);
+        String city = "";
+        String cityStartIdx = "";
+        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map,city,cityStartIdx);        assertNotNull(myMesh);
     }
     public void negativeRivers() throws IOException {
         IslandGen generator = new IslandGen();
@@ -188,8 +193,9 @@ public class TestCase {
         String riverStartIdx = "";
         String aquiferStartIdx = "";
 
-        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map);
-        assertNotNull(myMesh);
+        String city = "";
+        String cityStartIdx = "";
+        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map,city,cityStartIdx);        assertNotNull(myMesh);
     }
 
     public void tooManyAquifers() throws IOException {
@@ -214,8 +220,9 @@ public class TestCase {
         String riverStartIdx = "";
         String aquiferStartIdx = "";
 
-        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map);
-        assertNotNull(myMesh);
+        String city = "";
+        String cityStartIdx = "";
+        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map,city,cityStartIdx);        assertNotNull(myMesh);
     }
     public void tooManyLakes() throws IOException {
         IslandGen generator = new IslandGen();
@@ -239,8 +246,9 @@ public class TestCase {
         String riverStartIdx = "";
         String aquiferStartIdx = "";
 
-        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map);
-        assertNotNull(myMesh);
+        String city = "";
+        String cityStartIdx = "";
+        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map,city,cityStartIdx);        assertNotNull(myMesh);
     }
     public void tooManyRivers() throws IOException {
         IslandGen generator = new IslandGen();
@@ -264,8 +272,9 @@ public class TestCase {
         String riverStartIdx = "";
         String aquiferStartIdx = "";
 
-        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map);
-        assertNotNull(myMesh);
+        String city = "";
+        String cityStartIdx = "";
+        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map,city,cityStartIdx);        assertNotNull(myMesh);
     }
     public void incorrectSoilInput() throws IOException {
         IslandGen generator = new IslandGen();
@@ -289,8 +298,9 @@ public class TestCase {
         String riverStartIdx = "";
         String aquiferStartIdx = "";
 
-        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map);
-        assertNotNull(myMesh);
+        String city = "";
+        String cityStartIdx = "";
+        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map,city,cityStartIdx);        assertNotNull(myMesh);
     }
     public void incorrectBiomeInput() throws IOException {
         IslandGen generator = new IslandGen();
@@ -314,11 +324,8 @@ public class TestCase {
         String riverStartIdx = "";
         String aquiferStartIdx = "";
 
-        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map);
-        assertNotNull(myMesh);
+        String city = "";
+        String cityStartIdx = "";
+        Structs.Mesh myMesh = generator.generate(aMesh, seed, shape, elevType, elevationStartIdx, maxNumLakes, lakeStartIdx, rivers, riverStartIdx, aquifers, aquiferStartIdx, soil, biome, map,city,cityStartIdx);        assertNotNull(myMesh);
     }
-
-
-
-
 }

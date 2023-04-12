@@ -1,0 +1,54 @@
+@startuml
+class Node {
++ int id
++ int weight
++ List<Integer> neighbours
++ List<Integer> neighbourSegments
++ List<Integer> neighbourWeights
++ void setWeight(int)
++ void setNeighbours(List<Integer>)
++ void setNeighbourSegments(List<Integer>)
++ void setNeighbourWeights(List<Integer>)
++ int compare(Node,Node)
+}
+interface Path {
++ List<Integer> dijkstra(Graph,Integer)
+}
+class GraphGen {
+~ Graph meshToGraph
++ Mesh generate(Mesh)
++ List<Integer> getShortestPath(List<Integer>,Integer,Integer)
+- Integer getSegmentIdx(Integer,Integer)
++ List<Integer> getDijkstras(Integer)
++ Integer getWeight(Integer)
+}
+class ShortestPath {
+~ Graph graph
++ List<Integer> dijkstra(Graph,Integer)
+- void init()
+}
+abstract class GeneralGraph {
+~ HashMap<Integer,List<Integer>> adjacencyListV
+~ HashMap<Integer,List<Integer>> adjacencyListS
+~ HashMap<Integer,List<Integer>> weights
+}
+class Graph {
+~ List<Polygon> polygonList
+~ List<Segment> segmentList
+~ List<Vertex> vertexList
+~ List<Node> nodeList
++ Mesh generate(Mesh)
+- void initalizeNodes()
+- void generateNodeGraph()
+- void generateGraph()
+- Integer generateWeight(Integer,Integer)
+}
+
+
+Comparator <|.. Node
+Path <|.. ShortestPath
+GeneralGraph <|-- Graph
+Graph <-- GraphGen
+Node <-- Graph
+Graph <-- ShortestPath
+@enduml

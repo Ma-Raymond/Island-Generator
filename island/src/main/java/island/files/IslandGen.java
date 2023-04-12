@@ -56,6 +56,7 @@ public class IslandGen extends IslandSeed {
     //If the user inputs a seed then the island attributes are extracted from it
     private void seedDecoder(String seed){
         isSeed = true;
+        Double val = Double.parseDouble(seed);
         //adjust seed length if it is not correct
         if (seed.length() < 22){
             //if seed is too short then add 0's to the end
@@ -67,8 +68,13 @@ public class IslandGen extends IslandSeed {
         }
         //Get island details from seed
         String[] seedDetails = seed.split("");
+        if (seedDetails[0].equals("-")){
+            List<String> hi = new ArrayList<>(Arrays.asList(seedDetails));
+            hi.remove(0);
+            hi.add("0");
+            seedDetails = hi.toArray(new String[0]);;
+        }
         islandShape = (Integer.parseInt(seedDetails[0]))%5; //modulo 5 as there are only 5 island shapes
-        System.out.println(islandShape);
         altType = (Integer.parseInt(seedDetails[1]))%3;//modulo 3 as there are only elevation types
         altStartIdx = Integer.parseInt(seedDetails[2]+seedDetails[3]);
         maxLakes = Integer.parseInt(seedDetails[4] + seedDetails[5]);
@@ -101,7 +107,11 @@ public class IslandGen extends IslandSeed {
             islandShapes.put("Cross", 3);
             islandShapes.put("Heart", 4);
 
-            islandShape = islandShapes.get(shape);
+            try{
+                islandShape = islandShapes.get(shape);
+            } catch(Exception e) {
+                islandShape = 4;
+            }
         }
 
     }
@@ -135,7 +145,11 @@ public class IslandGen extends IslandSeed {
             elevationTypes.put("Mountain", 0);
             elevationTypes.put("Flat", 1);
             elevationTypes.put("Hill", 2);
-            altType = elevationTypes.get(elevType);
+            try{
+                altType = elevationTypes.get(elevType);
+            }catch (Exception e){
+                altType = 0;
+            }
         }
 
     }
@@ -178,7 +192,7 @@ public class IslandGen extends IslandSeed {
         else{
             maxLakes = Integer.parseInt(maxNumLakes);
             if (maxLakes>=maxLand){
-                maxLakes = maxLand;
+                maxLakes = 20;
             }
         }
     }
@@ -314,7 +328,11 @@ public class IslandGen extends IslandSeed {
             soilTypes.put("Dry", 0);
             soilTypes.put("Average", 1);
             soilTypes.put("Wet", 2);
-            soilMoisture = soilTypes.get(soilType);
+            try {
+                soilMoisture = soilTypes.get(soilType);
+            } catch (Exception e){
+                soilMoisture = 1;
+            }
         }
     }
     private void getCity(String numCityParam, String cityStartIdxParam){

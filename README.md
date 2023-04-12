@@ -89,6 +89,9 @@ Type of Heatmap "-heatmap xx"
 Elevation
 Mositure
 ------------------------------------
+# of Cities "-city xx"
+Options: Integer Value
+------------------------------------
 ```
 
 ### Visualizer

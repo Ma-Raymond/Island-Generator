@@ -85,6 +85,9 @@ public class Main {
                 System.out.println("Type of Heatmap to display as \"-biomes xx\"");
                 System.out.println("Options: \nElevation\nMoisture");
                 System.out.println("------------------------------------");
+                System.out.println("# of Cities \"-city xx\"\n");
+                System.out.println("Options: Integer Value");
+                System.out.println("------------------------------------");
             }
 
             if (commandline.hasOption("I")) {

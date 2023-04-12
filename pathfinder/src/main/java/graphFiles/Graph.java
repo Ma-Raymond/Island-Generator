@@ -37,7 +37,7 @@ public class Graph extends GeneralGraph{
             nodeList.add(node);
         }
     }
-    public void generateNodeGraph(){
+    private void generateNodeGraph(){
         for (int i=0; i< nodeList.size();i++){
             Node node = nodeList.get(i);
             node.setNeighbours(adjacencyListV.get(i));
@@ -45,7 +45,7 @@ public class Graph extends GeneralGraph{
             node.setNeighbourWeights(weights.get(i));
         }
     }
-    public void generateGraph(){
+    private void generateGraph(){
         initalizeNodes();
         for (Segment s : segmentList){
             int v1Idx = s.getV1Idx();

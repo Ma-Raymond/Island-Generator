@@ -54,15 +54,16 @@ public class City {
                 centralIdx = idx;
             }
         }
-
-        List<Integer> dijkPath = graph.getDijkstras(centralIdx);
-        colorVertex(centralIdx,255,215,0,255); // GOLD CENTRALL
-        new Color(255,215,0);
-        for (Integer idx : cityLocations){
-            if (!idx.equals(centralIdx)){
-                List<Integer> path = graph.getShortestPath(dijkPath,centralIdx,idx);
-                for (Integer segId : path){
-                    colorSegment(segId,1,1,1,255);
+        if (cityLocations.size() > 0){
+            List<Integer> dijkPath = graph.getDijkstras(centralIdx);
+            colorVertex(centralIdx,255,215,0,255); // GOLD CENTRALL
+            new Color(255,215,0);
+            for (Integer idx : cityLocations){
+                if (!idx.equals(centralIdx)){
+                    List<Integer> path = graph.getShortestPath(dijkPath,centralIdx,idx);
+                    for (Integer segId : path){
+                        colorSegment(segId,1,1,1,255);
+                    }
                 }
             }
         }

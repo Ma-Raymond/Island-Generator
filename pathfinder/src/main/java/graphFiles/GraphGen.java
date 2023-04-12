@@ -29,6 +29,9 @@ public class GraphGen{
         Integer value = destination;
         while (!value.equals(start)){
             Integer connect = dijkstras.get(value);
+            if (connect.equals(-1)){    // This means they arent even connected, test case
+                break;
+            }
             path.add(getSegmentIdx(value,connect));
             value = connect;
         }
@@ -45,15 +48,22 @@ public class GraphGen{
                 return node.neighbourSegments.get(i);
             }
         }
-        System.out.println("AN ERROR NO SEGMENTS");
+        // Test Case for no existing segment between them
         return 0;
     }
     public List<Integer> getDijkstras(Integer node){
-        ShortestPath dijkstraList = new ShortestPath();
-        return dijkstraList.dijkstra(meshToGraph,node);
+        if (meshToGraph != null){
+            ShortestPath dijkstraList = new ShortestPath();
+            return dijkstraList.dijkstra(meshToGraph,node);
+        }
+        // Test Case for Negatives
+        return new ArrayList<>();
     }
     public Integer getWeight(Integer destination){
-        return meshToGraph.nodeList.get(destination).weight;
+        if (meshToGraph != null && !(destination < 0 || destination >= meshToGraph.nodeList.size()))
+            return meshToGraph.nodeList.get(destination).weight;
+        // Test Case for Negatives
+        return 0;
     }
 
 }

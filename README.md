@@ -1,4 +1,4 @@
-# Assignment A3: Mesh Generator
+# Island Mesh Generator
 
   - Raymond Ma [mar47@mcmaster.ca]
   - Gayan Athukorala [athukorg@mcmaster.ca]
